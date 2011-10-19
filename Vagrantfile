@@ -25,8 +25,9 @@ Vagrant::Config.run do |config|
       }
   end
   
-  config.vm.provision :shell, :inline => "npm install express jade supervisor -g"
+  config.vm.provision :shell, :inline => "cd /vagrant && npm install"
   
+  config.vm.provision :shell, :inline => "npm install supervisor -g"
   # guard is better than supervisor,  though leaving it off for now.
   # config.vm.provision :shell, :inline => "gem install guard rb-inotify"
 
