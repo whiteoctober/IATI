@@ -5,8 +5,29 @@ Vagrant::Config.run do |config|
 
 
   # Boot with a GUI so you can see the screen. (Default is headless)
+  # NOTE : this allows us to restart network if it is hanging with
+  #         /etc/init.d/networking restart
   config.vm.boot_mode = :gui
   config.ssh.max_tries = 5000
   config.ssh.timeout   = 30
-  config.vm.forward_port("web", 80, 4567)
+
+  # forward to port 3003 to distinguish between vagrant and local
+  config.vm.forward_port("node", 3000, 3003)
+
+  config.vm.provision :chef_solo do |chef|
+    chef.add_recipe "nodejs"
+    chef.add_recipe "nodejs::npm"
+    chef.json =	{
+        "nodejs" => {
+          "version" => "0.4.12",
+          "npm" => "1.0.99"
+        } 
+      }
+  end
+  
+  config.vm.provision :shell, :inline => "npm install express jade supervisor -g"
+  
+  # guard is better than supervisor,  though leaving it off for now.
+  # config.vm.provision :shell, :inline => "gem install guard rb-inotify"
+
 end
