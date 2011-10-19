@@ -1,6 +1,27 @@
-!!!
+!!! 5
 html
   head
     title= title
+    link(rel='stylesheet', href='/stylesheets/boilerplate.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body!= body
+  body#body
+    #background_frame
+      .top
+        .left
+        .centre
+        .right
+      .bottom
+        .left
+        .centre
+        .right
+    #content
+      #content_inner!= body
+    #foreground_frame
+      .top
+        .left
+        .centre
+        .right
+      .bottom
+        .left
+        .centre
+        .right
