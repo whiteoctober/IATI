@@ -1,0 +1,16 @@
+h1= title
+
+// render the query state
+h3
+	each v, k in q
+		span
+			= k + '=' + v + '; '
+
+form(action='/activities')
+	each filter in filters
+		li
+			label
+				= filter
+				input(type="checkbox", value=filter, name=currentFilter)
+
+	input(type='submit')
