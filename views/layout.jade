@@ -1,6 +1,27 @@
-!!!
+!!! 5
 html
   head
     title= title
+    link(rel='stylesheet', href='/stylesheets/boilerplate.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body!= body
+  body#body
+    #content
+      #content_inner!= body
+    #header
+      .left_corner.corner
+      .centre
+      .right_corner.corner
+      a(href='#sector').sector_filter
+        img(src='/images/sector_filter_text.png').text
+        img(src='/images/sector_filter.png').button
+        
+    #footer
+      .left_corner.corner
+      .centre
+      .right_corner.corner
+      a(href='#funder').funder_filter
+        img(src='/images/funder_filter.png').button
+        img(src='/images/funder_filter_text.png').text.left
+      a(href='#area').area_filter
+        img(src='/images/area_filter.png').button
+        img(src='/images/area_filter_text.png').text.right

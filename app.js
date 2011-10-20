@@ -1,9 +1,9 @@
-
 /**
  * Module dependencies.
  */
 
-var express = require('express');
+var express = require('express'),
+	api = require('./lib/api-dev.js');
 
 var app = module.exports = express.createServer();
 
@@ -32,6 +32,32 @@ app.get('/', function(req, res){
   res.render('index', {
     title: 'Express'
   });
+});
+
+
+app.get('/activities', function(req, res){
+	
+	var qs = req.originalUrl.split('?')[1] || '';
+	
+	res.render('activities', {
+		title: 'Activities',
+		q: req.query,
+		qs: qs,
+		activities : api.activities(req.query)
+	});
+});
+
+app.get('/filter/:filter', function(req, res){
+	
+	var qs = req.originalUrl.split('?')[1] || '';
+	
+	var f = req.params.filter;
+	res.render('Filter', {
+		title: 'Filter:' + f,
+		currentFilter: f,
+		q: req.query,
+		filters: api.filterValues(f,req.query)
+	});
 });
 
 // Only listen on $ node app.js
