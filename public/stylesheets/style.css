@@ -161,3 +161,21 @@ h2 {
   font-weight: normal;
   font-size: 150%;
 }
+
+.activities li{
+	list-style:none;
+	background-color:#ccc;
+	display:block;
+	width:10em;
+	height:10em;
+	border-radius:10em;
+	border:5px solid #ddd;
+	line-height:10em;
+	text-align:center;
+	float:left;
+	margin:1em;
+}
+
+.filters{
+	clear:both;
+}
