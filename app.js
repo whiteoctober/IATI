@@ -40,6 +40,7 @@ var getFilters = function(req, res, next) {
 app.get('/', getFilters, function(req, res){
   res.render('index', {
     title: 'Express',
+    page: 'home',
     filter_paths: req.filter_paths
   });
 });
@@ -49,6 +50,7 @@ app.get('/activities', getFilters, function(req, res){
   
 	res.render('activities', {
     title: 'Activities',
+    page: 'activities',
     filter_paths: req.filter_paths,
 		query: req.query,
 		activities: api.activities(req.query),
@@ -62,6 +64,7 @@ app.get('/filter/:filter', getFilters, function(req, res){
   
 	res.render('Filter', {
     title: 'Filter by ' + filter,
+    page: 'filter',
     filter_paths: req.filter_paths,
 		currentFilter: filter,
 		query: req.query,

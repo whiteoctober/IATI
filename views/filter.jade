@@ -1,10 +1,11 @@
 h1= title
 
 // render the query state
-h3
-	each item, name in query
-		span
-			= name + '=' + item + '; '
+//
+	h3
+		each item, name in query
+			span
+				= name + '=' + item + '; '
 
 form.filter(action='/activities')
 	each item, name in query

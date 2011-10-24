@@ -11,20 +11,35 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a(href=filter_paths.sector).sector_filter.filter
-        img(src='/images/sector_filter_text.png').text
-        img(src='/images/sector_filter.png').button
+      a.sector_filter.filter(href=filter_paths.sector)
+        img.text(src='/images/sector_filter_text.png')
+        img.button(src='/images/sector_filter.png')
+      .main_navigation
+        a(href='/') 
+          img.button(src='/images/home_button.png')
+        a(href='#back') 
+          img.button(src='/images/back_button.png')
+        a(href='#favourites') 
+          img.button(src='/images/favourites_button.png')
         
     #footer
       .left_corner.corner
       .centre
       .right_corner.corner
-      a(href=filter_paths.funder).funder_filter.filter
-        img(src='/images/funder_filter.png').button
-        img(src='/images/funder_filter_text.png').text.left
-      a(href=filter_paths.area).area_filter.filter
-        img(src='/images/area_filter.png').button
-        img(src='/images/area_filter_text.png').text.right
+      a.funder_filter.filter(href=filter_paths.funder)
+        img.button(src='/images/funder_filter.png')
+        img.text.left(src='/images/funder_filter_text.png')
+      a.area_filter.filter(href=filter_paths.area)
+        img.button(src='/images/area_filter.png')
+        img.text.right(src='/images/area_filter_text.png')
+      - if (page == 'activities')
+        .activities_navigation
+          a(href='#data_file') 
+            img.button(src='/images/data_file_button.png')
+          a(href='#map') 
+            img.button(src='/images/map_button.png')
+          a(href='#list') 
+            img.button(src='/images/list_button.png')
     #popup.hidden
     #scripts.hidden
       script(src='/javascripts/jquery.js')
