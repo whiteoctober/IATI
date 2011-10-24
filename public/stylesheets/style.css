@@ -1,5 +1,6 @@
 #body .left { float: left; }
 #body .right { float: right; }
+#body .hidden { display: none; }
 
 body {
   font: 14px Arial, sans-serif;
@@ -107,6 +108,14 @@ h2 {
   padding: 5px;
 }
   
+#popup {
+  position: absolute;
+  width: 300px; padding: 40px 50px;
+  background: white;
+  border-radius: 30px; -moz-border-radius: 30px;
+  box-shadow: 0px 0px 6px #ccc; -moz-box-shadow: 0px 0px 6px #ccc;
+}
+ 
 .landing_message {
   margin-top: 20px;
 }

@@ -1,20 +1,12 @@
 h1= title
 
 // render the query state
-h3
-	each v, k in q
-		span
-			= k + '=' + v + '; '
+//
+	h3
+		each item, name in query
+			span
+				= name + '=' + item + '; '
 
-ol(class='activities')
+ul.activities
 	each activity in activities
 		li= activity.name
-
-
-ul(class='filters')
-	li
-		a(href='/filter/f1?' + qs) Filter One (f1)
-	li
-		a(href='/filter/f2?' + qs) Filter Two (f2)
-	li
-		a(href='/filter/f3?' + qs) Filter Three (f3)

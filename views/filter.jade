@@ -2,15 +2,17 @@ h1= title
 
 // render the query state
 h3
-	each v, k in q
+	each item, name in query
 		span
-			= k + '=' + v + '; '
+			= name + '=' + item + '; '
 
-form(action='/activities')
+form.filter(action='/activities')
+	each item, name in query
+		input(type="hidden", name=name, value=item)
 	each filter in filters
 		li
 			label
 				= filter
-				input(type="checkbox", value=filter, name=currentFilter)
+				input(type="checkbox", name=currentFilter, value=filter)
 
 	input(type='submit')

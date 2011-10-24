@@ -11,7 +11,7 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a(href='#sector').sector_filter
+      a(href=filter_paths.sector).sector_filter.filter
         img(src='/images/sector_filter_text.png').text
         img(src='/images/sector_filter.png').button
         
@@ -19,9 +19,14 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a(href='#funder').funder_filter
+      a(href=filter_paths.funder).funder_filter.filter
         img(src='/images/funder_filter.png').button
         img(src='/images/funder_filter_text.png').text.left
-      a(href='#area').area_filter
+      a(href=filter_paths.area).area_filter.filter
         img(src='/images/area_filter.png').button
         img(src='/images/area_filter_text.png').text.right
+    #popup.hidden
+    #scripts.hidden
+      script(src='/javascripts/jquery.js')
+      script(src='/javascripts/jquery.form.js')
+      script(src='/javascripts/app.js')
