@@ -1,12 +1,17 @@
-h1= title
-
 // render the query state
 //
-	h3
-		each item, name in query
-			span
-				= name + '=' + item + '; '
+  h3
+    each item, name in query
+      span
+        = name + '=' + item + '; '
 
-ul.activities
-	each activity in activities
-		li= activity.name
+ul.activities.clearfix
+  each activity in activities
+    li.activity.hidden(
+      id=activity.id, 
+      data-name=activity.name,
+      data-size=(activity.size + 15)
+    )
+      .outline
+      a.content
+        p.text.initial= activity.name

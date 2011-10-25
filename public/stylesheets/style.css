@@ -26,11 +26,10 @@ h2 {
   background: #E4E6E6 url(/images/background.png);
 }
 #content {
-  position: absolute; top: 0;
   width: 100%; height: 100%; min-height: 600px; min-width: 800px;
 }
 #content_inner {
-  padding: 162px 0px 112px;
+  padding: 112px 0px 112px;
 }
 
 #header {
@@ -117,7 +116,7 @@ h2 {
 }
  
 .landing_message {
-  margin-top: 20px;
+  margin-top: 70px;
 }
 .landing_message .logo {
   width: 300px; margin: 0px auto 9px;
@@ -165,16 +164,35 @@ h2 {
   padding: 18px 12px 0px;
 }
 
-.activities li {
-	list-style: none;
-	background-color: #ccc;
-	display: block;
-	width: 10em;
-	height: 10em;
-	border-radius: 10em;
-	border: 5px solid #ddd;
-	line-height: 10em;
-	text-align: center;
-	float: left;
-	margin: 1em;
+.activities {
+  position: relative;
+  margin: 0; padding: 0;
+}
+
+.activities .activity {
+  position: relative;
+  display: block; float: left;
+	width: 150px; height: 150px; margin: 1px;
+  list-style: none;
+}
+
+.activities .activity .outline {
+  position: absolute;
+  width: 100%; height: 100%;
+  opacity: 0.2; background-color: #aaa;
+  border-radius: 10000px;
+}
+
+.activities .activity .content {
+  display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+  margin: 8px;
+  opacity: 0.7; background-color: #aaa; 
+  text-align: center;
+  border-radius: 10000px;
+}
+
+.activities .activity .content .text {
+  margin: 17px 20px;
+  overflow: visible;
+  color: #000;
 }

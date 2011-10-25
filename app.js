@@ -39,7 +39,7 @@ var getFilters = function(req, res, next) {
 
 app.get('/', getFilters, function(req, res){
   res.render('index', {
-    title: 'Express',
+    title: 'Home',
     page: 'home',
     filter_paths: req.filter_paths
   });
