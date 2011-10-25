@@ -18,7 +18,8 @@
   var query = window.location.search;
 
   //Callback for when a filter has been submitted
-  var filterSubmitted = function(html) { 
+  var filterSubmitted = function(html) {
+    window.History.pushState({query: query}, "", "?"+query);
     $("#content_inner").html(html);
     popup.addClass("hidden");
     $("a.filter").each(function() {
