@@ -9,11 +9,10 @@ h1= title
 
 form.filter(action='/activities')
 	each item, name in query
-		input(type="hidden", name=name, value=item)
+		input(type='hidden', name=name, value=item)
 	each filter in filters
 		li
 			label
-				= filter
-				input(type="checkbox", name=currentFilter, value=filter)
-
+				= filter + ' '
+				input(type='checkbox', name=currentFilter, value=filter)
 	input(type='submit')
