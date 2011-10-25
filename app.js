@@ -1,12 +1,6 @@
-/**
- * Module dependencies.
- */
-
 var express = require('express');
 var api = require('./lib/api-dev.js');
 var app = module.exports = express.createServer();
-
-// Configuration
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -48,29 +42,29 @@ app.get('/', getFilters, function(req, res){
 app.get('/activities', getFilters, function(req, res){
   var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest' 
   
-	res.render('activities', {
+  res.render('activities', {
     title: 'Activities',
     page: 'activities',
     filter_paths: req.filter_paths,
-		query: req.query,
-		activities: api.activities(req.query),
+    query: req.query,
+    activities: api.activities(req.query),
     layout: !xhr
-	});
+  });
 });
 
 app.get('/filter/:filter', getFilters, function(req, res){
   var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest' 
-	var filter = req.params.filter;
+  var filter = req.params.filter;
   
-	res.render('Filter', {
+  res.render('Filter', {
     title: 'Filter by ' + filter,
     page: 'filter',
     filter_paths: req.filter_paths,
-		currentFilter: filter,
-		query: req.query,
-		filters: api.filterValues(filter, req.query),
+    currentFilter: filter,
+    query: req.query,
+    filters: api.filterValues(filter, req.query),
     layout: !xhr
-	});
+  });
 });
 
 // Only listen on $ node app.js

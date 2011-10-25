@@ -17,7 +17,7 @@ Vagrant::Config.run do |config|
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe "nodejs"
     chef.add_recipe "nodejs::npm"
-    chef.json =	{
+    chef.json = {
         "nodejs" => {
           "version" => "0.4.12",
           "npm" => "1.0.99"

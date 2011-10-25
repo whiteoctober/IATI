@@ -2,17 +2,17 @@ h1= title
 
 // render the query state
 //
-	h3
-		each item, name in query
-			span
-				= name + '=' + item + '; '
+  h3
+    each item, name in query
+      span
+        = name + '=' + item + '; '
 
 form.filter(action='/activities')
-	each item, name in query
-		input(type='hidden', name=name, value=item)
-	each filter in filters
-		li
-			label
-				= filter + ' '
-				input(type='checkbox', name=currentFilter, value=filter)
-	input(type='submit')
+  each item, name in query
+    input(type='hidden', name=name, value=item)
+  each filter in filters
+    li
+      label
+        = filter + ' '
+        input(type='checkbox', name=currentFilter, value=filter)
+  input(type='submit')
