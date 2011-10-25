@@ -85,6 +85,7 @@
   };
   
   var redrawActivities = function() {
+    var angleOffset = parseInt(Math.random() * palette.length);
     var activities = $(this);
     var frameHeight = Math.max(window.innerHeight, $("#content").height());
     var area = { x: 600, y: 600 };
@@ -132,7 +133,7 @@
       
       var centre = {x: area.x - position.radius, y: area.y - position.radius};
       var colourIndex = sliceIndex(position, centre, palette.length);
-      var colours = palette[colourIndex || 0];
+      var colours = palette[((colourIndex || 0) + angleOffset) % palette.length];
       activity.css({
         position: 'absolute',
         left: position.x - position.radius,

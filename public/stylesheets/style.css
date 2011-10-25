@@ -168,7 +168,7 @@ h2 {
 
 .activities {
   position: relative;
-  margin: auto; padding: 0;
+  margin: 35px auto 0; padding: 0;
 }
 
 .activities .activity {
