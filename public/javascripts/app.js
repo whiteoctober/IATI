@@ -1,5 +1,4 @@
 (function() {
-
   //Colour palette for activity bubbles
   var palette = [
     {colour: '#3366FF', text: '#fff'},
@@ -10,15 +9,29 @@
     {colour: '#003DF5', text: '#fff'},
     {colour: '#002EB8', text: '#fff'}
   ];
+  
   //Maximum and minimum font sizes for activity bubbles
   var fontRange = {min: 11, max: 30};
   var bubbleRadiusRange = {min: 50, max: 180};
   var popup = $("#popup");
   var content = $("#content");
-  var query = window.location.search;
-
+  query = window.location.search.replace(/^\?/, "");
+  console.log(query);
+  var activeChange = false;
+  var cacheBugFix = function(xhr, settings) { settings.url = settings.url.replace("?&", "?"); };
+  
+  //Monitor state changes for Back request
+  window.History.Adapter.bind(window,'statechange',function(){
+    if (!activeChange) {
+      var State = window.History.getState();
+      query = State.url.split("?")[1] || "";
+      $.ajax({url: State.url, cache: false, beforeSend: cacheBugFix,  success: filterSubmitted});
+    }
+    activeChange = false;
+  });
+  
   //Callback for when a filter has been submitted
-  var filterSubmitted = function(html) { 
+  var filterSubmitted = function(html) {
     $("#content_inner").html(html);
     popup.addClass("hidden");
     $("a.filter").each(function() {
@@ -27,8 +40,14 @@
     $(".activities").each(redrawActivities);
   };
 
+  //Updates the page state
+  var changeState = function(query) {
+    activeChange = true;
+    window.History.pushState({query: query}, "", "/activities" + (query ? "?" + query : ""));
+  };
+  
   //Callback for when a filter is opened
-  var filterLoaded = function(html) { 
+  var filterLoaded = function(html) {
     popup.html(html);
     popup.removeClass("hidden");
     popup.css("left", content.outerWidth()/2 - popup.outerWidth()/2);
@@ -36,7 +55,11 @@
     popup.find("form.filter").ajaxForm({
       beforeSubmit: function() {
         query = popup.find("form.filter").serialize();
+        console.log(query);
+        changeState(query);
       },
+      cache: false, 
+      beforeSend: cacheBugFix,
       dataType: 'html',
       success: filterSubmitted
     });

@@ -17,7 +17,7 @@ html
       .main_navigation
         a(href='/') 
           img.button(src='/images/home_button.png')
-        a(href='#back') 
+        a(href='javascript:history.back()') 
           img.button(src='/images/back_button.png')
         a(href='#favourites') 
           img.button(src='/images/favourites_button.png')
@@ -45,5 +45,6 @@ html
       script(src='/javascripts/jquery.form.min.js')
       script(src='/javascripts/d3.min.js')
       script(src='/javascripts/d3.layout.min.js')
+      script(src='/javascripts/jquery.history.js')
       script(src='/javascripts/jquery.transform.min.js')
       script(src='/javascripts/app.js')
