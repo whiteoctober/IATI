@@ -16,7 +16,6 @@
   var popup = $("#popup");
   var content = $("#content");
   query = window.location.search.replace(/^\?/, "");
-  console.log(query);
   var activeChange = false;
   var cacheBugFix = function(xhr, settings) { settings.url = settings.url.replace("?&", "?"); };
   
@@ -37,6 +36,7 @@
     $("a.filter").each(function() {
       $(this).attr("href", $(this).attr("href").split("?")[0] + "?" + query);
     });
+    $('.activities li').assignSizes(100,250);
     $(".activities").each(redrawActivities);
   };
 
@@ -55,7 +55,6 @@
     popup.find("form.filter").ajaxForm({
       beforeSubmit: function() {
         query = popup.find("form.filter").serialize();
-        console.log(query);
         changeState(query);
       },
       cache: false, 
@@ -127,7 +126,7 @@
     });
     
     var positions = {};
-    var bubble = d3.layout.pack().sort(randomly).size([area.x, area.y]);
+    var bubble = d3.layout.pack().size([area.x, area.y]);
     var coords = {top: [], bottom: [], left: [], right: []};
     $.map(bubble.nodes({children: data}).filter(isLeafNode), function(position) {
       positions[position.id] = position;

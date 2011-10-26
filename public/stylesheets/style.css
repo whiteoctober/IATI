@@ -1,26 +1,39 @@
 #body .left { float: left; }
 #body .right { float: right; }
 #body .hidden { display: none; }
+#body .third { width: 33.33%; }
+#body .clear { clear: both; }
+#body  .full { width: 100%; }
+#body  .block { display: block; }
 
 html, body { height: 100%; }
 
 body {
-  font: 14px Arial, sans-serif;
+  font: 12px Arial, sans-serif;
+  color: #828281;
 }
-p, a {
-  color: #0087DD;
+a, a:active, a:visited {
+  color: #828281;
+  text-decoration: none;
+}
+h1, h2, h3 {
+  font-weight: normal;
+  margin: 0px 0px 12px;
 }
 h1 {
-  margin: 0px 0px 12px;
   color: #1e99d6;
   font-size: 38px;
-  font-weight: normal;
 }
 h2 {
-  margin: 0px 0px 12px;
   color: #2d5ea9;
   font-size: 28px;
-  font-weight: normal;
+}
+h3 {
+  color: #2d5ea9;
+  font-size: 15px;
+}
+th, td {
+  padding: 0px;
 }
 
 #body {
@@ -145,11 +158,63 @@ h2 {
 }
 
 .data_file {
-  width: 910px; margin: 0px auto;
+  width: 980px; margin: 50px auto 0px;
   background: #fff;
   border-radius: 48px; -moz-border-radius: 48px;
-  padding: 27px 39px;
+  padding: 27px 30px;
   box-shadow: 0px 0px 6px #ccc; -moz-box-shadow: 0px 0px 6px #ccc;
+}
+
+.data_file h1 {
+  color: #334784;
+  font-size: 28px;
+  font-weight: normal;
+}
+
+.data_file .section { 
+  margin: 0px 10px 20px; padding: 0px 12px;
+}
+
+.data_file .title {
+  height: 32px; padding-left: 37px; margin: 0px 10px 12px;
+  background: url('/images/graph_icon.png') left bottom no-repeat;
+  vertical-align: baseline; line-height: 38px;
+}
+
+.data_file strong {
+  color: #2d5ea9;
+  font-weight: normal;
+}
+
+.data_file .summary table td {
+  font-size: 17px;
+  color: #2d5ea9;
+  vertical-align: baseline;
+}
+.data_file .summary strong {
+  font-size: 25px;
+}
+
+.data_file .links a {
+  display: block;
+  font-size: 16px;
+  line-height: 24px;
+}
+.data_file .links a img {
+  margin-right: 5px;
+  vertical-align: text-bottom;
+}
+
+.data_file .widget {
+  position: relative;
+  height: 200px; padding-top: 9px; padding-bottom: 9px;
+  background: #efefef;
+}
+
+.data_file .widget .corner {
+  position: absolute; top: -2px; right: -2px;
+  height: 45px; width: 45px;
+  background: url('/images/widget_corner.png') no-repeat;
 }
 
 .filters {

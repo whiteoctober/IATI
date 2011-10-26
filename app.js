@@ -41,14 +41,16 @@ app.get('/', getFilters, function(req, res){
 });
 
 app.get('/activities', getFilters, function(req, res){
-  var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest' 
+  var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest';
   
   new api.apiCall({result:'values', pagesize:10}, function(data){
     return data['iati-activity'];
   })
   .on('success', function(data){
     console.log(data);
-    res.render('activities', {
+    var view = req.query.view;
+    delete req.query.view;
+    res.render(view == 'data' ? 'data-file' : 'activities', {
       title: 'Activities',
       page: 'activities',
       filter_paths: req.filter_paths,
@@ -66,7 +68,7 @@ app.get('/activities', getFilters, function(req, res){
 });
 
 app.get('/filter/:filter', getFilters, function(req, res){
-  var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest' 
+  var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest';
   var filter = req.params.filter;
   
   res.render('Filter', {
