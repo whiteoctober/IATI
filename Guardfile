@@ -11,7 +11,19 @@
 # Run
 #
 # guard start
+group :app do
 
-guard 'process', :name => 'Iati', :command => 'node app.js' do
-  watch('app.js')
+  guard 'process', :name => 'Iati', :command => 'node app.js' do
+    watch('app.js')
+    watch(/lib\/.*\.js/)
+  end
+  
+end
+
+group :test do
+  
+  guard 'process', :name => 'Jasmine Tests', :command => './node_modules/jasmine-node/bin/jasmine-node test' do
+    watch(/.*\.js/)
+  end
+  
 end
