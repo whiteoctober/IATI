@@ -107,6 +107,10 @@
     }
   };
   
+  
+  //Assign the sizes of the activities
+  $('.activities li').assignSizes(100,250);
+  
   var redrawActivities = function() {
     var angleOffset = parseInt(Math.random() * palette.length);
     var activities = $(this);
@@ -118,7 +122,7 @@
       return {
         id: activity.attr("id"),
         name: activity.attr("data-name"),
-        value: activity.attr("data-size")
+        value: activity.data("size")
       };
     });
     
