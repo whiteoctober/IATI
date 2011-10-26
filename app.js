@@ -1,5 +1,6 @@
 var express = require('express');
-var api = require('./lib/api-dev.js');
+var api = require('./lib/api.js');
+var apidev = require('./lib/api-dev.js');
 var app = module.exports = express.createServer();
 
 app.configure(function(){
@@ -42,14 +43,26 @@ app.get('/', getFilters, function(req, res){
 app.get('/activities', getFilters, function(req, res){
   var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest' 
   
-  res.render('activities', {
-    title: 'Activities',
-    page: 'activities',
-    filter_paths: req.filter_paths,
-    query: req.query,
-    activities: api.activities(req.query),
-    layout: !xhr
-  });
+  new api.apiCall({result:'values', pagesize:10}, function(data){
+    return data['iati-activity'];
+  })
+  .on('success', function(data){
+    console.log(data);
+    res.render('activities', {
+      title: 'Activities',
+      page: 'activities',
+      filter_paths: req.filter_paths,
+      query: req.query,
+      activities: data,
+      layout: !xhr
+    });
+  })
+  .on('error', function(e){
+    res.end('api error');
+  })
+
+
+
 });
 
 app.get('/filter/:filter', getFilters, function(req, res){
@@ -62,7 +75,7 @@ app.get('/filter/:filter', getFilters, function(req, res){
     filter_paths: req.filter_paths,
     currentFilter: filter,
     query: req.query,
-    filters: api.filterValues(filter, req.query),
+    filters: apidev.filterValues(filter, req.query),
     layout: !xhr
   });
 });

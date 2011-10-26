@@ -8,9 +8,9 @@
 ul.activities.clearfix
   each activity in activities
     li.activity.hidden(
-      id=activity.id, 
+      id='activity-' + activity.code, 
       data-name=activity.name,
-      data-size=(activity.size + 15)
+      data-value=activity.value
     )
       .outline
       a.content
