@@ -13,11 +13,34 @@
   //Maximum and minimum font sizes for activity bubbles
   var fontRange = {min: 11, max: 30};
   var bubbleRadiusRange = {min: 50, max: 180};
-  var popup = $("#popup");
   var content = $("#content");
+  var popup = $("#popup");
+  var dimmer = $("#dimmer");
+  var embed = $("#embed");
+  var dimmed = false;
   query = window.location.search.replace(/^\?/, "");
   var activeChange = false;
   var cacheBugFix = function(xhr, settings) { settings.url = settings.url.replace("?&", "?"); };
+  
+  //Dim the page when requested
+  dimmer.click(function() {
+    if (dimmed) {
+      embed.addClass("hidden")
+      dimmer.fadeOut(180);
+      dimmed = false;
+    }
+  });
+  
+  $(".widget").each(function() {
+    var widget = $(this);
+    widget.find(".save").click(function() {
+      dimmer.fadeIn(180, function() { 
+        embed.removeClass("hidden");
+        embed.children(".widget").empty().append(widget.children(".content").clone());
+        dimmed = true; 
+      });
+    });
+  });
   
   //Monitor state changes for Back request
   window.History.Adapter.bind(window,'statechange',function(){
