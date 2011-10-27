@@ -5,6 +5,11 @@
       span
         = name + '=' + item + '; '
 
+
+h3 #{actitity_count} records found
+  - if (pagination)
+    != partial('pagination', pagination)
+
 ul.activities.clearfix
   each activity in activities
     li.activity.hidden(

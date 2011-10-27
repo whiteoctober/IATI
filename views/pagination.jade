@@ -1,0 +1,19 @@
+- var start = Math.max(1, Math.min(current*1 - 2, total - 4));
+- var end   = Math.min(total, Math.max(current*1 + 2, 5));
+
+ol.pagination
+
+  - if(start != 1)
+      li.more &hellip;
+
+  - for(var page = start; page <= end; page++)
+    li
+      if current==page
+        span.current
+          = page
+      else
+        a(href=url_with({p:page}))
+          = page
+
+  - if(end != total)
+    li.more &hellip;
