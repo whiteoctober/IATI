@@ -38,12 +38,12 @@ th, td {
 }
 
 /* inner page heading */
-h3{
+h3.inner{
   color: #2d5ea9;
   font-weight: normal;
   margin-left:3em;
   margin-top:1em;
-  font-size:1.5em;
+  font-size:1.7em;
   position:fixed;
   z-index:10;
 }
