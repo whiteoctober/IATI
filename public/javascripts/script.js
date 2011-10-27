@@ -203,4 +203,21 @@
     });
   };
   $(".activities").each(redrawActivities);
+  
+  
+  
+  
+  
+  $('a[data-load]').live('click', function(e){
+    e.preventDefault();
+    var $a = $(this);
+    $($a.data('load')).load($a.attr('href'), function(){
+      
+      // update any activities that have been loaded in
+      $('.activities li').assignSizes(100,250);
+      $(".activities").each(redrawActivities);
+
+    });
+  })
+  
 })();
