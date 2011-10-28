@@ -9,6 +9,10 @@ $.fn.assignSizes = function(tmin, tmax){
   var max = Math.max.apply(Math, values);
   var min = Math.min.apply(Math, values);
   
+  if (max == min){
+    max++;
+  }
+  
   var scale = (tmax - tmin) / (max - min);
   
   return this.each(function(){
