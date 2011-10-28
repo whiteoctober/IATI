@@ -218,6 +218,9 @@
       $(".activities").each(redrawActivities);
 
     });
-  })
+    
+    activeChange = true;
+    window.History.pushState({}, "", $a.attr('href'));
+  });
   
 })();
