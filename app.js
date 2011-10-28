@@ -71,11 +71,7 @@ var getFilters = function(req, res, next) {
   
   
   req.queryString = req.originalUrl.split('?')[1] || '';
-  req.filter_paths = {
-    area: '/filter/f1?' + req.queryString,
-    funder: '/filter/f2?' + req.queryString,
-    sector: '/filter/f3?' + req.queryString
-  };
+
   next();
 };
 
@@ -126,6 +122,29 @@ app.get('/activities', getFilters, function(req, res){
 
 
 });
+
+
+app.get('/filter/funder', getFilters, function(req, res){
+  
+  var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest';
+  var filter = 'Funder';
+  
+  new api.apiCall({result:'values', groupby:'Funder'})
+    .on('success', function(data){
+      res.render('filter2', {
+        values: data.Funder,
+        key: 'Funder',
+        title: 'Filter by ' + filter,
+        page: 'filter',
+        currentFilter: filter,
+        query: req.query,
+        filters: apidev.filterValues(filter, req.query),
+        layout: !xhr
+      });
+      
+    });
+});
+
 
 app.get('/filter/:filter', getFilters, function(req, res){
   var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest';

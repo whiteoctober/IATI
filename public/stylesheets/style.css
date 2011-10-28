@@ -340,3 +340,8 @@ ol.pagination a, ol.pagination span, ol.pagination .more{
 ol.pagination li .current{
   color:#111;
 }
+
+div.filter{
+  margin:4em;
+  
+}
