@@ -1,9 +1,10 @@
-var express = require('express');
-var api = require('./lib/api.js');
-var apidev = require('./lib/api-dev.js');
-var app = module.exports = express.createServer();
-var querystring = require('querystring');
-var url = require('url');
+var express = require('express'),
+    api = require('./lib/api.js'),
+    apidev = require('./lib/api-dev.js'),
+    app = module.exports = express.createServer(),
+    querystring = require('querystring'),
+    url = require('url'),
+    _ = require('underscore');
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -42,11 +43,7 @@ app.dynamicHelpers({
       delete parsedUrl.search;
       
       // assign the new parameters
-      for(var p in params){
-        if (params.hasOwnProperty(p)) {
-          parsedUrl.query[p] = params[p];
-        }
-      }
+      _.extend(parsedUrl.query, params);
       
       // return the formatted url
       return url.format(parsedUrl);
@@ -57,6 +54,16 @@ app.dynamicHelpers({
 // Routes
 
 var getFilters = function(req, res, next) {
+  
+  var keep = 'Region Country Sector SectorCategory Funder'.split(' ');
+  
+  req.filter_query = _.reduce(req.query, function(memo, value, key){
+    if(_.include(keep, key)) memo[key] = value;
+    
+    return memo;
+  },{});
+  
+  
   req.queryString = req.originalUrl.split('?')[1] || '';
   req.filter_paths = {
     area: '/filter/f1?' + req.queryString,
@@ -79,7 +86,11 @@ app.get('/activities', getFilters, function(req, res){
   
   var start = ((req.query.p || 0) * app.settings.pageSize) + 1;
   
-  new api.apiCall({result:'values', pagesize:app.settings.pageSize, start:start})
+  var params = {result:'values', pagesize:app.settings.pageSize, start:start};
+  
+  _.extend(params, req.filter_query);
+  
+  new api.apiCall(params)
   .on('success', function(data){
     
     var total = data['@activity-count'];
@@ -95,7 +106,7 @@ app.get('/activities', getFilters, function(req, res){
       page: 'activities',
       filter_paths: req.filter_paths,
       query: req.query,
-      activities: data['iati-activity'],
+      activities: data['iati-activity'] || [],
       actitity_count: total,
       current_page: req.query.p || 1,
       pagination: pagination,

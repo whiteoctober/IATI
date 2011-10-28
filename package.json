@@ -5,7 +5,8 @@
   "author": "White October <info@whiteoctober.co.uk>",
   "dependencies": {
     "express": "2.4.7",
-    "jade": "0.16.2"
+    "jade": "0.16.2",
+    "underscore" : "1.2.1"
   },
   "devDependencies": {
     "jasmine-node":"1.0.11"
