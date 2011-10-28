@@ -32,18 +32,24 @@ app.configure('production', function(){
 app.dynamicHelpers({
   // adds parameters to the url
   url_with:function(req,res){
-    return function(params){
+    return function(pathname, params){
       
       // parse the current url along with the query string
       var parsedUrl = url.parse(req.originalUrl,true);
       
-      // default to empty query object and remove search query 
-      // so it's not used to generate the url
-      parsedUrl.query = parsedUrl.query || {};
-      delete parsedUrl.search;
+      if(pathname){
+        parsedUrl.pathname = pathname;
+      }
       
-      // assign the new parameters
-      _.extend(parsedUrl.query, params);
+      if(params){
+        // default to empty query object and remove search query 
+        // so it's not used to generate the url
+        parsedUrl.query = parsedUrl.query || {};
+        delete parsedUrl.search;
+      
+        // assign the new parameters
+        _.extend(parsedUrl.query, params);
+      }
       
       // return the formatted url
       return url.format(parsedUrl);

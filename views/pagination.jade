@@ -12,7 +12,7 @@ ol.pagination
         span.current
           = page
       else
-        a(href=url_with({p:page}), data-load="#content_inner")
+        a(href=url_with(false,{p:page}), data-load="#content_inner")
           = page
 
   - if(end != total)

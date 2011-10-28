@@ -11,7 +11,7 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a.sector_filter.filter(href=filter_paths.sector)
+      a.sector_filter.filter(href=url_with('/filter/f1'))
         img.text(src='/images/sector_filter_text.png')
         img.button(src='/images/sector_filter.png')
       .main_navigation
@@ -25,10 +25,10 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a.funder_filter.filter(href=filter_paths.funder)
+      a.funder_filter.filter(href=url_with('/filter/funder'))
         img.button(src='/images/funder_filter.png')
         img.text.left(src='/images/funder_filter_text.png')
-      a.area_filter.filter(href=filter_paths.area)
+      a.area_filter.filter(href=url_with('/filter/f3'))
         img.button(src='/images/area_filter.png')
         img.text.right(src='/images/area_filter_text.png')
       - if (page == 'activities')
