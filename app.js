@@ -1,6 +1,5 @@
 var express = require('express'),
     api = require('./lib/api.js'),
-    apidev = require('./lib/api-dev.js'),
     app = module.exports = express.createServer(),
     querystring = require('querystring'),
     url = require('url'),
