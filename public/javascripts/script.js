@@ -11,7 +11,7 @@
   ];
   
   //Maximum and minimum font sizes for activity bubbles
-  var fontRange = {min: 11, max: 30};
+  var fontRange = {min: 10, max: 30};
   var bubbleRadiusRange = {min: 50, max: 180};
   var content = $("#content");
   var popup = $("#popup");
@@ -110,25 +110,19 @@
   };
   
   //Scales text within an element
-  var scaleText = function(element, text) {
-    var words = (text || "").split(" ");
-    var length = words.length;
-    var fontSize, ellipsis;
-    element.css("font-size", fontRange.max+"px");
-    while (true) {
-      fontSize = parseInt(element.css("font-size"));
-      if (fontSize > fontRange.min) {
-        element.css("font-size", (fontSize - 1)+"px");
-      }
-      else {
-        ellipsis = (length < words.length ? "<br>..." : "")
-        element.html(words.slice(0, length).join(" ") + ellipsis);
-        length = length - 1;
-      }
-      if (element.height() <= element.width() || length == 0) { break; }
+  var scaleText = function(container, text) {
+    container.css({padding: "10%"});
+    var remaining, fontScale = 1;
+    var circluar = function(height) { return 1 - Math.cos(Math.asin((height - 0.5) * 2)); };
+    for (var fontSize = fontRange.max; fontSize > fontRange.min; fontSize-- /*fontSize = fontSize * fontScale*/) {
+      container.css({"font-size": fontSize + "px"});
+      remaining = container.fitText(text, circluar);
+      if (remaining == 0) { return; }
+      container.children().last().html("...")
+      //fontScale = 1 - remaining / text.split(/ +/).length / 4;
+      console.log("tick");
     }
   };
-  
   
   //Assign the sizes of the activities
   $('.activities li').assignSizes(100,250);
@@ -192,21 +186,19 @@
       });
       activity.children().css({
         background: colours.colour,
+        color: colours.text
       });
       var text = activity.find(".text");
       text.css({ 
-        color: colours.text, 
         margin: parseInt(position.radius * 0.6 / 2)
       });
       activities.children().removeClass("hidden");
-      scaleText(text, position.name);
+      scaleText(activity.find(".content"), position.name);
     });
+    
+    var content = activities.children().find(".content");
   };
   $(".activities").each(redrawActivities);
-  
-  
-  
-  
   
   $('a[data-load]').live('click', function(e){
     e.preventDefault();

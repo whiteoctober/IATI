@@ -305,7 +305,6 @@ h3.inner{
   display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0;
   margin: 8px;
   opacity: 0.7; background-color: #aaa; 
-  text-align: center;
   border-radius: 10000px;
 }
 
