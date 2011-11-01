@@ -1,6 +1,5 @@
 var express = require('express'),
     api = require('./lib/api.js'),
-    apidev = require('./lib/api-dev.js'),
     app = module.exports = express.createServer(),
     querystring = require('querystring'),
     url = require('url'),
@@ -124,42 +123,24 @@ app.get('/activities', getFilters, function(req, res){
 });
 
 
-app.get('/filter/funder', getFilters, function(req, res){
+app.get('/filter/:filter_key', getFilters, function(req, res){
   
   var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest';
-  var filter = 'Funder';
+  var filter_key = req.params.filter_key;
   
-  new api.apiCall({result:'values', groupby:'Funder'})
+  new api.apiCall({result:'values', groupby:filter_key})
     .on('success', function(data){
-      res.render('filter2', {
-        values: data.Funder,
-        key: 'Funder',
-        title: 'Filter by ' + filter,
+      res.render('filter', {
+        values: data[filter_key],
+        key: filter_key,
+        title: 'Filter by ' + filter_key,
         page: 'filter',
-        currentFilter: filter,
-        query: req.query,
-        filters: apidev.filterValues(filter, req.query),
         layout: !xhr
       });
       
     });
 });
 
-
-app.get('/filter/:filter', getFilters, function(req, res){
-  var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest';
-  var filter = req.params.filter;
-  
-  res.render('Filter', {
-    title: 'Filter by ' + filter,
-    page: 'filter',
-    filter_paths: req.filter_paths,
-    currentFilter: filter,
-    query: req.query,
-    filters: apidev.filterValues(filter, req.query),
-    layout: !xhr
-  });
-});
 
 // Only listen on $ node app.js
 
