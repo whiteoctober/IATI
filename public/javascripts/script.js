@@ -114,13 +114,11 @@
     container.css({padding: "10%"});
     var remaining, fontScale = 1;
     var circluar = function(height) { return 1 - Math.cos(Math.asin((height - 0.5) * 2)); };
-    for (var fontSize = fontRange.max; fontSize > fontRange.min; fontSize-- /*fontSize = fontSize * fontScale*/) {
+    for (var fontSize = fontRange.max; fontSize > fontRange.min; fontSize--) {
       container.css({"font-size": fontSize + "px"});
       remaining = container.fitText(text, circluar);
       if (remaining == 0) { return; }
       container.children().last().html("...")
-      //fontScale = 1 - remaining / text.split(/ +/).length / 4;
-      console.log("tick");
     }
   };
   
