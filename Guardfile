@@ -13,7 +13,7 @@
 # guard start
 group :app do
 
-  guard 'process', :name => 'Iati', :command => 'node app.js' do
+  guard 'process', :name => 'Iati', :command => 'node web.js' do
     watch('app.js')
     watch(/lib\/.*\.js/)
   end
