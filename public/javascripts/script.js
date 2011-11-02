@@ -10,8 +10,6 @@
     {colour: '#002EB8', text: '#fff'}
   ];
   
-  //Maximum and minimum font sizes for activity bubbles
-  var fontRange = {min: 10, max: 30};
   var bubbleRadiusRange = {min: 50, max: 180};
   var content = $("#content");
   var popup = $("#popup");
@@ -109,19 +107,6 @@
     return parseInt(slices * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2) % slices;
   };
   
-  //Scales text within an element
-  var scaleText = function(container, text) {
-    container.css({padding: "10%"});
-    var remaining, fontScale = 1;
-    var circluar = function(height) { return 1 - Math.cos(Math.asin((height - 0.5) * 2)); };
-    for (var fontSize = fontRange.max; fontSize > fontRange.min; fontSize--) {
-      container.css({"font-size": fontSize + "px"});
-      remaining = container.fitText(text, circluar);
-      if (remaining == 0) { return; }
-      container.children().last().html("...")
-    }
-  };
-  
   //Assign the sizes of the activities
   $('.activities li').assignSizes(100,250);
   
@@ -191,8 +176,9 @@
         margin: parseInt(position.radius * 0.6 / 2)
       });
       activities.children().removeClass("hidden");
-      scaleText(activity.find(".content"), position.name);
+      
     });
+   console.log(activities.find(".content").fitText('circular', {fontMin: 12, fontMax: 30}));
     
     var content = activities.children().find(".content");
   };
@@ -202,11 +188,9 @@
     e.preventDefault();
     var $a = $(this);
     $($a.data('load')).load($a.attr('href'), function(){
-      
       // update any activities that have been loaded in
       $('.activities li').assignSizes(100,250);
       $(".activities").each(redrawActivities);
-
     });
     
     activeChange = true;
