@@ -303,7 +303,7 @@ h3.inner{
 
 .activities .activity .content {
   display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0;
-  margin: 8px;
+  margin: 8px; padding: 3px;
   opacity: 0.7; background-color: #aaa; 
   border-radius: 10000px;
 }
