@@ -27,3 +27,13 @@ This project can be run on a virtual machine using [Vagrant](http://vagrantup.co
     cd /vagrant && node app.js
 
 Note. this will tunnel port 3000 on the virtual box -> 3003 on localhost
+
+## Heroku
+
+This app can be deployed to [heroku](http://heroku.com)
+
+    heroku create --stack cedar
+    git push heroku develop:master
+    
+    # to rename for a nicer url
+    heroku apps:rename my-iati-app
