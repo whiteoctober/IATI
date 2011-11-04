@@ -178,11 +178,13 @@
       activities.children().removeClass("hidden");
       
     });
-   console.log(activities.find(".content").fitText('circular', {fontMin: 12, fontMax: 30}));
+   activities.find(".content").fitText('circular', {fontMin: 12, fontMax: 25});
     
     var content = activities.children().find(".content");
   };
-  $(".activities").each(redrawActivities);
+  var activities = $(".activities");
+  var activitiesContent = activities.find(".content");
+  activities.each(redrawActivities);
   
   $('a[data-load]').live('click', function(e){
     e.preventDefault();
@@ -192,9 +194,7 @@
       $('.activities li').assignSizes(100,250);
       $(".activities").each(redrawActivities);
     });
-    
     activeChange = true;
     window.History.pushState({}, "", $a.attr('href'));
   });
-  
 })();
