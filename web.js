@@ -1,4 +1,5 @@
 var express = require('express'),
+    connect = require('connect'),
     api = require('./lib/api.js'),
     app = module.exports = express.createServer(),
     querystring = require('querystring'),
@@ -11,11 +12,20 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
+  
+  app.use(connect.compiler({ 
+    src: __dirname + '/public', 
+    enable: ['less'] })
+  );
+  
   app.use(express.static(__dirname + '/public'));
   
   //custom app settings
   app.set('pageSize', 20);
   
+  app.set('view options', {
+    title: 'IATI data browser'
+  });
   
 });
 

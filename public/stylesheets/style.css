@@ -1,3 +1,6 @@
+
+@import url(slide-panel.css);
+
 #body .left { float: left; }
 #body .right { float: right; }
 #body .hidden { display: none; }
