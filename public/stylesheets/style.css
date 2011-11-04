@@ -130,7 +130,7 @@ h3.inner{
   width: 184px; margin: 20px 5px 0;
 }
 #footer .funder_filter  .button {
-  position: absolute; left: 40px; bottom: 35px;
+  position: absolute; left: 40px; bottom: 35px;z-index:15;
   padding: 5px;
 }
 #footer .area_filter {
@@ -138,7 +138,7 @@ h3.inner{
   width: 184px; margin: 16px 5px 0;
 }
 #footer .area_filter  .button {
-  position: absolute; right: 40px; bottom: 35px;
+  position: absolute; right: 40px; bottom: 35px;z-index:15;
   padding: 5px;
 }
   
@@ -357,4 +357,12 @@ ol.pagination li .current{
 
 div.filter{
   margin:4em;
+}
+
+nav.foot{
+  position:fixed;
+  bottom:0;
+  z-index:10;
+  width:100%;
+  text-align:center;
 }

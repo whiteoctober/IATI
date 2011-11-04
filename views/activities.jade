@@ -14,3 +14,11 @@ h3.inner #{actitity_count} records found
         .inner
           a.content
             p.text.hidden= activity.name
+
+nav.foot
+  a(href='#data_file') 
+    img.button(src='/images/data_file_button.png')
+  a(href='#map') 
+    img.button(src='/images/map_button.png')
+  a.xhr(href='/list', data-history={enter:'slideUp'}) 
+    img.button(src='/images/list_button.png')
