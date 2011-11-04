@@ -14,8 +14,15 @@
 group :app do
 
   guard 'process', :name => 'Iati', :command => 'node web.js' do
-    watch('app.js')
+    watch('web.js')
     watch(/lib\/.*\.js/)
+  end
+  
+  guard 'livereload' do
+    watch(%r{view/.+\.(jade)})
+    watch(%r{public/stylesheets/.+\.(css|less)})
+    watch(%r{public/javascripts/.+\.js})
+    watch(%r{public/images/.+})
   end
   
 end
@@ -27,3 +34,4 @@ group :test do
   end
   
 end
+
