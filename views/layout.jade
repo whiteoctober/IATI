@@ -6,7 +6,7 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body#body
     #content
-      #content_inner!= body
+      #content_inner.clearfix!= body
     #header
       .left_corner.corner
       .centre
@@ -56,5 +56,9 @@ html
       script(src='/javascripts/d3.layout.min.js')
       script(src='/javascripts/jquery.history.js')
       script(src='/javascripts/jquery.transform.min.js')
+      script(src='/javascripts/zynga/Animate.js')
+      script(src='/javascripts/zynga/Scroller.js')
+      script(src='/javascripts/zynga/Engine.js')
+      script(src='/javascripts/zynga/Style.js')
       script(src='/javascripts/plugins.js')
       script(src='/javascripts/script.js')
