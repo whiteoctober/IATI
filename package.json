@@ -5,11 +5,13 @@
   "author": "White October <info@whiteoctober.co.uk>",
   "dependencies": {
     "express": "2.4.7",
+    "connect": "1.7.1",
     "jade": "0.16.2",
     "underscore" : "1.2.1"
   },
   "devDependencies": {
-    "jasmine-node":"1.0.11"
+    "jasmine-node":"1.0.11",
+    "gently":"0.9.1"
   },
   "engines":{
     "node" : "0.4.12"
