@@ -1,4 +1,5 @@
 (function() {
+  
   //Colour palette for activity bubbles
   var palette = [
     {colour: '#3366FF', text: '#fff'},
@@ -44,10 +45,13 @@
   window.History.Adapter.bind(window,'statechange',function(){
     if (!activeChange) {
       var State = window.History.getState();
-      query = State.url.split("?")[1] || "";
-      $.ajax({url: State.url, cache: false, beforeSend: cacheBugFix,  success: filterSubmitted});
+      $('#content_inner').load(State.url + '?xhr', function(){
+        if(State.data.enter == 'slideUp'){
+          $(this).css('margin-top',600).animate({'margin-top':0});
+        }
+        run_inlines();
+      });
     }
-    activeChange = false;
   });
   
   //Callback for when a filter has been submitted
@@ -111,7 +115,6 @@
   activityWrapper.width($("#content").width()).height($("#content").height() - 230);
   var activities = $(".activity_wrapper").children(".activities");
   var activitiesContent = activities.find(".content");
-  activities.find(".activity").assignSizes(100, 250);
   
   var redrawActivities = function() {
     var angleOffset = parseInt(Math.random() * palette.length);
@@ -120,7 +123,7 @@
     var desiredArea = {x: activityWrapper.width(), y: activityWrapper.height()};
     var area = { x: 600, y: 600 };
     
-    var data = activities.children().map(function() {
+    var data = activities.children().assignSizes(100,250).map(function() {
       var activity = $(this);
       return {
         id: activity.attr("id"),
@@ -190,7 +193,6 @@
     activities.find(".content").fitText('circular', {fontMin: 13, fontMax: 25, delay: 0});
     var content = activities.children().find(".content");
   };
-  activities.each(redrawActivities);  
   
   activityWrapper.activityZoom({
     afterZoom: function(zoom, zoomed) {
@@ -204,15 +206,26 @@
     transition2d: false
   });
   
-  $('a[data-load]').live('click', function(e) {
+  // a simple jQ plugin that allows activity bubbles to be rendered via jQuery
+  $.fn.activityList = function(){
+    return this.bind('redraw', redrawActivities);
+  }
+  
+  
+  $('a.xhr').live('click', function(e){
     e.preventDefault();
-    var $a = $(this);
-    $($a.data('load')).load($a.attr('href'), function() {
-      // update any activities that have been loaded in
-      $('.activities li').assignSizes(100,250);
-      $(".activities").each(redrawActivities);
-    });
-    activeChange = true;
-    window.History.pushState({}, "", $a.attr('href'));
+    var $this = $(this);
+    window.History.pushState($this.data('history'), "", $this.attr('href'));
   });
+  
+  
+  // run any inline scripts on DOM Ready
+  $(run_inlines);
+  
+  // this calls all of the inline scripts
+  //  (for page load + dynamic content)
+  function run_inlines(){
+    while(inlines.length){inlines.pop()();}
+  }
+  
 })();

@@ -18,7 +18,13 @@ h3.inner #{actitity_count} records found
 nav.foot
   a(href='#data_file') 
     img.button(src='/images/data_file_button.png')
-  a(href='#map') 
+  a.xhr(href='/list') 
     img.button(src='/images/map_button.png')
-  a.xhr(href='/list', data-history={enter:'slideUp'}) 
+  a.xhr(href='/list', data-history='{"enter":"slideUp"}') 
     img.button(src='/images/list_button.png')
+    
+script
+  inlines.push(function(){
+    $('.activities').activityList().trigger('redraw');
+  });
+
