@@ -28,7 +28,7 @@
         x: area.x / 2 - position.x,
         y: area.y / 2 - position.y
       };
-      return parseInt(slices * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2) % slices;
+      return parseInt(slices * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2, 10) % slices;
     };
     
     
@@ -53,7 +53,7 @@
     
     
     var redrawActivities = function() {
-      var angleOffset = parseInt(Math.random() * palette.length);
+      var angleOffset = parseInt(Math.random() * palette.length, 10);
       var activities = $(this);
       var activityWrapper = activities.parent(); // << added so this can be standalone
       var frameHeight = Math.max(window.innerHeight, $("#content").height());
@@ -77,9 +77,9 @@
       var coords = {top: [], bottom: [], left: [], right: []};
       $.map(bubble.nodes({children: data}).filter(isLeafNode), function(position) {
         positions[position.id] = position;
-        position.x = parseInt(position.x);
-        position.y = parseInt(position.y);
-        position.radius = Math.min(parseInt(position.r), bubbleRadiusRange.max);
+        position.x = parseInt(position.x, 10);
+        position.y = parseInt(position.y, 10);
+        position.radius = Math.min(parseInt(position.r, 10), bubbleRadiusRange.max);
         coords.left.push(position.x - position.radius);
         coords.top.push(position.y - position.radius);
         coords.right.push(position.x + position.radius);
@@ -125,7 +125,7 @@
         });
         var text = activity.find(".text");
         text.css({ 
-          margin: parseInt(position.radius * 0.6 / 2)
+          margin: parseInt(position.radius * 0.6 / 2, 10)
         });
         activities.children().removeClass("hidden");
 
@@ -140,7 +140,7 @@
     $.fn.activityList = function(){
       return this
         .bind('redraw', redrawActivities);
-    }
+    };
     
     
     

@@ -12,7 +12,7 @@
   //Dim the page when requested
   dimmer.click(function() {
     if (dimmed) {
-      embed.addClass("hidden")
+      embed.addClass("hidden");
       dimmer.fadeOut(180);
       dimmed = false;
     }
@@ -98,7 +98,7 @@
   activityWrapper.activityZoom({
     afterZoom: function(zoom, zoomed) {
       var fontMin = Math.round(13 / zoom);
-      var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size")) < fontMin; };
+      var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < fontMin; };
       activitiesContent.filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
     },
     onResize: function() {
