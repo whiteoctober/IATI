@@ -187,7 +187,7 @@
       activities.children().removeClass("hidden");
       
     });
-    activities.find(".content").fitText('circular', {fontMin: 13, fontMax: 25});
+    activities.find(".content").fitText('circular', {fontMin: 13, fontMax: 25, delay: 0});
     var content = activities.children().find(".content");
   };
   activities.each(redrawActivities);  
@@ -200,13 +200,14 @@
     },
     onResize: function() {
       activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-    }
+    },
+    transition2d: false
   });
   
-  $('a[data-load]').live('click', function(e){
+  $('a[data-load]').live('click', function(e) {
     e.preventDefault();
     var $a = $(this);
-    $($a.data('load')).load($a.attr('href'), function(){
+    $($a.data('load')).load($a.attr('href'), function() {
       // update any activities that have been loaded in
       $('.activities li').assignSizes(100,250);
       $(".activities").each(redrawActivities);

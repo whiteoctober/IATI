@@ -13,16 +13,17 @@
 
   // Sets up zooming and dragging with automatic performance/quality switching and callbacks
   $.fn.activityZoom = function(options) {
+    if (options.transition2d === undefined) options.transition2d = true;
     var container = this;
     var activities = container.children();
     var state = {left: 0, top: 0, zoom: 1};
     var zoom = 1;
     var scrolling = function() { return scroller.__isDragging || scroller.__isDecelerating; };
-    var set2D = function() { if (!scrolling()) { activities.transform(state, false); } };
+    var set2D = function() { if (options.transition2d && !scrolling()) { activities.transform(state, false); } };
     var render = function(left, top, zoom) {
       state = {left: left, top: top, zoom: zoom};
       activities.transform(state, options.is3d);
-    }    
+    }; 
     zynga.common.Style.set(activities[0], "transform-origin", "0 0");
     scroller = new Scroller(render, {zooming: true, bouncing: true, minZoom: 1, maxZoom: 2.5});
     scroller.onFinishAnimating = set2D;
@@ -39,6 +40,7 @@
     if ('ontouchstart' in window) {
       container[0].addEventListener("touchstart", function(e) {
         scroller.doTouchStart(e.touches, e.timeStamp);
+        e.preventDefault();
       }, false);
 
       document.addEventListener("touchmove", function(e) {

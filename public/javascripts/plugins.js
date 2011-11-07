@@ -20,6 +20,7 @@ $.fn.assignSizes = function(tmin, tmax) {
   //Fits text to a container of any shape
   var chars = {};
   $.fn.fitText = function(edges, options) {
+    options.delay = options.delay === undefined ? 30 : options.delay;
     var items = this.toArray();
     var standardFontSize = 14;
     var fontTolerance = 0.05;
@@ -27,14 +28,14 @@ $.fn.assignSizes = function(tmin, tmax) {
       circular: function(height) { return 1 - Math.cos(Math.asin((height - 0.5) * 2)); },
       none: function() { return 0; }
     };
-  
+    
     //Finds predefined edge functions, or set defaults
     if ($.isFunction(edges) || edges.substr) { edges = {left: edges, right: edges}; }
     edges.left = $.isFunction(edges.left) ? edges.left : (predefinedEdges[edges.left] || predefinedEdges.none);
     edges.right = $.isFunction(edges.right) ? edges.right : (predefinedEdges[edges.right] || predefinedEdges.none);
    
     //Calculates the widths of each character in the text
-    var allText = $.map(items, function(item) { return $(item).text(); }).join();
+    var allText = $.map(items, function(item) { return $(item).text(); }).join() + ".";
     var allNewText = '';
     $.map(allText, function(c) {
       if (!chars[c]) allNewText = allNewText + c;
@@ -47,6 +48,7 @@ $.fn.assignSizes = function(tmin, tmax) {
         width: standardFontSize * 10, 'font-size': standardFontSize
       });
       $.map(allNewText, function(c) {
+        if (chars[c]) return;
         c.match(/\s/) ? sampleText.html("&nbsp;") : sampleText.text(c);
         chars[c] = sampleText.width();
       });
@@ -145,7 +147,7 @@ $.fn.assignSizes = function(tmin, tmax) {
         }).appendTo(item);
       });
       
-      if (items[index + 1]) setTimeout(function() { fitTextTo(items, index + 1); }, 20);
+      if (items[index + 1]) setTimeout(function() { fitTextTo(items, index + 1); }, options.delay);
     };
     
     //Fits text to elements in a staggered way
