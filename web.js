@@ -68,7 +68,9 @@ app.dynamicHelpers({
 
 // Routes
 
-var getFilters = function(req, res, next) {
+var beforeFilter = function(req, res, next){
+  
+  //assign the filter query
   
   var keep = 'Region Country Sector SectorCategory Funder'.split(' ');
   
@@ -80,20 +82,24 @@ var getFilters = function(req, res, next) {
   
   
   req.queryString = req.originalUrl.split('?')[1] || '';
-
+  
+  
+  //assign xhr
+  req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
+  
   next();
 };
 
-app.get('/', getFilters, function(req, res){
+app.get('/', beforeFilter, function(req, res){
   res.render('index', {
     title: 'Home',
     page: 'home',
-    filter_paths: req.filter_paths
+    filter_paths: req.filter_paths,
+    layout:!req.isXHR
   });
 });
 
-app.get('/activities', getFilters, function(req, res){
-  var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest';
+app.get('/activities', beforeFilter, function(req, res){
   
   var start = ((req.query.p || 0) * app.settings.pageSize) + 1;
   
@@ -121,7 +127,7 @@ app.get('/activities', getFilters, function(req, res){
       actitity_count: total,
       current_page: req.query.p || 1,
       pagination: pagination,
-      layout: !xhr
+      layout: !req.isXHR
     });
   })
   .on('error', function(e){
@@ -133,9 +139,7 @@ app.get('/activities', getFilters, function(req, res){
 });
 
 
-app.get('/filter/:filter_key', getFilters, function(req, res){
-  
-  var xhr = req.headers['x-requested-with'] == 'XMLHttpRequest';
+app.get('/filter/:filter_key', beforeFilter, function(req, res){
   var filter_key = req.params.filter_key;
   
   new api.apiCall({result:'values', groupby:filter_key})
@@ -145,10 +149,16 @@ app.get('/filter/:filter_key', getFilters, function(req, res){
         key: filter_key,
         title: 'Filter by ' + filter_key,
         page: 'filter',
-        layout: !xhr
+        layout: !req.isXHR
       });
       
     });
+});
+
+app.get('/list', beforeFilter, function(req, res){
+  res.render('activities-list', {
+    layout:!req.isXHR
+  });
 });
 
 

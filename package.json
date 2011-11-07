@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "2.4.7",
     "connect": "1.7.1",
+    "request": "2.2.0",
     "jade": "0.16.2",
     "underscore" : "1.2.1"
   },
