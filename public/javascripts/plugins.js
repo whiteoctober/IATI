@@ -66,7 +66,7 @@ $.fn.assignSizes = function(tmin, tmax) {
       for (var fontSize = options.fontMax; fontSize > options.fontMin; fontSize = fontSize - 1) {
         item.css({"font-size": fontSize});
         text = originalText;
-        var sampler = $("<span>test</span>").appendTo(item);
+        var sampler = $("<span>test</span>").css({visibility: 'hidden'}).appendTo(item);
         var lineHeight = sampler.height();
         var lines = Math.floor(total.height / lineHeight);
         var centering = (total.height % lineHeight) / 2;

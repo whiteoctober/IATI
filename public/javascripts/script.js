@@ -107,13 +107,17 @@
     return parseInt(slices * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2) % slices;
   };
   
-  //Assign the sizes of the activities
-  $('.activities li').assignSizes(100,250);
+  var activityWrapper = $(".activity_wrapper");
+  activityWrapper.width($("#content").width()).height($("#content").height() - 230);
+  var activities = $(".activity_wrapper").children(".activities");
+  var activitiesContent = activities.find(".content");
+  activities.find(".activity").assignSizes(100, 250);
   
   var redrawActivities = function() {
     var angleOffset = parseInt(Math.random() * palette.length);
     var activities = $(this);
     var frameHeight = Math.max(window.innerHeight, $("#content").height());
+    var desiredArea = {x: activityWrapper.width(), y: activityWrapper.height()};
     var area = { x: 600, y: 600 };
     
     var data = activities.children().map(function() {
@@ -139,24 +143,29 @@
       coords.bottom.push(position.y + position.radius);
     });
     
-    var offset = {
+    //Generate maximum and minimum data values, total area
+    var edges = {
       top: Math.min.apply(this, coords.top),
       left: Math.min.apply(this, coords.left),
       right: Math.max.apply(this, coords.right),
       bottom: Math.max.apply(this, coords.bottom)
     };
-    area = {x: offset.right - offset.left, y: offset.bottom - offset.top };
+    area = {x: edges.right - edges.left, y: edges.bottom - edges.top };
     
+    //Position and scale data values
+    var scale = Math.min(desiredArea.x / area.x, desiredArea.y / area.y);
+    area = {x: area.x * scale, y: area.y * scale};
     $.each(positions, function(id, position) {
-      positions[id].x =  position.x - offset.left;
-      positions[id].y =  position.y - offset.top;
+      position.x = (desiredArea.x - area.x)/2 + scale * (position.x - edges.left);
+      position.y = (desiredArea.y - area.y)/2 + scale * (position.y - edges.top);
+      position.radius = scale * position.radius;
     });
-    
-    activities.css({width: area.x, height: area.y});
+    area = desiredArea;
+        
+    activities.css({width: desiredArea.x, height: desiredArea.y});
     activities.children().each(function() {
       var activity = $(this);
       var position = positions[activity.attr("id")];
-      
       var centre = {x: area.x - position.radius, y: area.y - position.radius};
       var colourIndex = sliceIndex(position, centre, palette.length);
       var colours = palette[((colourIndex || 0) + angleOffset) % palette.length];
@@ -178,13 +187,21 @@
       activities.children().removeClass("hidden");
       
     });
-   activities.find(".content").fitText('circular', {fontMin: 12, fontMax: 25});
-    
+    activities.find(".content").fitText('circular', {fontMin: 13, fontMax: 25});
     var content = activities.children().find(".content");
   };
-  var activities = $(".activities");
-  var activitiesContent = activities.find(".content");
-  activities.each(redrawActivities);
+  activities.each(redrawActivities);  
+  
+  activityWrapper.activityZoom({
+    afterZoom: function(zoom, zoomed) {
+      var fontMin = Math.round(13 / zoom);
+      var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size")) < fontMin; };
+      activitiesContent.filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
+    },
+    onResize: function() {
+      activityWrapper.width($("#content").width()).height($("#content").height() - 230);
+    }
+  });
   
   $('a[data-load]').live('click', function(e){
     e.preventDefault();
