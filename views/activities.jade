@@ -10,13 +10,15 @@ h3.inner #{actitity_count} records found
   - if (pagination)
     != partial('pagination', pagination)
 
-ul.activities.clearfix
-  each activity in activities
-    li.activity.hidden(
-      id='activity-' + activity.code, 
-      data-name=activity.name,
-      data-value=activity.value
-    )
-      .outline
-      a.content
-        p.text.initial= activity.name
+.activity_wrapper
+  ul.activities.clearfix
+    each activity in activities
+      li.activity.hidden(
+        id='activity-' + activity.code, 
+        data-name=activity.name,
+        data-value=activity.value
+      )
+        .outline
+        .inner
+          a.content
+            p.text.hidden= activity.name

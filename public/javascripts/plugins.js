@@ -1,23 +1,24 @@
-(function() {
-  // Assigns a scaled data-size value based on the data-value parameter of each element
-  $.fn.assignSizes = function(tmin, tmax) {
-    
-    var values = $.makeArray(this.map(function() {
-      return $(this).data('value');
-    }));
-    
-    var max = Math.max.apply(Math, values);
-    var min = Math.min.apply(Math, values);
-    var scale = (tmax - tmin) / (max == min ? 1 : max - min);
-    
-    return this.each(function() {
-      var $this = $(this);
-      var size = ($this.data('value') * scale) + tmin;
-      $this.data('size', size);
-    });  
-  };
+// Assigns a scaled data-size value based on the data-value parameter of each element
+$.fn.assignSizes = function(tmin, tmax) {
+  
+  var values = $.makeArray(this.map(function() {
+    return $(this).data('value');
+  }));
+  
+  var max = Math.max.apply(Math, values);
+  var min = Math.min.apply(Math, values);
+  var scale = (tmax - tmin) / (max == min ? 1 : max - min);
+  
+  return this.each(function() {
+    var $this = $(this);
+    var size = ($this.data('value') * scale) + tmin;
+    $this.data('size', size);
+  });  
+};
 
+(function() {
   //Fits text to a container of any shape
+  var chars = {};
   $.fn.fitText = function(edges, options) {
     var items = this.toArray();
     var standardFontSize = 14;
@@ -31,34 +32,41 @@
     if ($.isFunction(edges) || edges.substr) { edges = {left: edges, right: edges}; }
     edges.left = $.isFunction(edges.left) ? edges.left : (predefinedEdges[edges.left] || predefinedEdges.none);
     edges.right = $.isFunction(edges.right) ? edges.right : (predefinedEdges[edges.right] || predefinedEdges.none);
-    
+   
     //Calculates the widths of each character in the text
-    chars = {};
-    var sampler = $("<div><span></span></div>").addClass("sampler").appendTo($("body"));
-    var sampleText = sampler.children();
-    sampler.css({
-      position: "absolute", visibility: 'hidden', 
-      width: standardFontSize * 10, 'font-size': standardFontSize
-    });
     var allText = $.map(items, function(item) { return $(item).text(); }).join();
+    var allNewText = '';
     $.map(allText, function(c) {
-      c.match(/\s/) ? sampleText.html("&nbsp;") : sampleText.text(c);
-      chars[c] = sampleText.width();
+      if (!chars[c]) allNewText = allNewText + c;
     });
-    sampler.remove();
+    if (allNewText.length > 0) {
+      var sampler = $("<div><span></span></div>").addClass("sampler").appendTo($("body"));
+      var sampleText = sampler.children();
+      sampler.css({
+        position: "absolute", visibility: 'hidden', 
+        width: standardFontSize * 10, 'font-size': standardFontSize
+      });
+      $.map(allNewText, function(c) {
+        c.match(/\s/) ? sampleText.html("&nbsp;") : sampleText.text(c);
+        chars[c] = sampleText.width();
+      });
+      sampler.remove();
+    }
     
-    //Fits text to each element
-    return $.map(items, function(elem) {
-      var item = $(elem);
-      var originalText = item.text().replace(/\s+/, " ");
+    //Fits text to an element
+    var fitTextTo = function(items, index) {
+      index = index || 0;
+      var item = $(items[index]);
+      var originalText = item.data("text") ? item.data("text") : item.text().replace(/\s+/, " ");
+      item.data("text", originalText);
       item.empty();
       var total = {width: item.width(), height: item.height()};
-      var text = "", lineDetails, remainingText;
+      var text = '', lineDetails, remainingText;
       
-      for (var fontSize = options.fontMax; fontSize > options.fontMin; fontSize--) {
+      for (var fontSize = options.fontMax; fontSize > options.fontMin; fontSize = fontSize - 1) {
         item.css({"font-size": fontSize});
         text = originalText;
-        var sampler = $("<div>test</div>").appendTo(item)
+        var sampler = $("<span>test</span>").css({visibility: 'hidden'}).appendTo(item);
         var lineHeight = sampler.height();
         var lines = Math.floor(total.height / lineHeight);
         var centering = (total.height % lineHeight) / 2;
@@ -106,6 +114,7 @@
         if (remainingText.length == 0) break;
       }
      
+      //TODO: remove characters/lines until space is found for an ellipsis, add it.
       //Inserts ellipsis if text is concatenated
       if (remainingText.length > 0) {
         var lastFound = false;
@@ -123,8 +132,9 @@
           lineDetails[0].text = "...";
           lineDetails[0].margins.left = lineDetails[0].margins.right = 0;
         }
+        item.addClass("truncated");
       }
-
+      else { item.removeClass("truncated"); }
      
       //Inserts lines
       $.map(lineDetails, function(line) {
@@ -134,8 +144,11 @@
           'margin-top': line.margins.top
         }).appendTo(item);
       });
-     
-      return remainingText;
-    });
+      
+      if (items[index + 1]) setTimeout(function() { fitTextTo(items, index + 1); }, 20);
+    };
+    
+    //Fits text to elements in a staggered way
+    fitTextTo(items);
   };
 })();

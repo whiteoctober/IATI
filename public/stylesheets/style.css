@@ -51,12 +51,19 @@ h3.inner{
 #body {
   width: 100%; height: 100%;
   background: #E4E6E6 url(/images/background.png);
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 #content {
   width: 100%; height: 100%; min-height: 500px; min-width: 600px;
 }
 #content_inner {
+  position: relative;
   padding: 115px 0px;
+  overflow: hidden;
 }
 
 #header {
@@ -283,8 +290,9 @@ h3.inner{
 }
 
 .activities {
-  position: relative;
-  margin: 35px auto 0; padding: 0;
+  width: 900px;
+  height: 600px;
+  margin: 0px; padding: 0px;
 }
 
 .activities .activity {
@@ -301,11 +309,17 @@ h3.inner{
   border-radius: 10000px;
 }
 
-.activities .activity .content {
-  display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+.activities .activity .inner {
+  position: absolute; top: 0; bottom: 0; left: 0; right: 0;
   margin: 8px; padding: 3px;
   opacity: 0.7; background-color: #aaa; 
   border-radius: 10000px;
+}
+
+.activities .activity .content {
+  display: block;
+  color: white;
+  width: 100%; height: 100%;
 }
 
 .activities .activity .content .text {
@@ -342,5 +356,4 @@ ol.pagination li .current{
 
 div.filter{
   margin:4em;
-  
 }
