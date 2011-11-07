@@ -1,11 +1,3 @@
-// render the query state
-//
-  h3
-    each item, name in query
-      span
-        = name + '=' + item + '; '
-
-
 h3.inner #{actitity_count} records found
   - if (pagination)
     != partial('pagination', pagination)
