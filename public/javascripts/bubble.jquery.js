@@ -31,6 +31,27 @@
       return parseInt(slices * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2) % slices;
     };
     
+    
+    // Assigns a scaled data-size value based on the data-value parameter of each element
+    var assignSizes = function(tmin, tmax) {
+
+      var values = $.makeArray(this.map(function() {
+        return $(this).data('value') || 1;
+      }));
+
+      var max = Math.max.apply(Math, values);
+      var min = Math.min.apply(Math, values);
+      var scale = (tmax - tmin) / (max == min ? 1 : max - min);
+
+      return this.each(function() {
+        var $this = $(this);
+        var v = $this.data('value') || 1;
+        var size = (v * scale) + tmin;
+        $this.data('size', size);
+      });  
+    };
+    
+    
     var redrawActivities = function() {
       var angleOffset = parseInt(Math.random() * palette.length);
       var activities = $(this);
@@ -38,8 +59,11 @@
       var frameHeight = Math.max(window.innerHeight, $("#content").height());
       var desiredArea = {x: activityWrapper.width(), y: activityWrapper.height()};
       var area = { x: 600, y: 600 };
+      
+      // set the 'size' data attribute
+      assignSizes.apply(activities.children(), [100,250]);
 
-      var data = activities.children().assignSizes(100,250).map(function() {
+      var data = activities.children().map(function() {
         var activity = $(this);
         return {
           id: activity.attr("id"),
@@ -114,7 +138,8 @@
     
     // a simple jQ plugin that allows activity bubbles to be rendered via jQuery
     $.fn.activityList = function(){
-      return this.bind('redraw', redrawActivities);
+      return this
+        .bind('redraw', redrawActivities);
     }
     
     

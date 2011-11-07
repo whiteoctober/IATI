@@ -1,24 +1,5 @@
 (function() {
   
-  // Assigns a scaled data-size value based on the data-value parameter of each element
-  $.fn.assignSizes = function(tmin, tmax) {
-    
-    var values = $.makeArray(this.map(function() {
-      return $(this).data('value') || 1;
-    }));
-    
-    var max = Math.max.apply(Math, values);
-    var min = Math.min.apply(Math, values);
-    var scale = (tmax - tmin) / (max == min ? 1 : max - min);
-    
-    return this.each(function() {
-      var $this = $(this);
-      var v = $this.data('value') || 1;
-      var size = (v * scale) + tmin;
-      $this.data('size', size);
-    });  
-  };
-  
   //Fits text to a container of any shape
   var chars = {};
   $.fn.fitText = function(edges, options) {
