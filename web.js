@@ -55,9 +55,14 @@ app.dynamicHelpers({
         // so it's not used to generate the url
         parsedUrl.query = parsedUrl.query || {};
         delete parsedUrl.search;
-      
+        
         // assign the new parameters
         _.extend(parsedUrl.query, params);
+      }
+      
+      //remove the xhr param (this is used as a work around for cache issues)
+      if(parsedUrl.query && parsedUrl.query.xhr){
+        delete parsedUrl.query.xhr;
       }
       
       // return the formatted url
