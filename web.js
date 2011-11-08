@@ -45,7 +45,7 @@ app.configure(function(){
   
   app.set('view options', {
     title: 'IATI data browser',
-    scripts: clientScripts,
+    clientScripts: clientScripts,
   });
   
   /* todo
@@ -179,10 +179,7 @@ app.get('/activities', beforeFilter, function(req, res, next){
 
 });
 
-app.get('/activity/:id', function(req, res, next){
-  
-  // GB-1-112242
-  
+app.get('/activity/:id', beforeFilter, function(req, res, next){
   res.render('activity', {
     layout: !req.isXHR
   });
