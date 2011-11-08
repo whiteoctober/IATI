@@ -103,7 +103,7 @@ app.get('/', beforeFilter, function(req, res){
   });
 });
 
-app.get('/activities', beforeFilter, function(req, res){
+app.get('/activities', beforeFilter, function(req, res, next){
   
   var start = ((req.query.p || 0) * app.settings.pageSize) + 1;
   
@@ -135,7 +135,7 @@ app.get('/activities', beforeFilter, function(req, res){
     });
   })
   .on('error', function(e){
-    res.end('api error');
+    next(e);
   })
   .end();
 
@@ -144,7 +144,7 @@ app.get('/activities', beforeFilter, function(req, res){
 });
 
 
-app.get('/filter/:filter_key', beforeFilter, function(req, res){
+app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
   var filter_key = req.params.filter_key;
   
   new api.Request({result:'values', groupby:filter_key})
@@ -158,6 +158,9 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res){
       }).on('error', function(e){
         res.end('api error');
       });
+    })
+    .on('error', function(e){
+      next(e);
     })
     .end();
 });
