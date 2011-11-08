@@ -4,7 +4,27 @@ var express = require('express'),
     app = module.exports = express.createServer(),
     querystring = require('querystring'),
     url = require('url'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    assetManager = require('connect-assetmanager'),
+    assetHandler = require('connect-assetmanager-handlers');
+
+// all the script files that should be served to the client
+var clientScripts = [
+  'lib/jquery.js', 
+  'lib/jquery.form.min.js', 
+  'lib/d3.min.js', 
+  'lib/d3.layout.min.js', 
+  'lib/jquery.history.js', //causes problems when minified
+  'lib/jquery.transform.min.js', 
+  'lib/zynga/Animate.js', 
+  'lib/zynga/Scroller.js', 
+  'lib/zynga/Engine.js', 
+  'lib/zynga/Style.js', 
+  'bubble.jquery.js', 
+  'zoom.js', 
+  'plugins.js', 
+  'script.js'
+  ];
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -24,8 +44,24 @@ app.configure(function(){
   app.set('pageSize', 20);
   
   app.set('view options', {
-    title: 'IATI data browser'
+    title: 'IATI data browser',
+    scripts: clientScripts,
   });
+  
+  /* todo
+  app.use(assetManager({
+    'js':{
+      'route' : /\/static\/js\/[0-9]+\/.*\.js/,
+      'path': './public/javascripts/',
+      'dataType': 'javascript',
+      'files': clientScripts,
+      'postManipulate': {
+          '^': [assetHandler.uglifyJsOptimize]
+      }
+    }
+  }));
+  */
+  
 });
 
 app.configure('development', function(){
