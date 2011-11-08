@@ -179,6 +179,15 @@ app.get('/activities', beforeFilter, function(req, res, next){
 
 });
 
+app.get('/activity/:id', function(req, res, next){
+  
+  // GB-1-112242
+  
+  res.render('activity', {
+    layout: !req.isXHR
+  });
+});
+
 
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
   var filter_key = req.params.filter_key;

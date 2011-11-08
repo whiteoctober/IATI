@@ -1,0 +1,35 @@
+section.slide-panel
+  aside
+    ul
+      li: a.icn.save(href="#") Save to my favourites
+      li: a.icn.print(href="#") Print
+      li: a.icn.pdf(href="#") PDF
+      li: a.icn.csv(href="#") CSV
+      
+    h3 Related documents 
+    ul.related
+      li: a.icn.doc(href="#") document title
+      li: a.icn.doc(href="#") document title
+      li: a.icn.doc(href="#") document title
+      
+  div.main
+    h1 HIV/AIDS, Malaria and TB (HAMSET)
+    
+    table.headline
+      tr
+        th Total budget:
+        td $<strong>235</strong> million
+      tr
+        th Allocated to date:
+        td $<strong>189</strong> thousand
+  
+  
+  
+script
+  inlines.push(function(){
+    contentExit = function(){
+      return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+        $(this).empty().css({marginTop:0});
+      });
+    }
+  });
