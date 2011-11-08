@@ -2,7 +2,7 @@
   //Fits text to a container of any shape
   var chars = {};
   $.fn.fitText = function(edges, options) {
-    var defaults = {delay: 30, truncate: true};
+    var defaults = {font: {min: 12, max: 25}, delay: 30, truncate: true};
     options = $.extend(defaults, options);
     var items = this.toArray();
     var standardFontSize = 14;
@@ -50,7 +50,7 @@
         var total = {width: item.width(), height: item.height()};
         var text = '', lineDetails, remainingText;
         
-        for (var fontSize = options.fontMax; fontSize > options.fontMin; fontSize = fontSize - 1) {
+        for (var fontSize = options.font.max; fontSize > options.font.min; fontSize = fontSize - 1) {
           item.css({"font-size": fontSize});
           text = originalText;
           var sampler = $("<span>test</span>").css({visibility: 'hidden'}).appendTo(item);

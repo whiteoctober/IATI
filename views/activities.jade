@@ -25,7 +25,7 @@ nav.foot
 
 script
   inlines.push(function(){
-    $('.activities').activityList().trigger('redraw');
+    $('.activities').renderBubbles({palette: palette});
     $('a.area_filter').attr('href', "#{url_with('/filter/Region')}");
     $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}");
     $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}");

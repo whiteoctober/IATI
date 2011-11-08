@@ -1,3 +1,14 @@
+//Colour palette for activity bubbles
+var palette = [
+  {colour: '#3366FF', text: '#fff'},
+  {colour: '#6633FF', text: '#fff'},
+  {colour: '#CC33FF', text: '#fff'},
+  {colour: '#FF33CC', text: '#fff'},
+  {colour: '#33CCFF', text: '#fff'},
+  {colour: '#003DF5', text: '#fff'},
+  {colour: '#002EB8', text: '#fff'}
+];
+
 (function() {
 
   var content = $("#content");
@@ -78,23 +89,6 @@
     return false;
   });
   
-  var activityWrapper = $(".activity_wrapper");
-  activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-  var activities = $(".activity_wrapper").children(".activities");
-  var activitiesContent = activities.find(".content");
-
-  activityWrapper.activityZoom({
-    transition2d: false,
-    afterZoom: function(zoom, zoomed) {
-      var fontMin = Math.round(13 / zoom);
-      var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < fontMin; };
-      activitiesContent.filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
-    },
-    onResize: function() {
-      activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-    }
-  });
-  
   $('a.xhr').live('click', function(e) {
     e.preventDefault();
     var $this = $(this);
@@ -104,21 +98,24 @@
   $(".activity_wrapper").each(function() {
     var activityWrapper = $(this);
     activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-    var activities = $(".activity_wrapper").children(".activities")
-    activities.find(".activity").scaleValues({min: 100, max: 250});
+    var activities = activityWrapper.children(".activities").children(".activity");
+    var content = activities.find(".content");
+
+    activities.scaleValues({min: 100, max: 250});
+    
     activityWrapper.activityZoom({
       transition2d: false,
       afterZoom: function(zoom, zoomed) {
-        var fontMin = Math.round(11 / zoom);
-        var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size")) < fontMin; };
-        activities.find(".content").filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
+        var min = Math.round(11 / zoom);
+        var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
+        content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
       },
       onResize: function() {
         activityWrapper.width($("#content").width()).height($("#content").height() - 230);
       }
     });
   });
-
+  
   $(runInlines);
 
 })();
