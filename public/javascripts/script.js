@@ -52,7 +52,7 @@
         if(State.data.enter == 'slideUp'){
           $(this).css('margin-top',600).animate({'margin-top':0});
         }
-        run_inlines();
+        runInlines();
       });
     };
     
