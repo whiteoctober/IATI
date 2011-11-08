@@ -79,21 +79,23 @@
   });
   
   var activityWrapper = $(".activity_wrapper");
-  activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-  var activities = $(".activity_wrapper").children(".activities");
-  var activitiesContent = activities.find(".content");
+  if(!!activityWrapper.size()){
+    activityWrapper.width($("#content").width()).height($("#content").height() - 230);
+    var activities = $(".activity_wrapper").children(".activities");
+    var activitiesContent = activities.find(".content");
 
-  activityWrapper.activityZoom({
-    transition2d: false,
-    afterZoom: function(zoom, zoomed) {
-      var fontMin = Math.round(13 / zoom);
-      var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < fontMin; };
-      activitiesContent.filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
-    },
-    onResize: function() {
-      activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-    }
-  });
+    activityWrapper.activityZoom({
+      transition2d: false,
+      afterZoom: function(zoom, zoomed) {
+        var fontMin = Math.round(13 / zoom);
+        var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < fontMin; };
+        activitiesContent.filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
+      },
+      onResize: function() {
+        activityWrapper.width($("#content").width()).height($("#content").height() - 230);
+      }
+    });
+  }
   
   $('a.xhr').live('click', function(e) {
     e.preventDefault();
