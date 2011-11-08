@@ -55,7 +55,7 @@
       });
 
       items.each(function(i) {
-        $(this).css({
+        $(this).data({position: positions[i]}).css({
           position: 'absolute',
           left: positions[i].x - positions[i].radius,
           top: positions[i].y - positions[i].radius, 
@@ -78,6 +78,8 @@
       palette: [{colour: '#3366FF', text: '#fff'}]
     };
     options = $.extend(defaults, options);
+    options.layout = layouts[options.layout] ? options.layout : 'pack';
+    
     var container = $(this);
     var items = container.children(".bubble");
     var content = items.find(".content");
@@ -85,19 +87,14 @@
     var frameHeight = Math.max(window.innerHeight, $("#content").height());
     var area = {x: container.parent().width(), y: container.parent().height()};
     
-    options.layout = layouts[options.layout] ? options.layout : 'pack';
-    
     items.scaleValues({min: 100, max: 250});
-    var positions = layouts[options.layout](items, area);
+    layouts[options.layout](items, area);
 
     container.css({width: area.x, height: area.y});
     items.each(function(i) {
-      var activity = $(this);
-      var position = positions[i];
-      var centre = {x: area.x - position.radius, y: area.y - position.radius};
-      var colourIndex = sectorIndex(position, centre, options.palette.length);
+      var colourIndex = sectorIndex($(this).data("position"), area, options.palette.length);
       var colours = options.palette[((colourIndex || 0) + angleOffset) % options.palette.length];
-      activity.children().css({
+      $(this).children().css({
         background: colours.colour,
         color: colours.text
       });
