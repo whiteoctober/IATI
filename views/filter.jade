@@ -1,12 +1,16 @@
 div.filter
-
-  h2 filter: #{key}
+  h2 Filter by #{key}
   
-  form.filter(action='/activities')
-    each value in values
-      li
-        label
-          #{value.code} : #{value.name || 'null'}
-          input(type='checkbox', name=key, value=value.code)
-
-    input(type='submit')
+  form.filter(action='/activities')          
+    ul.choices.clearfix
+      each choice in choices
+        li.choice.bubble(
+          id='choice-' + choice.code, 
+          data-name=choice.name,
+          data-value=choice.value
+          data-colour=''
+        )
+          .outline
+          .inner
+            a.content
+              p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"

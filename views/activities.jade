@@ -5,7 +5,7 @@ h3.inner #{actitity_count} records found
 .activity_wrapper
   ul.activities.clearfix
     each activity in activities
-      li.activity.hidden(
+      li.activity.bubble.hidden(
         id='activity-' + activity.code, 
         data-name=activity.name,
         data-value=activity.value
@@ -13,7 +13,7 @@ h3.inner #{actitity_count} records found
         .outline
         .inner
           a.content
-            p.text.hidden= activity.name
+            p.text.hidden= activity.name.replace("\n", "")
 
 nav.foot
   a(href='#data_file') 
@@ -22,12 +22,11 @@ nav.foot
     img.button(src='/images/map_button.png')
   a.xhr(href='/list', data-history='{"enter":"slideUp"}') 
     img.button(src='/images/list_button.png')
-    
+
 script
   inlines.push(function(){
     $('.activities').activityList().trigger('redraw');
+    $('a.area_filter').attr('href', "#{url_with('/filter/Region')}");
     $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}");
-    $('a.area_filter')  .attr('href', "#{url_with('/filter/Region')}");
     $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}");
   });
-

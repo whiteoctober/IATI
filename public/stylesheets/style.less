@@ -1,4 +1,3 @@
-
 @import url(slide-panel.css);
 
 #body .left { float: left; }
@@ -40,15 +39,14 @@ th, td {
   padding: 0px;
 }
 
-/* inner page heading */
-h3.inner{
+h3.inner {
   color: #2d5ea9;
   font-weight: normal;
-  margin-left:3em;
-  margin-top:1em;
-  font-size:1.7em;
-  position:fixed;
-  z-index:10;
+  margin-left: 3em;
+  margin-top: 1em;
+  font-size :1.7em;
+  position: fixed;
+  z-index: 10;
 }
 
 #body {
@@ -62,7 +60,7 @@ h3.inner{
 }
 #content {
   width: 100%; height: 100%; min-height: 500px; min-width: 600px;
-  overflow: hidden;
+  
 }
 #content_inner {
   position: relative;
@@ -133,7 +131,7 @@ h3.inner{
   width: 184px; margin: 20px 5px 0;
 }
 #footer .funder_filter  .button {
-  position: absolute; left: 40px; bottom: 35px;z-index:15;
+  position: absolute; left: 40px; bottom: 35px; z-index: 15;
   padding: 5px;
 }
 #footer .area_filter {
@@ -141,7 +139,7 @@ h3.inner{
   width: 184px; margin: 16px 5px 0;
 }
 #footer .area_filter  .button {
-  position: absolute; right: 40px; bottom: 35px;z-index:15;
+  position: absolute; right: 40px; bottom: 35px; z-index: 15;
   padding: 5px;
 }
   
@@ -299,73 +297,84 @@ h3.inner{
   margin: 0px; padding: 0px;
 }
 
-.activities .activity {
+.bubble {
   position: relative;
   display: block; float: left;
   width: 150px; height: 150px; margin: 1px;
   list-style: none;
 }
 
-.activities .activity .outline {
+.bubble .outline {
   position: absolute;
   width: 100%; height: 100%;
-  opacity: 0.4; background-color: #aaa;
+  opacity: 0.4; background-color: #97BD52;
   border-radius: 10000px;
 }
 
-.activities .activity .inner {
+.bubble .inner {
   position: absolute; top: 0; bottom: 0; left: 0; right: 0;
   margin: 8px; padding: 3px;
-  opacity: 0.7; background-color: #aaa; 
+  opacity: 0.7; background-color: #97BD52; 
   border-radius: 10000px;
 }
 
-.activities .activity .content {
+.bubble .content {
   display: block;
   color: white;
   width: 100%; height: 100%;
 }
 
-.activities .activity .content .text {
-  margin: 17px 20px;
-  overflow: visible;
-  color: #000;
+.bubble .content .text {
+  text-align: center;
 }
 
-ol.pagination{
-  padding:0;
-  margin:0;
-  font-size:.9em;
+.choices .choice {
+  margin-right: 10px;
 }
 
-ol.pagination li{
-  list-style:none;
-  display:inline;
+.choices .choice .content {
+  font-weight: bold;
 }
 
-ol.pagination a, ol.pagination span, ol.pagination .more{
-  display:inline-block;
-  background-color:#1E99D6;
-  margin:.2em;
-  padding:.1em 0;
-  width:1.5em;
-  text-align:center;
-  color:#fff;
-  text-decoration:none;
+.bubble .content .small {
+  font-size: 90%;
+  font-weight: normal;
+}
+
+ol.pagination {
+  padding: 0;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+ol.pagination li {
+  list-style: none;
+  display: inline;
+}
+
+ol.pagination a, ol.pagination span, ol.pagination .more {
+  display: inline-block;
+  background-color: #1E99D6;
+  margin: 0.2em;
+  padding: 0.1em 0;
+  width: 1.5em;
+  text-align :center;
+  color: #fff;
+  text-decoration: none;
 }
 
 ol.pagination li .current{
-  color:#111;
+  color: #111;
 }
 
 div.filter{
-  margin:4em;
+  margin: 4em;
 }
 
 nav.foot{
-  position:fixed;
-  bottom:0;
-  z-index:10;
-  width:100%;
-  text-align:center;
+  position: fixed;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+  text-align: center;
 }

@@ -13,7 +13,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   
-  app.use(connect.compiler({ 
+  app.use(connect.compiler({
     src: __dirname + '/public', 
     enable: ['less'] })
   );
@@ -26,7 +26,6 @@ app.configure(function(){
   app.set('view options', {
     title: 'IATI data browser'
   });
-  
 });
 
 app.configure('development', function(){
@@ -36,7 +35,6 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
-
 
 app.dynamicHelpers({
   // adds parameters to the url
@@ -151,7 +149,7 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res){
   new api.apiCall({result:'values', groupby:filter_key})
     .on('success', function(data){
       res.render('filter', {
-        values: data[filter_key],
+        choices: data[filter_key],
         key: filter_key,
         title: 'Filter by ' + filter_key,
         page: 'filter',

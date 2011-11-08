@@ -1,76 +1,60 @@
-/*
-  Bubbles.jquery.js
-  
-  Render a list of elements as bubbles
-  
-*/
+// bubble.jquery.js
+// Renders a list of elements as sized bubbles in various layouts
+
 (function($){
-    
-    //Colour palette for activity bubbles
-    var palette = [
-      {colour: '#3366FF', text: '#fff'},
-      {colour: '#6633FF', text: '#fff'},
-      {colour: '#CC33FF', text: '#fff'},
-      {colour: '#FF33CC', text: '#fff'},
-      {colour: '#33CCFF', text: '#fff'},
-      {colour: '#003DF5', text: '#fff'},
-      {colour: '#002EB8', text: '#fff'}
-    ];
-    
-    var bubbleRadiusRange = {min: 50, max: 180};
 
-    var randomly = function(a,b) { return Math.random() * 2 - 1; };
-    var isLeafNode = function(d) { return !d.children; };
+  // Assigns a linearly scaled value based on an initial value
+  $.fn.scaleValues = function(bounds) {
+    var values = $.map(this, function(i) { return $(i).data("value") || 1; });
+    var max = Math.max.apply(Math, values);
+    var min = Math.min.apply(Math, values);
+    var scale = (bounds.max - bounds.min) / (max == min ? 1 : max - min);
+    return this.each(function(i) { $(this).data("scaled-value", parseInt(values[i] * scale + bounds.min)); });
+  };
 
-    //Finds a sector index based on angle from the centre
-    var sliceIndex = function(position, area, slices) {
-      var delta = {
-        x: area.x / 2 - position.x,
-        y: area.y / 2 - position.y
-      };
-      return parseInt(slices * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2, 10) % slices;
-    };
-    
-    
-    // Assigns a scaled data-size value based on the data-value parameter of each element
-    var assignSizes = function(tmin, tmax) {
+  //Colour palette for activity bubbles
+  var palette = [
+    {colour: '#3366FF', text: '#fff'},
+    {colour: '#6633FF', text: '#fff'},
+    {colour: '#CC33FF', text: '#fff'},
+    {colour: '#FF33CC', text: '#fff'},
+    {colour: '#33CCFF', text: '#fff'},
+    {colour: '#003DF5', text: '#fff'},
+    {colour: '#002EB8', text: '#fff'}
+  ];
+  
+  var bubbleRadiusRange = {min: 50, max: 180};
+  var randomly = function(a,b) { return Math.random() * 2 - 1; };
+  var isLeafNode = function(d) { return !d.children; };
 
-      var values = $.makeArray(this.map(function() {
-        return $(this).data('value') || 1;
-      }));
-
-      var max = Math.max.apply(Math, values);
-      var min = Math.min.apply(Math, values);
-      var scale = (tmax - tmin) / (max == min ? 1 : max - min);
-
-      return this.each(function() {
-        var $this = $(this);
-        var v = $this.data('value') || 1;
-        var size = (v * scale) + tmin;
-        $this.data('size', size);
-      });  
-    };
-    
-    
-    var redrawActivities = function() {
+  //Finds a circluar sector from the center point of an area
+  var sectorIndex = function(position, area, sectors) {
+    var delta = { x: area.x / 2 - position.x, y: area.y / 2 - position.y };
+    return parseInt(sectors * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2, 10) % sectors;
+  };
+  
+  //Adds redraw event to a bubble container
+  $.fn.activityList = function() {
+    return this.bind('redraw', function() {
+      var activityContainer = $(this);
+      var activities = activityContainer.children(".activity");
+      var content = activities.find(".content");
+      var activityWrapper = activityContainer.parent();
       var angleOffset = parseInt(Math.random() * palette.length, 10);
-      var activities = $(this);
-      var activityWrapper = activities.parent(); // << added so this can be standalone
       var frameHeight = Math.max(window.innerHeight, $("#content").height());
       var desiredArea = {x: activityWrapper.width(), y: activityWrapper.height()};
       var area = { x: 600, y: 600 };
       
-      // set the 'size' data attribute
-      assignSizes.apply(activities.children(), [100,250]);
+      activities.scaleValues({min: 100, max: 250});
 
-      var data = activities.children().map(function() {
+      var data = activities.map(function() {
         var activity = $(this);
         return {
           id: activity.attr("id"),
-          name: activity.attr("data-name"),
-          value: activity.data("size")
+          name: activity.data("name"),
+          value: activity.data("scaled-value")
         };
-      });
+      }).toArray();
 
       var positions = {};
       var bubble = d3.layout.pack().size([area.x, area.y]);
@@ -93,7 +77,7 @@
         right: Math.max.apply(this, coords.right),
         bottom: Math.max.apply(this, coords.bottom)
       };
-      area = {x: edges.right - edges.left, y: edges.bottom - edges.top };
+      area = { x: edges.right - edges.left, y: edges.bottom - edges.top };
 
       //Position and scale data values
       var scale = Math.min(desiredArea.x / area.x, desiredArea.y / area.y);
@@ -105,12 +89,12 @@
       });
       area = desiredArea;
 
-      activities.css({width: desiredArea.x, height: desiredArea.y});
-      activities.children().each(function() {
+      activityContainer.css({width: desiredArea.x, height: desiredArea.y});
+      activities.each(function() {
         var activity = $(this);
         var position = positions[activity.attr("id")];
         var centre = {x: area.x - position.radius, y: area.y - position.radius};
-        var colourIndex = sliceIndex(position, centre, palette.length);
+        var colourIndex = sectorIndex(position, centre, palette.length);
         var colours = palette[((colourIndex || 0) + angleOffset) % palette.length];
         activity.css({
           position: 'absolute',
@@ -123,25 +107,10 @@
           background: colours.colour,
           color: colours.text
         });
-        var text = activity.find(".text");
-        text.css({ 
-          margin: parseInt(position.radius * 0.6 / 2, 10)
-        });
-        activities.children().removeClass("hidden");
-
       });
-      activities.find(".content").fitText('circular', {fontMin: 13, fontMax: 25, delay: 0});
-      var content = activities.children().find(".content");
-    };
-    
-    
-    
-    // a simple jQ plugin that allows activity bubbles to be rendered via jQuery
-    $.fn.activityList = function(){
-      return this
-        .bind('redraw', redrawActivities);
-    };
-    
-    
-    
+      activities.removeClass("hidden");
+      content.fitText('circular', {fontMin: 13, fontMax: 25, delay: 0});
+    });
+  };
+
 })(jQuery);

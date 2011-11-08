@@ -1,5 +1,5 @@
 (function() {
-  
+
   var content = $("#content");
   var popup = $("#popup");
   var dimmer = $("#dimmer");
@@ -8,6 +8,8 @@
   query = window.location.search.replace(/^\?/, "");
   var activeChange = false;
   var cacheBugFix = function(xhr, settings) { settings.url = settings.url.replace("?&", "?"); };
+  //This calls all of the inline scripts, set on page/dynamic content load
+  var runInlines = function() { while(inlines.length) { inlines.pop()(); } }
   
   //Dim the page when requested
   dimmer.click(function() {
@@ -30,22 +32,22 @@
   });
   
   //Monitor state changes for Back request
-  window.History.Adapter.bind(window,'statechange',function(){
+  window.History.Adapter.bind(window,'statechange',function() {
     var State = window.History.getState(),
         url = State.url;
     
-    // add the xhr param (allows for caching + doesn't clash with 'full' pages)
+    //Add the xhr param (allows for caching + doesn't clash with 'full' pages)
     var separator = State.url.indexOf('?') == -1 ? '?' : '&';
     url += separator + 'xhr=true';
     
-    // cache bug fix
+    //jQuery Cache bug fix
     url = url.replace("?&", "?");
     
     $('#content_inner').load(url, function(){
       if(State.data.enter == 'slideUp'){
         $(this).css('margin-top',600).animate({'margin-top':0});
       }
-      run_inlines();
+      runInlines();
     });
   });
   
@@ -76,15 +78,13 @@
     return false;
   });
   
-  
   var activityWrapper = $(".activity_wrapper");
   activityWrapper.width($("#content").width()).height($("#content").height() - 230);
   var activities = $(".activity_wrapper").children(".activities");
   var activitiesContent = activities.find(".content");
-  
-  
-  
+
   activityWrapper.activityZoom({
+    transition2d: false,
     afterZoom: function(zoom, zoomed) {
       var fontMin = Math.round(13 / zoom);
       var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < fontMin; };
@@ -92,25 +92,33 @@
     },
     onResize: function() {
       activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-    },
-    transition2d: false
+    }
   });
   
-  
-  $('a.xhr').live('click', function(e){
+  $('a.xhr').live('click', function(e) {
     e.preventDefault();
     var $this = $(this);
     window.History.pushState($this.data('history'), "", $this.attr('href'));
   });
   
-  
-  // run any inline scripts on DOM Ready
-  $(run_inlines);
-  
-  // this calls all of the inline scripts
-  //  (for page load + dynamic content)
-  function run_inlines(){
-    while(inlines.length){inlines.pop()();}
-  }
-  
+  $(".activity_wrapper").each(function() {
+    var activityWrapper = $(this);
+    activityWrapper.width($("#content").width()).height($("#content").height() - 230);
+    var activities = $(".activity_wrapper").children(".activities")
+    activities.find(".activity").scaleValues({min: 100, max: 250});
+    activityWrapper.activityZoom({
+      transition2d: false,
+      afterZoom: function(zoom, zoomed) {
+        var fontMin = Math.round(11 / zoom);
+        var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size")) < fontMin; };
+        activities.find(".content").filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
+      },
+      onResize: function() {
+        activityWrapper.width($("#content").width()).height($("#content").height() - 230);
+      }
+    });
+  });
+
+  $(runInlines);
+
 })();
