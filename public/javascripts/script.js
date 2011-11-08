@@ -31,6 +31,10 @@
     });
   });
   
+  // If this is a function that returns a deferred promise, then it will
+  // be called before new content is loaded in.
+  window.contentExit = null;
+  
   //Monitor state changes for Back request
   window.History.Adapter.bind(window,'statechange',function() {
     var State = window.History.getState(),
@@ -43,12 +47,25 @@
     //jQuery Cache bug fix
     url = url.replace("?&", "?");
     
-    $('#content_inner').load(url, function(){
-      if(State.data.enter == 'slideUp'){
-        $(this).css('margin-top',600).animate({'margin-top':0});
-      }
-      runInlines();
-    });
+    var loadContent = function(){
+      $('#content_inner').load(url, function(){
+        if(State.data.enter == 'slideUp'){
+          $(this).css('margin-top',600).animate({'margin-top':0});
+        }
+        run_inlines();
+      });
+    };
+    
+    // if there is an exit animation/function - then fire that before loading 
+    if(window.contentExit){
+      window.contentExit().then(function(){
+        window.contentExit = null;
+        loadContent();
+      });
+    } else {
+      loadContent();
+    }
+    
   });
   
   //Callback for when a filter is opened
