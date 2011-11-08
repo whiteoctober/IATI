@@ -111,7 +111,7 @@ app.get('/activities', beforeFilter, function(req, res){
   
   _.extend(params, req.filter_query);
   
-  new api.apiCall(params)
+  new api.Request(params)
   .on('success', function(data){
     
     var total = data['@activity-count'];
@@ -136,7 +136,8 @@ app.get('/activities', beforeFilter, function(req, res){
   })
   .on('error', function(e){
     res.end('api error');
-  });
+  })
+  .end();
 
 
 
@@ -146,7 +147,7 @@ app.get('/activities', beforeFilter, function(req, res){
 app.get('/filter/:filter_key', beforeFilter, function(req, res){
   var filter_key = req.params.filter_key;
   
-  new api.apiCall({result:'values', groupby:filter_key})
+  new api.Request({result:'values', groupby:filter_key})
     .on('success', function(data){
       res.render('filter', {
         choices: data[filter_key],
@@ -154,9 +155,11 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res){
         title: 'Filter by ' + filter_key,
         page: 'filter',
         layout: !req.isXHR
+      }).on('error', function(e){
+        res.end('api error');
       });
-      
-    });
+    })
+    .end();
 });
 
 app.get('/list', beforeFilter, function(req, res){
