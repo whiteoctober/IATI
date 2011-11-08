@@ -180,9 +180,18 @@ app.get('/activities', beforeFilter, function(req, res, next){
 });
 
 app.get('/activity/:id', beforeFilter, function(req, res, next){
-  res.render('activity', {
-    layout: !req.isXHR
-  });
+
+  api.Request({ID:req.params.id, result:'full'})
+    .on('success', function(data){
+      res.render('activity', {
+        activity: data['iati-activity'],
+        layout: !req.isXHR
+      });
+    })
+    .on('error', function(e){
+      next(e);
+    })
+    .end();
 });
 
 
