@@ -63,6 +63,7 @@ app.dynamicHelpers({
       //remove the xhr param (this is used as a work around for cache issues)
       if(parsedUrl.query && parsedUrl.query.xhr){
         delete parsedUrl.query.xhr;
+        delete parsedUrl.search; //force the query to be used
       }
       
       // return the formatted url
