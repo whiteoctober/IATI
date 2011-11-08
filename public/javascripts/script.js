@@ -31,33 +31,23 @@
   
   //Monitor state changes for Back request
   window.History.Adapter.bind(window,'statechange',function(){
-    if (!activeChange) {
-      var State = window.History.getState();
-      $('#content_inner').load(State.url + '?xhr', function(){
-        if(State.data.enter == 'slideUp'){
-          $(this).css('margin-top',600).animate({'margin-top':0});
-        }
-        run_inlines();
-      });
-    }
-  });
-  
-  //Callback for when a filter has been submitted
-  var filterSubmitted = function(html) {
-    $("#content_inner").html(html);
-    popup.addClass("hidden");
-    $("a.filter").each(function() {
-      $(this).attr("href", $(this).attr("href").split("?")[0] + "?" + query);
+    var State = window.History.getState(),
+        url = State.url;
+    
+    // add the xhr param (allows for caching + doesn't clash with 'full' pages)
+    var separator = State.url.indexOf('?') == -1 ? '?' : '&';
+    url += separator + 'xhr=true';
+    
+    // cache bug fix
+    url = url.replace("?&", "?");
+    
+    $('#content_inner').load(url, function(){
+      if(State.data.enter == 'slideUp'){
+        $(this).css('margin-top',600).animate({'margin-top':0});
+      }
+      run_inlines();
     });
-    $('.activities li').assignSizes(100,250);
-    $(".activities").each(redrawActivities);
-  };
-
-  //Updates the page state
-  var changeState = function(query) {
-    activeChange = true;
-    window.History.pushState({query: query}, "", "/activities" + (query ? "?" + query : ""));
-  };
+  });
   
   //Callback for when a filter is opened
   var filterLoaded = function(html) {
@@ -65,15 +55,14 @@
     popup.removeClass("hidden");
     popup.css("left", content.outerWidth()/2 - popup.outerWidth()/2);
     popup.css("top", content.outerHeight()/2 - popup.outerHeight()/2);
-    popup.find("form.filter").ajaxForm({
-      beforeSubmit: function() {
-        query = popup.find("form.filter").serialize();
-        changeState(query);
-      },
-      cache: false, 
-      beforeSend: cacheBugFix,
-      dataType: 'html',
-      success: filterSubmitted
+    popup.find("form.filter").submit(function(e){
+      e.preventDefault();
+      var $form = $(this);
+      var url = $form.attr('action') + '?' + $form.serialize();
+      
+      window.History.pushState(null, null, url);
+      
+      popup.addClass("hidden");
     });
   };
 
