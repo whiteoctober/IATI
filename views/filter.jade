@@ -14,3 +14,14 @@ div.filter
           .inner
             a.content
               p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
+
+script
+  inlines.push(function(){
+    $('.choices').renderBubbles({
+      palette: palette, layout: 'list', size: {min: 150, max: 200},
+      afterFit: function() {
+        var textLines = $(this).children().filter(function() { return $(this).text() !== ""; }).toArray();
+        $(textLines.slice(-2)).addClass("small");
+      }
+    });
+  });

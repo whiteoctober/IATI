@@ -1,12 +1,12 @@
 //Colour palette for activity bubbles
 var palette = [
-  {colour: '#3366FF', text: '#fff'},
-  {colour: '#6633FF', text: '#fff'},
-  {colour: '#CC33FF', text: '#fff'},
-  {colour: '#FF33CC', text: '#fff'},
-  {colour: '#33CCFF', text: '#fff'},
-  {colour: '#003DF5', text: '#fff'},
-  {colour: '#002EB8', text: '#fff'}
+  {colour: '#96BD50', text: '#fff'},
+  {colour: '#EDB24D', text: '#fff'},
+  {colour: '#EA6D65', text: '#fff'},
+  {colour: '#E85890', text: '#fff'},
+  {colour: '#BE547C', text: '#fff'},
+  {colour: '#8588BB', text: '#fff'},
+  {colour: '#7BBABA', text: '#fff'}
 ];
 
 (function() {
@@ -87,7 +87,7 @@ var palette = [
       success: filterLoaded
     });
     return false;
-  });
+  });  
   
   $('a.xhr').live('click', function(e) {
     e.preventDefault();

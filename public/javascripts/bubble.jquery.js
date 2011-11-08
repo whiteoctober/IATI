@@ -11,10 +11,6 @@
     var scale = (bounds.max - bounds.min) / (max == min ? 1 : max - min);
     return this.each(function(i) { $(this).data("scaled-value", parseInt(values[i] * scale + bounds.min)); });
   };
-  
-  var bubbleRadiusRange = {min: 50, max: 180};
-  var randomly = function(a,b) { return Math.random() * 2 - 1; };
-  var isLeafNode = function(d) { return !d.children; };
 
   //Finds a circluar sector from the center point of an area
   var sectorIndex = function(position, area, sectors) {
@@ -23,7 +19,11 @@
   };
   
   var layouts = {
-    pack: function(items, area) {
+    //Packs bubbles tightly together
+    pack: function(items, container, options) {
+      var randomly = function(a,b) { return Math.random() * 2 - 1; };
+      var isLeafNode = function(d) { return !d.children; };
+      var area = {x: container.parent().width(), y: container.parent().height()};
       var data = items.map(function() {
         var item = $(this);
         return { id: item.attr("id"), name: item.data("name"), value: item.data("scaled-value") };
@@ -36,7 +36,7 @@
       $.map(bubble.nodes({children: data}).filter(isLeafNode), function(position) {
         position.x = parseInt(position.x, 10);
         position.y = parseInt(position.y, 10);
-        position.radius = Math.min(parseInt(position.r, 10), bubbleRadiusRange.max);
+        position.radius = parseInt(position.r, 10);
         positions.push(position);
         padding.left = Math.min(padding.left, position.x - position.radius);
         padding.top = Math.min(padding.top, position.y - position.radius);
@@ -54,26 +54,60 @@
         position.radius = scale * position.radius;
       });
 
+      //Set positions
       items.each(function(i) {
-        $(this).data({position: positions[i]}).css({
+        var position = positions[i];
+        $(this).css({
           position: 'absolute',
-          left: positions[i].x - positions[i].radius,
-          top: positions[i].y - positions[i].radius, 
-          width: positions[i].radius * 2,
-          height: positions[i].radius * 2
+          left: position.x - position.radius,
+          top: position.y - position.radius, 
+          width: position.radius * 2,
+          height: position.radius * 2
         });
       });
       
-      return positions;
-    },
-    list: {
+      //Set colours
+      var angleOffset = parseInt(Math.random() * options.palette.length, 10);
+      items.each(function(i) {
+        var colourIndex = sectorIndex(positions[i], area, options.palette.length);
+        var colours = options.palette[((colourIndex || 0) + angleOffset) % options.palette.length];
+        $(this).children().css({
+          background: colours.colour,
+          color: colours.text
+        });
+      });
       
+      container.css({width: area.x, height: area.y});
+    },
+    
+    //Lays out bubbles on vertically centered rows
+    list: function(items, container, options) {
+      //Set positions
+      var max = Math.max.apply(Math, items.map(function() { return $(this).data("scaled-value"); }).toArray());
+      items.each(function() {
+        $(this).css({'margin': parseInt((max - $(this).height())/ 2) + 'px 5px' });
+      });
+      
+      //Set colours
+      items.each(function() {
+        var item = $(this);
+        var colours = options.palette[Math.floor(Math.random() * options.palette.length)];
+        item.css({
+          width: item.data("scaled-value"),
+          height: item.data("scaled-value")
+        });
+        item.children().css({ 
+          background: item.data("colour") || colours.colour,
+          color: item.data("text-colour") || colours.text
+        });
+      });
     }
   };
   
   //Adds redraw event to a bubble container
   $.fn.renderBubbles = function(options) {
     var defaults = {
+      size: {min: 100, max: 250},
       layout: 'pack',
       palette: [{colour: '#3366FF', text: '#fff'}]
     };
@@ -82,53 +116,11 @@
     
     var container = $(this);
     var items = container.children(".bubble");
-    var content = items.find(".content");
-    var angleOffset = parseInt(Math.random() * options.palette.length, 10);
-    var frameHeight = Math.max(window.innerHeight, $("#content").height());
-    var area = {x: container.parent().width(), y: container.parent().height()};
     
-    items.scaleValues({min: 100, max: 250});
-    layouts[options.layout](items, area);
-
-    container.css({width: area.x, height: area.y});
-    items.each(function(i) {
-      var colourIndex = sectorIndex($(this).data("position"), area, options.palette.length);
-      var colours = options.palette[((colourIndex || 0) + angleOffset) % options.palette.length];
-      $(this).children().css({
-        background: colours.colour,
-        color: colours.text
-      });
-    });
+    items.scaleValues(options.size);
+    layouts[options.layout](items, container, options);
+    
     items.removeClass("hidden");
-    content.fitText('circular', {font: options.font, delay: 0});
-    
-    // -------------- CHOICES -------------
-    
-    // items.each(function() {
-      // var choice = $(this);
-      // var colours = options.palette[Math.floor(Math.random() * options.palette.length)];
-      // choice.css({
-        // width: choice.data("scaled-value"),
-        // height: choice.data("scaled-value")
-      // });
-      // choice.children().css({ 
-        // background: choice.data("colour") || colours.colour,
-        // color: choice.data("text-colour") || colours.text
-      // });
-    // });
-    
-    // items.find(".content").fitText('circular', {
-      // font: options.font, delay: 0,
-      // afterEach: function() {
-        // var textLines = $(this).children().filter(function() { return $(this).text() !== ""; }).toArray();
-        // $(textLines.slice(-2)).addClass("small");
-      // }
-    // });
-
-    // var maxSize = Math.max.apply(Math, items.map(function() { return $(this).data("scaled-value"); }).toArray());
-    // items.each(function() {
-      // $(this).css({'margin': parseInt((maxSize - $(this).height())/ 2) + 'px 5px' });
-    // });
+    items.find(".content").fitText('circular', {font: options.font, delay: 0, afterEach: options.afterFit});
   };
-
 })(jQuery);
