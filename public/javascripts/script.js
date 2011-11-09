@@ -79,37 +79,10 @@ var palette = [
     
   });
   
-  //Callback for when a filter is opened
-  var filterLoaded = function(html) {
-    popup.html(html);
-    popup.removeClass("hidden");
-    popup.css("left", content.outerWidth()/2 - popup.outerWidth()/2);
-    popup.css("top", content.outerHeight()/2 - popup.outerHeight()/2);
-    popup.find("form.filter").submit(function(e){
-      e.preventDefault();
-      var $form = $(this);
-      var url = $form.attr('action') + '?' + $form.serialize();
-      
-      window.History.pushState(null, null, url);
-      
-      popup.addClass("hidden");
-    });
-  };
-
-  $("a.filter").click(function(e) {
-    $.ajax({
-      url: $(this).attr("href"),
-      type: 'get',
-      dataType: 'html', 
-      success: filterLoaded
-    });
-    return false;
-  });  
-  
-  $('a.xhr').live('click', function(e) {
-    e.preventDefault();
+  $('a.xhr').live('click', function() {
     var $this = $(this);
     window.History.pushState($this.data('history'), "", $this.attr('href'));
+    return false;
   });
   
   $(".activity_wrapper").each(function() {
