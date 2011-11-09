@@ -171,7 +171,7 @@ app.get('/activities', beforeFilter, function(req, res, next){
       page: 'activities',
       filter_paths: req.filter_paths,
       query: req.query,
-      activities: data['iati-activity'] || [],
+      activities: _.as_array(data['iati-activity']),
       actitity_count: total,
       current_page: req.query.p || 1,
       pagination: pagination,
