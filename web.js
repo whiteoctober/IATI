@@ -76,7 +76,7 @@ app.configure('production', function(){
 _.mixin({
   // to wrap singular responses in array
   as_array:function(obj_or_array){
-    return _.isArray(obj_or_array) ? obj_or_array : [obj_or_array];
+    return obj_or_array === undefined ? [] : (_.isArray(obj_or_array) ? obj_or_array : [obj_or_array]);
   }
 })
 
