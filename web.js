@@ -73,6 +73,13 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+_.mixin({
+  // to wrap singular responses in array
+  as_array:function(obj_or_array){
+    return _.isArray(obj_or_array) ? obj_or_array : [obj_or_array];
+  }
+})
+
 app.dynamicHelpers({
   // adds parameters to the url
   url_with:function(req,res){
@@ -181,7 +188,7 @@ app.get('/activities', beforeFilter, function(req, res, next){
 });
 
 app.get('/activity/:id', beforeFilter, function(req, res, next){
-
+  
   api.Request({ID:req.params.id, result:'full'})
     .on('success', function(data){
       res.render('activity', {
@@ -199,17 +206,19 @@ app.get('/activity/:id', beforeFilter, function(req, res, next){
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
   var filter_key = req.params.filter_key;
   
-  new api.Request({result:'values', groupby:filter_key})
+  var params = {result:'values', groupby:filter_key};
+  
+  _.extend(params, req.filter_query);
+  
+  new api.Request(params)
     .on('success', function(data){
       res.render('filter', {
-        choices: data[filter_key],
+        choices: _.as_array(data[filter_key]),
         key: filter_key,
         title: 'Filter by ' + filter_key,
         page: 'filter',
         layout: !req.isXHR
-      }).on('error', function(e){
-        res.end('api error');
-      });
+      })
     })
     .on('error', function(e){
       next(e);
