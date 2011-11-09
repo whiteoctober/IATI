@@ -4,7 +4,28 @@ var express = require('express'),
     app = module.exports = express.createServer(),
     querystring = require('querystring'),
     url = require('url'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    assetManager = require('connect-assetmanager'),
+    assetHandler = require('connect-assetmanager-handlers');
+
+// all the script files that should be served to the client
+var clientScripts = [
+  'lib/jquery.js', 
+  'lib/jquery.form.min.js', 
+  'lib/d3.min.js', 
+  'lib/d3.layout.min.js', 
+  'lib/jquery.history.js', //causes problems when minified
+  'lib/jquery.transform.min.js', 
+  'lib/zynga/Animate.js', 
+  'lib/zynga/Scroller.js', 
+  'lib/zynga/Engine.js', 
+  'lib/zynga/Style.js',
+  'lib/seedrandom.js',
+  'bubble.jquery.js', 
+  'zoom.js', 
+  'plugins.js', 
+  'script.js'
+];
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -24,8 +45,24 @@ app.configure(function(){
   app.set('pageSize', 20);
   
   app.set('view options', {
-    title: 'IATI data browser'
+    title: 'IATI data browser',
+    clientScripts: clientScripts,
   });
+  
+  /* todo
+  app.use(assetManager({
+    'js':{
+      'route' : /\/static\/js\/[0-9]+\/.*\.js/,
+      'path': './public/javascripts/',
+      'dataType': 'javascript',
+      'files': clientScripts,
+      'postManipulate': {
+          '^': [assetHandler.uglifyJsOptimize]
+      }
+    }
+  }));
+  */
+  
 });
 
 app.configure('development', function(){
@@ -103,7 +140,7 @@ app.get('/', beforeFilter, function(req, res){
   });
 });
 
-app.get('/activities', beforeFilter, function(req, res){
+app.get('/activities', beforeFilter, function(req, res, next){
   
   var start = ((req.query.p || 0) * app.settings.pageSize) + 1;
   
@@ -111,7 +148,7 @@ app.get('/activities', beforeFilter, function(req, res){
   
   _.extend(params, req.filter_query);
   
-  new api.apiCall(params)
+  new api.Request(params)
   .on('success', function(data){
     
     var total = data['@activity-count'];
@@ -135,18 +172,34 @@ app.get('/activities', beforeFilter, function(req, res){
     });
   })
   .on('error', function(e){
-    res.end('api error');
-  });
+    next(e);
+  })
+  .end();
 
 
 
 });
 
+app.get('/activity/:id', beforeFilter, function(req, res, next){
 
-app.get('/filter/:filter_key', beforeFilter, function(req, res){
+  api.Request({ID:req.params.id, result:'full'})
+    .on('success', function(data){
+      res.render('activity', {
+        activity: data['iati-activity'],
+        layout: !req.isXHR
+      });
+    })
+    .on('error', function(e){
+      next(e);
+    })
+    .end();
+});
+
+
+app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
   var filter_key = req.params.filter_key;
   
-  new api.apiCall({result:'values', groupby:filter_key})
+  new api.Request({result:'values', groupby:filter_key})
     .on('success', function(data){
       res.render('filter', {
         choices: data[filter_key],
@@ -154,9 +207,14 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res){
         title: 'Filter by ' + filter_key,
         page: 'filter',
         layout: !req.isXHR
+      }).on('error', function(e){
+        res.end('api error');
       });
-      
-    });
+    })
+    .on('error', function(e){
+      next(e);
+    })
+    .end();
 });
 
 app.get('/list', beforeFilter, function(req, res){

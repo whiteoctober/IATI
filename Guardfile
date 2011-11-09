@@ -18,8 +18,12 @@ group :app do
     watch(/lib\/.*\.js/)
   end
   
+end
+
+group :livereload do
+  
   guard 'livereload' do
-    watch(%r{view/.+\.(jade)})
+    watch(%r{view/.+\.jade})
     watch(%r{public/stylesheets/.+\.(css|less)})
     watch(%r{public/javascripts/.+\.js})
     watch(%r{public/images/.+})

@@ -44,18 +44,5 @@ html
         p Copy and paste
         
     #scripts.hidden
-      script(src='/javascripts/lib/jquery.js')
-      script(src='/javascripts/lib/jquery.form.min.js')
-      script(src='/javascripts/lib/d3.min.js')
-      script(src='/javascripts/lib/d3.layout.min.js')
-      script(src='/javascripts/lib/jquery.history.js')
-      script(src='/javascripts/lib/jquery.transform.min.js')
-      script(src='/javascripts/lib/zynga/Animate.js')
-      script(src='/javascripts/lib/zynga/Scroller.js')
-      script(src='/javascripts/lib/zynga/Engine.js')
-      script(src='/javascripts/lib/zynga/Style.js')
-      script(src='/javascripts/lib/seedrandom.js')
-      script(src='/javascripts/bubble.jquery.js')
-      script(src='/javascripts/zoom.js')
-      script(src='/javascripts/plugins.js')
-      script(src='/javascripts/script.js')
+      each script in clientScripts
+        script(src='/javascripts/'+script)

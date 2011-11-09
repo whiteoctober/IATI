@@ -17,4 +17,88 @@ section.slide-panel{
     font-weight: normal;
     text-shadow:#fff 0 0 1px;
   }
+  
+  aside{
+    float:right;
+    width:20%;
+    margin-left:1em;
+    
+    ul{
+      padding:0;
+    }
+    
+    li{
+      list-style:none;
+    }
+    
+    a{
+      color:#999;
+      font-size:1.2em;
+      
+      text-shadow:#fff 0 0 1px;
+    }
+    
+    h3{
+      margin-top:1.5em;
+    }
+    
+  }
+  
+  // when there is an aside, the rest of 
+  // the content can go in this
+  .main{
+    width:75%;
+  }
+  
+}
+
+
+a.icn{
+  padding-left:25px;
+  display:block;
+  
+  line-height:2em;
+  
+  background-repeat:no-repeat;
+  background-position:center left;
+  
+  &.doc{
+    //todo
+    background-image:url("/images/sprites/pdf.png")
+  }
+  &.pdf{
+    background-image:url("/images/sprites/pdf.png")
+  }
+  &.save{
+    background-image:url("/images/sprites/save.png")
+  }
+  &.print{
+    background-image:url("/images/sprites/print.png")
+  }
+  &.csv{
+    background-image:url("/images/sprites/csv.png")
+  }
+}
+
+// main blue table at the top of the activity page
+table.headline{
+  font-size:1.3em;
+  color: #2d5ea9;
+  text-shadow:#fff 0 0 1px;
+  vertical-align: baseline;
+  
+  th, td{
+    font-weight:normal;
+    text-align:left;
+    vertical-align: baseline;
+  }
+  
+  td{
+    padding:.25em 1em;
+  }
+  
+  strong{
+    font-size:1.6em;
+    font-weight:normal;
+  }
 }
