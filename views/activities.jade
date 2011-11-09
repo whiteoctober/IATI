@@ -24,8 +24,26 @@ nav.foot
     img.button(src='/images/list_button.png')
 
 script
-  inlines.push(function(){
-    $('.activities').activityList().trigger('redraw');
+  inlines.push(function() {
+    var wrapper = $(".activity_wrapper");
+    wrapper.width($("#content").width()).height($("#content").height() - 230);
+    var container = wrapper.children(".activities");
+    var activities = container.children(".activity");
+    var content = activities.find(".content");
+    
+    wrapper.activityZoom({
+      transition2d: false,
+      afterZoom: function(zoom, zoomed) {
+        var min = Math.round(11 / zoom);
+        var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
+        content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
+      },
+      onResize: function() {
+        wrapper.width($("#content").width()).height($("#content").height() - 230);
+      }
+    });
+    Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
+    container.bubbleLayout({palette: palette, layout: 'pack', diameter: {min: 100, max: 250}});
     $('a.area_filter').attr('href', "#{url_with('/filter/Region')}");
     $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}");
     $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}");

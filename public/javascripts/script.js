@@ -1,5 +1,16 @@
-(function() {
+//Colour palette for activity bubbles
+var palette = [
+  {colour: '#96BD50', text: '#fff'},
+  {colour: '#EDB24D', text: '#fff'},
+  {colour: '#EA6D65', text: '#fff'},
+  {colour: '#E85890', text: '#fff'},
+  {colour: '#BE547C', text: '#fff'},
+  {colour: '#8588BB', text: '#fff'},
+  {colour: '#7BBABA', text: '#fff'}
+];
 
+(function() {
+  Math.seedrandom('z6m44E4MB5');
   var content = $("#content");
   var popup = $("#popup");
   var dimmer = $("#dimmer");
@@ -31,6 +42,10 @@
     });
   });
   
+  // If this is a function that returns a deferred promise, then it will
+  // be called before new content is loaded in.
+  window.contentExit = null;
+  
   //Monitor state changes for Back request
   window.History.Adapter.bind(window,'statechange',function() {
     var State = window.History.getState(),
@@ -43,82 +58,33 @@
     //jQuery Cache bug fix
     url = url.replace("?&", "?");
     
-    $('#content_inner').load(url, function(){
-      if(State.data.enter == 'slideUp'){
-        $(this).css('margin-top',600).animate({'margin-top':0});
-      }
-      runInlines();
-    });
+    var loadContent = function(){
+      $('#content_inner').load(url, function(){
+        if(State.data.enter == 'slideUp'){
+          $(this).css('margin-top',600).animate({'margin-top':0});
+        }
+        runInlines();
+      });
+    };
+    
+    // if there is an exit animation/function - then fire that before loading 
+    if(window.contentExit){
+      window.contentExit().then(function(){
+        window.contentExit = null;
+        loadContent();
+      });
+    } else {
+      loadContent();
+    }
+    
   });
   
-  //Callback for when a filter is opened
-  var filterLoaded = function(html) {
-    popup.html(html);
-    popup.removeClass("hidden");
-    popup.css("left", content.outerWidth()/2 - popup.outerWidth()/2);
-    popup.css("top", content.outerHeight()/2 - popup.outerHeight()/2);
-    popup.find("form.filter").submit(function(e){
-      e.preventDefault();
-      var $form = $(this);
-      var url = $form.attr('action') + '?' + $form.serialize();
-      
-      window.History.pushState(null, null, url);
-      
-      popup.addClass("hidden");
-    });
-  };
-
-  $("a.filter").click(function(e) {
-    $.ajax({
-      url: $(this).attr("href"),
-      type: 'get',
-      dataType: 'html', 
-      success: filterLoaded
-    });
+  $('a.xhr').live('click', function() {
+    var $this = $(this);
+    window.History.pushState($this.data('history'), "", $this.attr('href'));
     return false;
   });
   
-  var activityWrapper = $(".activity_wrapper");
-  activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-  var activities = $(".activity_wrapper").children(".activities");
-  var activitiesContent = activities.find(".content");
-
-  activityWrapper.activityZoom({
-    transition2d: false,
-    afterZoom: function(zoom, zoomed) {
-      var fontMin = Math.round(13 / zoom);
-      var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < fontMin; };
-      activitiesContent.filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
-    },
-    onResize: function() {
-      activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-    }
-  });
-  
-  $('a.xhr').live('click', function(e) {
-    e.preventDefault();
-    var $this = $(this);
-    window.History.pushState($this.data('history'), "", $this.attr('href'));
-  });
-  
-  $(".activity_wrapper").each(function() {
-    var activityWrapper = $(this);
-    activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-    var activities = $(".activity_wrapper").children(".activities")
-    activities.find(".activity").scaleValues({min: 100, max: 250});
-    activityWrapper.activityZoom({
-      transition2d: false,
-      afterZoom: function(zoom, zoomed) {
-        var fontMin = Math.round(11 / zoom);
-        var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size")) < fontMin; };
-        activities.find(".content").filter(filter).fitText('circular', {fontMin: fontMin, fontMax: 25});
-      },
-      onResize: function() {
-        activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-      }
-    });
-  });
-
   $(runInlines);
 
 })();

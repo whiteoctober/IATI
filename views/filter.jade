@@ -1,16 +1,28 @@
 div.filter
   h2 Filter by #{key}
-  
-  form.filter(action='/activities')          
-    ul.choices.clearfix
-      each choice in choices
-        li.choice.bubble(
-          id='choice-' + choice.code, 
-          data-name=choice.name,
-          data-value=choice.value
-          data-colour=''
-        )
-          .outline
-          .inner
-            a.content
-              p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
+         
+  ul.choices.clearfix
+    each choice in choices
+      li.choice.bubble(
+        id='choice-' + choice.code, 
+        data-name=choice.name, data-value=choice.value, data-colour=''
+      )
+        .outline
+        .inner
+          - var query = {};
+          - query[key] = choice.code
+          a.content.xhr(href=url_with('/activities', query))
+            p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
+
+script
+  inlines.push(function(){
+    Math.seedrandom($('.choices').map(function() { return $(this).attr("id"); }).toArray().join(""));
+    $('.choices').bubbleLayout({
+      palette: palette, layout: 'list', diameter: {min: 130, max: 200},
+      afterFit: function() {
+        var notEmpty = function() { return $(this).text() !== ""; }
+        var textLines = $(this).children().filter(notEmpty).toArray();
+        $(textLines.slice(-2)).addClass("small");
+      }
+    });
+  });

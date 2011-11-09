@@ -13,7 +13,7 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a.sector_filter.filter(href=url_with('/filter/SectorCategory'))
+      a.sector_filter.filter.xhr(href=url_with('/filter/SectorCategory'))
         img.text(src='/images/sector_filter_text.png')
         img.button(src='/images/sector_filter.png')
       .main_navigation
@@ -27,10 +27,10 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a.funder_filter.filter(href=url_with('/filter/Funder'))
+      a.funder_filter.filter.xhr(href=url_with('/filter/Funder'))
         img.button(src='/images/funder_filter.png')
         img.text.left(src='/images/funder_filter_text.png')
-      a.area_filter.filter(href=url_with('/filter/Region'))
+      a.area_filter.filter.xhr(href=url_with('/filter/Region'))
         img.button(src='/images/area_filter.png')
         img.text.right(src='/images/area_filter_text.png')
     #popup.hidden
@@ -54,6 +54,7 @@ html
       script(src='/javascripts/lib/zynga/Scroller.js')
       script(src='/javascripts/lib/zynga/Engine.js')
       script(src='/javascripts/lib/zynga/Style.js')
+      script(src='/javascripts/lib/seedrandom.js')
       script(src='/javascripts/bubble.jquery.js')
       script(src='/javascripts/zoom.js')
       script(src='/javascripts/plugins.js')

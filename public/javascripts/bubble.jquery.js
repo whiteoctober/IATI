@@ -1,8 +1,7 @@
-// bubble.jquery.js
-// Renders a list of elements as sized bubbles in various layouts
+// bubbleLayout Plugin
+// Renders a list of text as coloured bubbles with a custom layout
 
 (function($){
-
   // Assigns a linearly scaled value based on an initial value
   $.fn.scaleValues = function(bounds) {
     var values = $.map(this, function(i) { return $(i).data("value") || 1; });
@@ -11,106 +10,121 @@
     var scale = (bounds.max - bounds.min) / (max == min ? 1 : max - min);
     return this.each(function(i) { $(this).data("scaled-value", parseInt(values[i] * scale + bounds.min)); });
   };
-
-  //Colour palette for activity bubbles
-  var palette = [
-    {colour: '#3366FF', text: '#fff'},
-    {colour: '#6633FF', text: '#fff'},
-    {colour: '#CC33FF', text: '#fff'},
-    {colour: '#FF33CC', text: '#fff'},
-    {colour: '#33CCFF', text: '#fff'},
-    {colour: '#003DF5', text: '#fff'},
-    {colour: '#002EB8', text: '#fff'}
-  ];
   
-  var bubbleRadiusRange = {min: 50, max: 180};
-  var randomly = function(a,b) { return Math.random() * 2 - 1; };
-  var isLeafNode = function(d) { return !d.children; };
-
-  //Finds a circluar sector from the center point of an area
-  var sectorIndex = function(position, area, sectors) {
-    var delta = { x: area.x / 2 - position.x, y: area.y / 2 - position.y };
-    return parseInt(sectors * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2, 10) % sectors;
-  };
-  
-  //Adds redraw event to a bubble container
-  $.fn.activityList = function() {
-    return this.bind('redraw', function() {
-      var activityContainer = $(this);
-      var activities = activityContainer.children(".activity");
-      var content = activities.find(".content");
-      var activityWrapper = activityContainer.parent();
-      var angleOffset = parseInt(Math.random() * palette.length, 10);
-      var frameHeight = Math.max(window.innerHeight, $("#content").height());
-      var desiredArea = {x: activityWrapper.width(), y: activityWrapper.height()};
-      var area = { x: 600, y: 600 };
+  var layouts = {
+    // Packs bubbles tightly together
+    pack: function(items, container, options) {
+      var randomly = function(a,b) { return Math.random() * 2 - 1; };
+      var isLeafNode = function(d) { return !d.children; };
+      var area = {x: container.parent().width(), y: container.parent().height()};
       
-      activities.scaleValues({min: 100, max: 250});
-
-      var data = activities.map(function() {
-        var activity = $(this);
-        return {
-          id: activity.attr("id"),
-          name: activity.data("name"),
-          value: activity.data("scaled-value")
-        };
+      // Finds a circluar sector from the center point of an area
+      var sectorIndex = function(position, area, sectors) {
+        var delta = { x: area.x / 2 - position.x, y: area.y / 2 - position.y };
+        return parseInt(sectors * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2, 10) % sectors;
+      };
+      
+      // Generates data objects from DOM objects
+      var data = items.map(function() {
+        var item = $(this);
+        return { id: item.attr("id"), name: item.data("name"), value: item.data("scaled-value") };
       }).toArray();
 
-      var positions = {};
+      // Gets bubble positions using the D3 algorithm and computes the padding around them
+      var positions = [];
+      var padding = {left: area.x, top: area.y, right: 0, bottom: 0};
       var bubble = d3.layout.pack().size([area.x, area.y]);
-      var coords = {top: [], bottom: [], left: [], right: []};
       $.map(bubble.nodes({children: data}).filter(isLeafNode), function(position) {
-        positions[position.id] = position;
         position.x = parseInt(position.x, 10);
         position.y = parseInt(position.y, 10);
-        position.radius = Math.min(parseInt(position.r, 10), bubbleRadiusRange.max);
-        coords.left.push(position.x - position.radius);
-        coords.top.push(position.y - position.radius);
-        coords.right.push(position.x + position.radius);
-        coords.bottom.push(position.y + position.radius);
+        position.radius = parseInt(position.r, 10);
+        positions.push(position);
+        padding.left = Math.min(padding.left, position.x - position.radius);
+        padding.top = Math.min(padding.top, position.y - position.radius);
+        padding.right = Math.max(padding.right, position.x + position.radius);
+        padding.bottom = Math.max(padding.bottom, position.y + position.radius);
       });
+      var actualArea = { x: padding.right - padding.left, y: padding.bottom - padding.top };
 
-      //Generate maximum and minimum data values, total area
-      var edges = {
-        top: Math.min.apply(this, coords.top),
-        left: Math.min.apply(this, coords.left),
-        right: Math.max.apply(this, coords.right),
-        bottom: Math.max.apply(this, coords.bottom)
-      };
-      area = { x: edges.right - edges.left, y: edges.bottom - edges.top };
-
-      //Position and scale data values
-      var scale = Math.min(desiredArea.x / area.x, desiredArea.y / area.y);
-      area = {x: area.x * scale, y: area.y * scale};
-      $.each(positions, function(id, position) {
-        position.x = (desiredArea.x - area.x)/2 + scale * (position.x - edges.left);
-        position.y = (desiredArea.y - area.y)/2 + scale * (position.y - edges.top);
+      // Scales values according to the desired area
+      var scale = Math.min(area.x / actualArea.x, area.y / actualArea.y);
+      var scaledArea = {x: parseInt(actualArea.x * scale), y: parseInt(actualArea.y * scale)};
+      $.map(positions, function(position) {
+        position.x = (area.x - scaledArea.x) / 2 + scale * (position.x - padding.left);
+        position.y = (area.y - scaledArea.y) / 2 + scale * (position.y - padding.top);
         position.radius = scale * position.radius;
       });
-      area = desiredArea;
 
-      activityContainer.css({width: desiredArea.x, height: desiredArea.y});
-      activities.each(function() {
-        var activity = $(this);
-        var position = positions[activity.attr("id")];
-        var centre = {x: area.x - position.radius, y: area.y - position.radius};
-        var colourIndex = sectorIndex(position, centre, palette.length);
-        var colours = palette[((colourIndex || 0) + angleOffset) % palette.length];
-        activity.css({
+      // Set positions
+      items.each(function(i) {
+        var position = positions[i];
+        $(this).css({
           position: 'absolute',
           left: position.x - position.radius,
           top: position.y - position.radius, 
           width: position.radius * 2,
           height: position.radius * 2
         });
-        activity.children().css({
+      });
+      
+      // Set colours
+      var angleOffset = parseInt(Math.random() * options.palette.length, 10);
+      items.each(function(i) {
+        var colourIndex = sectorIndex(positions[i], area, options.palette.length);
+        var colours = options.palette[((colourIndex || 0) + angleOffset) % options.palette.length];
+        $(this).children().css({
           background: colours.colour,
           color: colours.text
         });
       });
-      activities.removeClass("hidden");
-      content.fitText('circular', {fontMin: 13, fontMax: 25, delay: 0});
-    });
+      
+      container.css({width: area.x, height: area.y});
+    },
+    
+    // Lays out bubbles on vertically centered rows
+    list: function(items, container, options) {     
+      // Set positions
+      var max = Math.max.apply(Math, items.map(function() { return $(this).data("scaled-value"); }).toArray());
+      items.each(function() {
+        var item = $(this);
+        item.css({
+          width: item.data("scaled-value"),
+          height: item.data("scaled-value")
+        });
+        var margin = parseInt((max - item.data("scaled-value"))/ 2);
+        $(this).css({'margin-top': margin, 'margin-bottom': margin });
+      });
+      
+      // Set colours
+      var random = Math.floor(Math.random() * options.palette.length);
+      items.each(function(i) {
+        var item = $(this);
+        var colours = options.palette[(random + i++) % options.palette.length];
+        item.children().css({ 
+          background: item.data("colour") || colours.colour,
+          color: item.data("text-colour") || colours.text
+        });
+      });
+    }
   };
-
+  
+  // Renders bubbles with text inside using the chosen layout
+  $.fn.bubbleLayout = function(options) {
+    var defaults = {
+      diameter: {min: 100, max: 250},
+      layout: 'pack',
+      palette: [{colour: '#3366FF', text: '#fff'}]
+    };
+    options = $.extend(defaults, options);
+    options.layout = layouts[options.layout] ? options.layout : 'pack';
+    
+    var container = $(this);
+    var items = container.children(".bubble");
+    
+    items.scaleValues(options.diameter);
+    layouts[options.layout](items, container, options);
+    
+    items.removeClass("hidden");
+    items.find(".content").fitText('circular', {font: options.font, delay: 0, afterEach: options.afterFit});
+  };
 })(jQuery);
