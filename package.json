@@ -10,7 +10,8 @@
     "connect-assetmanager-handlers": "0.0.17",
     "request": "2.2.0",
     "jade": "0.16.2",
-    "underscore" : "1.2.1"
+    "underscore" : "1.2.1",
+    "less": "1.1.4"
   },
   "devDependencies": {
     "jasmine-node":"1.0.11",
