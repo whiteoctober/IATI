@@ -44,7 +44,7 @@ script
     });
     Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
     container.bubbleLayout({palette: palette, layout: 'pack', diameter: {min: 100, max: 250}});
-    $('a.area_filter').attr('href', "#{url_with('/filter/Region')}");
-    $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}");
-    $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}");
+    $('a.area_filter').attr('href', "#{url_with('/filter/Region')}".replace('&amp;','&'));
+    $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}".replace('&amp;','&'));
+    $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}".replace('&amp;','&'));
   });
