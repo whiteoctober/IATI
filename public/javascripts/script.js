@@ -86,12 +86,12 @@ var palette = [
   });
   
   $(".activity_wrapper").each(function() {
-    var activityWrapper = $(this);
-    activityWrapper.width($("#content").width()).height($("#content").height() - 230);
-    var activities = activityWrapper.children(".activities").children(".activity");
+    var wrapper = $(".activity_wrapper");
+    wrapper.width($("#content").width()).height($("#content").height() - 230);
+    var activities = wrapper.find(".activity");
     var content = activities.find(".content");
     
-    activityWrapper.activityZoom({
+    wrapper.activityZoom({
       transition2d: false,
       afterZoom: function(zoom, zoomed) {
         var min = Math.round(11 / zoom);
@@ -99,7 +99,7 @@ var palette = [
         content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
       },
       onResize: function() {
-        activityWrapper.width($("#content").width()).height($("#content").height() - 230);
+        wrapper.width($("#content").width()).height($("#content").height() - 230);
       }
     });
   });
