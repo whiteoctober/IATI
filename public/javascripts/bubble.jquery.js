@@ -1,8 +1,7 @@
-// bubble.jquery.js
-// Renders a list of elements as sized bubbles in various layouts
+// bubbleLayout Plugin
+// Renders a list of text as coloured bubbles with a custom layout
 
 (function($){
-
   // Assigns a linearly scaled value based on an initial value
   $.fn.scaleValues = function(bounds) {
     var values = $.map(this, function(i) { return $(i).data("value") || 1; });
@@ -11,25 +10,27 @@
     var scale = (bounds.max - bounds.min) / (max == min ? 1 : max - min);
     return this.each(function(i) { $(this).data("scaled-value", parseInt(values[i] * scale + bounds.min)); });
   };
-
-  //Finds a circluar sector from the center point of an area
-  var sectorIndex = function(position, area, sectors) {
-    var delta = { x: area.x / 2 - position.x, y: area.y / 2 - position.y };
-    return parseInt(sectors * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2, 10) % sectors;
-  };
   
   var layouts = {
-    //Packs bubbles tightly together
+    // Packs bubbles tightly together
     pack: function(items, container, options) {
       var randomly = function(a,b) { return Math.random() * 2 - 1; };
       var isLeafNode = function(d) { return !d.children; };
       var area = {x: container.parent().width(), y: container.parent().height()};
+      
+      // Finds a circluar sector from the center point of an area
+      var sectorIndex = function(position, area, sectors) {
+        var delta = { x: area.x / 2 - position.x, y: area.y / 2 - position.y };
+        return parseInt(sectors * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2, 10) % sectors;
+      };
+      
+      // Generates data objects from DOM objects
       var data = items.map(function() {
         var item = $(this);
         return { id: item.attr("id"), name: item.data("name"), value: item.data("scaled-value") };
       }).toArray();
 
-      //Gets bubble positions using the D3 algorithm and computes the padding around them
+      // Gets bubble positions using the D3 algorithm and computes the padding around them
       var positions = [];
       var padding = {left: area.x, top: area.y, right: 0, bottom: 0};
       var bubble = d3.layout.pack().size([area.x, area.y]);
@@ -45,7 +46,7 @@
       });
       var actualArea = { x: padding.right - padding.left, y: padding.bottom - padding.top };
 
-      //Scales values according to the desired area
+      // Scales values according to the desired area
       var scale = Math.min(area.x / actualArea.x, area.y / actualArea.y);
       var scaledArea = {x: parseInt(actualArea.x * scale), y: parseInt(actualArea.y * scale)};
       $.map(positions, function(position) {
@@ -54,7 +55,7 @@
         position.radius = scale * position.radius;
       });
 
-      //Set positions
+      // Set positions
       items.each(function(i) {
         var position = positions[i];
         $(this).css({
@@ -66,7 +67,7 @@
         });
       });
       
-      //Set colours
+      // Set colours
       var angleOffset = parseInt(Math.random() * options.palette.length, 10);
       items.each(function(i) {
         var colourIndex = sectorIndex(positions[i], area, options.palette.length);
@@ -80,22 +81,24 @@
       container.css({width: area.x, height: area.y});
     },
     
-    //Lays out bubbles on vertically centered rows
-    list: function(items, container, options) {
-      //Set positions
+    // Lays out bubbles on vertically centered rows
+    list: function(items, container, options) {     
+      // Set positions
       var max = Math.max.apply(Math, items.map(function() { return $(this).data("scaled-value"); }).toArray());
       items.each(function() {
-        $(this).css({'margin': parseInt((max - $(this).height())/ 2) + 'px 5px' });
-      });
-      
-      //Set colours
-      items.each(function() {
         var item = $(this);
-        var colours = options.palette[Math.floor(Math.random() * options.palette.length)];
         item.css({
           width: item.data("scaled-value"),
           height: item.data("scaled-value")
         });
+        var margin = parseInt((max - item.data("scaled-value"))/ 2);
+        $(this).css({'margin-top': margin, 'margin-bottom': margin });
+      });
+      
+      // Set colours
+      items.each(function() {
+        var item = $(this);
+        var colours = options.palette[Math.floor(Math.random() * options.palette.length)];
         item.children().css({ 
           background: item.data("colour") || colours.colour,
           color: item.data("text-colour") || colours.text
@@ -104,10 +107,10 @@
     }
   };
   
-  //Adds redraw event to a bubble container
-  $.fn.renderBubbles = function(options) {
+  // Renders bubbles with text inside using the chosen layout
+  $.fn.bubbleLayout = function(options) {
     var defaults = {
-      size: {min: 100, max: 250},
+      diameter: {min: 100, max: 250},
       layout: 'pack',
       palette: [{colour: '#3366FF', text: '#fff'}]
     };
@@ -117,7 +120,7 @@
     var container = $(this);
     var items = container.children(".bubble");
     
-    items.scaleValues(options.size);
+    items.scaleValues(options.diameter);
     layouts[options.layout](items, container, options);
     
     items.removeClass("hidden");

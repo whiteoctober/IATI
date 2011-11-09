@@ -6,21 +6,20 @@ div.filter
       each choice in choices
         li.choice.bubble(
           id='choice-' + choice.code, 
-          data-name=choice.name,
-          data-value=choice.value
-          data-colour=''
+          data-name=choice.name, data-value=choice.value, data-colour=''
         )
           .outline
           .inner
-            a.content
+            a.content(href=choice.code)
               p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
 
 script
   inlines.push(function(){
-    $('.choices').renderBubbles({
-      palette: palette, layout: 'list', size: {min: 150, max: 200},
+    var notEmpty = function() { return $(this).text() !== ""; }
+    $('.choices').bubbleLayout({
+      palette: palette, layout: 'list', diameter: {min: 130, max: 200},
       afterFit: function() {
-        var textLines = $(this).children().filter(function() { return $(this).text() !== ""; }).toArray();
+        var textLines = $(this).children().filter(notEmpty).toArray();
         $(textLines.slice(-2)).addClass("small");
       }
     });

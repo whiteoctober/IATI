@@ -25,7 +25,7 @@ nav.foot
 
 script
   inlines.push(function(){
-    $('.activities').renderBubbles({palette: palette, layout: 'pack', size: {min: 100, max: 250}});
+    $('.activities').bubbleLayout({palette: palette, layout: 'pack', diameter: {min: 100, max: 250}});
     $('a.area_filter').attr('href', "#{url_with('/filter/Region')}");
     $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}");
     $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}");

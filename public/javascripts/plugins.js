@@ -1,4 +1,44 @@
 (function() {
+  
+  // This fires an animation,  but returns a 
+  // deferred object rather than the jQuery object
+  $.fn.deferredAnimate = function( prop, speed, easing, callback ){
+    var dfr = $.Deferred();
+    
+    // update the appropriate arguments
+    if(typeof speed === "object"){
+      speed.complete = withResolve(speed.complete);
+    } else {
+      
+      // this part might be nicer to do with the argument
+      if(speed === undefined || $.isFunction(speed)){
+        speed = withResolve(speed);
+        
+      } else if(easing === undefined || $.isFunction(easing)){
+        easing = withResolve(easing);
+        
+      } else if(callback === undefined || $.isFunction(callback)){
+        callback = withResolve(callback);
+      }
+      
+    }
+    
+    this.animate(prop, speed, easing, callback);
+    
+    return dfr.promise();
+    
+    // calls a function, then resolved the deffered object
+    function withResolve(fn){
+      return function(){
+        if($.isFunction(fn)){
+          $.proxy(fn, this)();
+        }
+        dfr.resolve(); 
+      };
+    }
+  };
+  
+  
   //Fits text to a container of any shape
   var chars = {};
   $.fn.fitText = function(edges, options) {
