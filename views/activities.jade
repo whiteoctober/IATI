@@ -13,7 +13,7 @@ h3.inner #{actitity_count} records found
         .outline
         .inner
           a.xhr.content(href='/activity/' + activity.code, data-history='{"enter":"slideUp"}')
-            p.text.hidden= activity.name.replace("\n", "")
+            p.text.hidden= (activity.name|| "").replace("\n", "")
 
 nav.foot
   a(href='#data_file') 
