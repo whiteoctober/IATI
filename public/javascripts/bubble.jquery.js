@@ -47,13 +47,21 @@
       var actualArea = { x: padding.right - padding.left, y: padding.bottom - padding.top };
 
       // Scales values according to the desired area
-      var scale = Math.min(area.x / actualArea.x, area.y / actualArea.y);
-      var scaledArea = {x: parseInt(actualArea.x * scale), y: parseInt(actualArea.y * scale)};
+      // var scale = Math.min(area.x / actualArea.x, area.y / actualArea.y);
+      // var scaledArea = {x: parseInt(actualArea.x * scale), y: parseInt(actualArea.y * scale)};
+      // $.map(positions, function(position) {
+        // position.x = (area.x - scaledArea.x) / 2 + scale * (position.x - padding.left);
+        // position.y = (area.y - scaledArea.y) / 2 + scale * (position.y - padding.top);
+        // position.radius = scale * position.radius;
+      // });
+      var scale = {x: area.x / actualArea.x, y: area.y / actualArea.y};
+      var scaledArea = {x: parseInt(actualArea.x * scale.x), y: parseInt(actualArea.y * scale.y)};
       $.map(positions, function(position) {
-        position.x = (area.x - scaledArea.x) / 2 + scale * (position.x - padding.left);
-        position.y = (area.y - scaledArea.y) / 2 + scale * (position.y - padding.top);
-        position.radius = scale * position.radius;
+        position.x = (area.x - scaledArea.x) / 2 + scale.x * (position.x - padding.left);
+        position.y = (area.y - scaledArea.y) / 2 + scale.y * (position.y - padding.top);
+        position.radius = Math.min(scale.x, scale.y) * position.radius;
       });
+      
 
       // Set positions
       items.each(function(i) {
@@ -82,7 +90,7 @@
     },
     
     // Lays out bubbles on vertically centered rows
-    list: function(items, container, options) {     
+    list: function(items, container, options) {
       // Set positions
       var max = Math.max.apply(Math, items.map(function() { return $(this).data("scaled-value"); }).toArray());
       items.each(function() {
@@ -92,7 +100,7 @@
           height: item.data("scaled-value")
         });
         var margin = parseInt((max - item.data("scaled-value"))/ 2);
-        $(this).css({'margin-top': margin, 'margin-bottom': margin });
+        $(this).css({'margin-top': margin + item.data("scaled-value") % 2, 'margin-bottom': margin });
       });
       
       // Set colours
