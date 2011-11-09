@@ -85,25 +85,6 @@ var palette = [
     return false;
   });
   
-  $(".activity_wrapper").each(function() {
-    var wrapper = $(".activity_wrapper");
-    wrapper.width($("#content").width()).height($("#content").height() - 230);
-    var activities = wrapper.find(".activity");
-    var content = activities.find(".content");
-    
-    wrapper.activityZoom({
-      transition2d: false,
-      afterZoom: function(zoom, zoomed) {
-        var min = Math.round(11 / zoom);
-        var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
-        content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
-      },
-      onResize: function() {
-        wrapper.width($("#content").width()).height($("#content").height() - 230);
-      }
-    });
-  });
-  
   $(runInlines);
 
 })();
