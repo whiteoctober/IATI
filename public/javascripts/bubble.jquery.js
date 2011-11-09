@@ -96,9 +96,10 @@
       });
       
       // Set colours
-      items.each(function() {
+      var random = Math.floor(Math.random() * options.palette.length);
+      items.each(function(i) {
         var item = $(this);
-        var colours = options.palette[Math.floor(Math.random() * options.palette.length)];
+        var colours = options.palette[(random + i++) % options.palette.length];
         item.children().css({ 
           background: item.data("colour") || colours.colour,
           color: item.data("text-colour") || colours.text
