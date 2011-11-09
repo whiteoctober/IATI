@@ -16,7 +16,7 @@ h3.inner #{actitity_count} records found
             p.text.hidden= (activity.name|| "").replace("\n", "")
 
 nav.foot
-  a(href='#data_file') 
+  a.xhr(href='/activities?view=data', data-history='{"enter":"slideUp"}') 
     img.button(src='/images/data_file_button.png')
   a.xhr(href='/list') 
     img.button(src='/images/map_button.png')
@@ -44,8 +44,8 @@ script
         wrapper.width($("#content").width()).height($("#content").height() - 230);
       }
     });
-    
-    $('a.area_filter').attr('href', "#{url_with('/filter/Region')}");
-    $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}");
-    $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}");
+
+    $('a.area_filter').attr('href', "#{url_with('/filter/Region')}".replace('&amp;','&'));
+    $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}".replace('&amp;','&'));
+    $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}".replace('&amp;','&'));
   });

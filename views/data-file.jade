@@ -92,3 +92,12 @@
   .third.left
     .widget.section
       h3 Spare box
+
+script
+  inlines.push(function(){
+    contentExit = function(){
+      return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+        $(this).empty().css({marginTop:0});
+      });
+    }
+  });
