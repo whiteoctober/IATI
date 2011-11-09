@@ -59,7 +59,11 @@ var palette = [
     url = url.replace("?&", "?");
     
     var loadContent = function(){
-      $('#content_inner').load(url, function(){
+      $('#content_inner').load(url, function(response, status, xhr){
+        if(status == 'error'){
+          alert('request error');
+          return;
+        }
         if(State.data.enter == 'slideUp'){
           $(this).css('margin-top',600).animate({'margin-top':0});
         }
