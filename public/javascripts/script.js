@@ -10,7 +10,7 @@ var palette = [
 ];
 
 (function() {
-
+  Math.seedrandom('z6m44E4MB5');
   var content = $("#content");
   var popup = $("#popup");
   var dimmer = $("#dimmer");
