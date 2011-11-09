@@ -30,7 +30,9 @@ script
     var container = wrapper.children(".activities");
     var activities = container.children(".activity");
     var content = activities.find(".content");
-    
+
+    Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
+    container.bubbleLayout({palette: palette, layout: 'pack', font: {min: 9, max: 25}, diameter: {min: 100, max: 250}});
     wrapper.activityZoom({
       transition2d: false,
       afterZoom: function(zoom, zoomed) {
@@ -42,8 +44,7 @@ script
         wrapper.width($("#content").width()).height($("#content").height() - 230);
       }
     });
-    Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
-    container.bubbleLayout({palette: palette, layout: 'pack', diameter: {min: 100, max: 250}});
+    
     $('a.area_filter').attr('href', "#{url_with('/filter/Region')}");
     $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}");
     $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}");

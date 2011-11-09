@@ -86,7 +86,7 @@
         });
       });
       
-      container.css({width: area.x, height: area.y});
+      container.height(area.y).width(area.x);
     },
     
     // Lays out bubbles on vertically centered rows
