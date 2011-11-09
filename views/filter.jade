@@ -15,10 +15,11 @@ div.filter
 
 script
   inlines.push(function(){
-    var notEmpty = function() { return $(this).text() !== ""; }
+    Math.seedrandom($('.choices').map(function() { return $(this).attr("id"); }).toArray().join(""));
     $('.choices').bubbleLayout({
       palette: palette, layout: 'list', diameter: {min: 130, max: 200},
       afterFit: function() {
+        var notEmpty = function() { return $(this).text() !== ""; }
         var textLines = $(this).children().filter(notEmpty).toArray();
         $(textLines.slice(-2)).addClass("small");
       }

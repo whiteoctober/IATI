@@ -24,7 +24,8 @@ nav.foot
     img.button(src='/images/list_button.png')
 
 script
-  inlines.push(function(){
+  inlines.push(function() {
+    Math.seedrandom($('.activities').map(function() { return $(this).attr("id"); }).toArray().join(""));
     $('.activities').bubbleLayout({palette: palette, layout: 'pack', diameter: {min: 100, max: 250}});
     $('a.area_filter').attr('href', "#{url_with('/filter/Region')}");
     $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}");
