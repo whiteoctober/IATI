@@ -1,3 +1,14 @@
+nav.sorting
+  | Arrange By:
+  a(href=url_with(false,{orderby:'value'}), 
+    class="xhr funding" + (query.orderby != 'name' ? ' active' : ''),
+    data-history='{"enter":"slideUp"}')
+    span Funding Size 
+  a(href=url_with(false,{orderby:'name'}), 
+    class="xhr az" + (query.orderby == 'name' ? ' active' : ''),
+    data-history='{"enter":"slideUp"}')
+    span A-Z 
+
 section.slide-panel
 
   aside

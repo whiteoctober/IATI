@@ -82,6 +82,10 @@ _.mixin({
 });
 
 app.dynamicHelpers({
+  query:function(req){
+    return req.query;
+  },
+  
   // adds parameters to the url
   url_with:function(req,res){
     return function(pathname, params){
@@ -123,7 +127,7 @@ var beforeFilter = function(req, res, next){
   
   //assign the filter query
   
-  var keep = 'Region Country Sector SectorCategory Funder'.split(' ');
+  var keep = 'Region Country Sector SectorCategory Funder orderby'.split(' ');
   
   req.filter_query = _.reduce(req.query, function(memo, value, key){
     if(_.include(keep, key)) memo[key] = value;

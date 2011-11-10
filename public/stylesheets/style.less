@@ -1,5 +1,13 @@
 @import url(slide-panel.css);
 
+@blue:#2d5ea9;
+@grey:#999;
+
+.thinned_text(@bg:#fff){
+  text-shadow:@bg 0 0 1px;  
+}
+
+
 #body .left { float: left; }
 #body .right { float: right; }
 #body .hidden { display: none; }
@@ -382,3 +390,47 @@ nav.foot{
   width: 100%;
   text-align: center;
 }
+nav.sorting{
+  position: fixed;
+  top: 0;
+  right:0;
+  z-index: 10;
+  margin:1em 3em;
+  
+  text-transform:uppercase;
+  font-weight:bold;
+  color:@grey;
+  .thinned_text;
+  
+  //possibly move this out to a.toggle
+  a{
+    background-image:url("/images/toggles/off.png");
+    height:64px;
+    width:64px;
+    
+    span{
+      height:64px;
+      width:64px;
+      display:block;
+      text-indent: -3000px;
+    }
+    
+    display:inline-block;
+    
+    vertical-align:middle;
+    &.active{
+      background-image:url("/images/toggles/on.png");
+    }
+    &.funding{
+      span{
+        background-image:url("/images/toggles/label-funding.png");
+      }
+    }
+    &.az{
+      span{
+        background-image:url("/images/toggles/label-az.png");
+      }
+    }
+  }
+}
+
