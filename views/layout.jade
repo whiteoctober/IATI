@@ -21,7 +21,7 @@ html
           img.button(src='/images/home_button.png')
         a(href='javascript:history.back()') 
           img.button(src='/images/back_button.png')
-        a(href='#favourites') 
+        a.xhr(href='/dashboard', data-history='{"enter":"slideUp"}') 
           img.button(src='/images/favourites_button.png')
     #footer
       .left_corner.corner

@@ -1,0 +1,45 @@
+@greybg:#f0f0f0;
+
+.clearfix {
+    &:before, &:after{
+        content: "\0020"; display: block; height: 0; overflow: hidden;
+    }
+    &:after { clear: both; }
+    zoom: 1;
+}
+
+
+section.dashboard{
+  .clearfix;
+  
+  section{
+    width:30%;
+  }
+  
+  ol.groups{
+    width:65%;
+    float:right;
+    padding:0;
+    margin:0;
+    li{
+      list-style:none;
+    }
+    h2{.clearfix}
+  }
+  
+  h2{
+    background-color:@greybg;
+    padding:.25em .75em;
+    
+    font-size:1.6em;
+    
+    small{
+      float:right;
+      font-size:.6em;
+      line-height:2em;
+      
+    }
+  }
+  
+  
+}

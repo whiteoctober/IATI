@@ -237,6 +237,12 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
 });
 
 
+app.get('/dashboard', beforeFilter, function(req, res, next){
+  res.render('dashboard', {
+    layout: !req.isXHR
+  });
+});
+
 
 // Only listen on $ node app.js
 
