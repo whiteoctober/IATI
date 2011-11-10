@@ -2,6 +2,7 @@
 @import url(dashboard.css);
 
 @blue:#2d5ea9;
+@light-blue:#1e99d6;
 @grey:#999;
 
 .thinned_text(@bg:#fff){
@@ -435,3 +436,30 @@ nav.sorting{
   }
 }
 
+
+#dialog{
+  z-index:20;
+  position:fixed;
+  width:100%;
+  text-align:center;
+  margin:auto;
+  background-image:url(/images/dialog.png);
+  background-repeat:no-repeat;
+  background-position:center center;
+  height:467px;
+  
+  .thinned_text;
+  h2{
+    width:400px;
+    margin:auto;
+    margin-top:180px;
+    font-size:3em;
+    color:@light-blue;
+  }
+  p{
+    width:350px;
+    margin:auto;
+    color:@blue;
+    font-size:1.8em;
+  }
+}

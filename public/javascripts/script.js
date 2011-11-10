@@ -42,6 +42,12 @@ var palette = [
     });
   });
   
+  $('#dialog').live('click', function(){
+    $(this).fadeOut(function(){
+      $(this).remove();
+    });
+  })
+  
   // If this is a function that returns a deferred promise, then it will
   // be called before new content is loaded in.
   window.contentExit = null;
