@@ -6,7 +6,8 @@ var express = require('express'),
     url = require('url'),
     _ = require('underscore'),
     assetManager = require('connect-assetmanager'),
-    assetHandler = require('connect-assetmanager-handlers');
+    assetHandler = require('connect-assetmanager-handlers'),
+    helpers = require('./lib/helpers.js');
 
 // all the script files that should be served to the client
 var clientScripts = [
@@ -114,6 +115,8 @@ app.dynamicHelpers({
   }
 });
 
+app.helpers(helpers);
+
 // Routes
 
 var beforeFilter = function(req, res, next){
@@ -162,20 +165,20 @@ app.get('/activities', beforeFilter, function(req, res, next){
     
     var total = data['@activity-count'];
     var pagination = (total <= app.settings.pageSize) ? false : {
-      current: parseInt((req.query.p||1), 10),
+      current: page,
       total: Math.ceil(total / app.settings.pageSize)
     };
     
-    var view = req.query.view;
+    var template = {data:'data-file', list:'activities-list'}[req.query.view] || 'activities';
     delete req.query.view;
-    res.render(view == 'data' ? 'data-file' : 'activities', {
+    
+    res.render(template, {
       title: 'Activities',
       page: 'activities',
       filter_paths: req.filter_paths,
       query: req.query,
       activities: _.as_array(data['iati-activity']),
       actitity_count: total,
-      current_page: req.query.p || 1,
       pagination: pagination,
       layout: !req.isXHR
     });
@@ -229,11 +232,6 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
     .end();
 });
 
-app.get('/list', beforeFilter, function(req, res){
-  res.render('activities-list', {
-    layout:!req.isXHR
-  });
-});
 
 
 // Only listen on $ node app.js

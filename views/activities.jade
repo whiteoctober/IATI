@@ -16,11 +16,11 @@ h3.inner #{actitity_count} records found
             p.text.hidden= (activity.name|| "").replace("\n", "")
 
 nav.foot
-  a.xhr(href='/activities?view=data', data-history='{"enter":"slideUp"}') 
+  a.xhr(href=url_with(false, {view:'data'}), data-history='{"enter":"slideUp"}') 
     img.button(src='/images/data_file_button.png')
-  a.xhr(href='/list') 
+  a.xhr(href='#map')
     img.button(src='/images/map_button.png')
-  a.xhr(href='/list', data-history='{"enter":"slideUp"}') 
+  a.xhr(href=url_with(false, {view:'list'}), data-history='{"enter":"slideUp"}') 
     img.button(src='/images/list_button.png')
 
 script

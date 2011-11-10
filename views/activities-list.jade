@@ -1,13 +1,31 @@
 section.slide-panel
-  h1 Activities List
-  p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  script
-    inlines.push(function(){
-      contentExit = function(){
-        return $('#content_inner').deferredAnimate({marginTop:600}, function(){
-          $(this).empty().css({marginTop:0});
-        });
-      }
-    });
+
+  aside
+    ul
+      li: a.icn.save(href="#") Save to my favourites
+      li: a.icn.print(href="#") Print
+      li: a.icn.pdf(href="#") PDF
+      li: a.icn.csv(href="#") CSV
+
+  div.main
+  
+    h1 Results viewed as a list
+  
+    table.full
+      each activity in activities
+        tr 
+          td.name 
+            a.xhr.content(href='/activity/' + activity.code, data-history='{"enter":"slideUp"}')
+              = activity.name
+          td
+           = to_currency(activity.value)
+
+    script
+      inlines.push(function(){
+        contentExit = function(){
+          return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+            $(this).empty().css({marginTop:0});
+          });
+        }
+      });
     
