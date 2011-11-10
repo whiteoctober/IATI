@@ -1,9 +1,11 @@
 var gently = global.GENTLY = new (require('gently'))(),
     api = require('../lib/api.js'),
     url = require('url'),
-    http = require('http');
-    
+    http = require('http'),
+    log4js = require('log4js');
 
+
+log4js.getLogger('api.js').setLevel('FATAL');
 
 describe("request", function() {
   
