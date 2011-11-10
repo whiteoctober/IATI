@@ -1,6 +1,11 @@
-h3.inner #{actitity_count} records found
+h3.inner #{activity_count} records found
   - if (pagination)
     != partial('pagination', pagination)
+
+- if (activity_count > 750 && pagination.current == 1)
+  div#dialog
+    h2 <strong>#{activity_count}</strong> projects found
+    p Refine search by selecting another sector, sub-sector, funder or area
 
 .activity_wrapper
   ul.activities.clearfix
@@ -48,4 +53,6 @@ script
     $('a.area_filter').attr('href', "#{url_with('/filter/Region')}".replace('&amp;','&'));
     $('a.funder_filter').attr('href', "#{url_with('/filter/Funder')}".replace('&amp;','&'));
     $('a.sector_filter').attr('href', "#{url_with('/filter/SectorCategory')}".replace('&amp;','&'));
+    
+    $('#dialog').hide().fadeIn();
   });

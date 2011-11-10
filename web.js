@@ -167,7 +167,7 @@ app.get('/activities', beforeFilter, function(req, res, next){
   new api.Request(params)
   .on('success', function(data){
     
-    var total = data['@activity-count'];
+    var total = data['activity-count'];
     var pagination = (total <= app.settings.pageSize) ? false : {
       current: page,
       total: Math.ceil(total / app.settings.pageSize)
@@ -182,7 +182,7 @@ app.get('/activities', beforeFilter, function(req, res, next){
       filter_paths: req.filter_paths,
       query: req.query,
       activities: _.as_array(data['iati-activity']),
-      actitity_count: total,
+      activity_count: total,
       pagination: pagination,
       layout: !req.isXHR
     });
