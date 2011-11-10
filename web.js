@@ -78,7 +78,7 @@ _.mixin({
   as_array:function(obj_or_array){
     return obj_or_array === undefined ? [] : (_.isArray(obj_or_array) ? obj_or_array : [obj_or_array]);
   }
-})
+});
 
 app.dynamicHelpers({
   // adds parameters to the url
@@ -149,11 +149,13 @@ app.get('/', beforeFilter, function(req, res){
 
 app.get('/activities', beforeFilter, function(req, res, next){
   
-  var start = ((req.query.p || 0) * app.settings.pageSize) + 1;
+  var page = parseInt(req.query.p || 1, 10);
+  var start = ((page - 1) * app.settings.pageSize) + 1;
   
   var params = {result:'values', pagesize:app.settings.pageSize, start:start};
   
   _.extend(params, req.filter_query);
+
   
   new api.Request(params)
   .on('success', function(data){
@@ -189,6 +191,7 @@ app.get('/activities', beforeFilter, function(req, res, next){
 
 app.get('/activity/:id', beforeFilter, function(req, res, next){
   
+  
   api.Request({ID:req.params.id, result:'full'})
     .on('success', function(data){
       res.render('activity', {
@@ -218,7 +221,7 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
         title: 'Filter by ' + filter_key,
         page: 'filter',
         layout: !req.isXHR
-      })
+      });
     })
     .on('error', function(e){
       next(e);
