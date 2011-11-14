@@ -19,7 +19,7 @@ var palette = [
   Math.seedrandom('z6m44E4MB5');
   
   //This calls all of the inline scripts, set on page/dynamic content load
-  var runInlines = function() { while(inlines.length) { inlines.pop()(); } }
+  var runInlines = function() { while(inlines.length) { inlines.pop()(); } };
   
   //Dim the page when requested
   dimmer.click(function() {
@@ -50,7 +50,13 @@ var palette = [
     $(this).fadeOut(function() {
       $(this).remove();
     });
-  })
+  });
+  
+  $('.dashboard #clear').live('click', function(e){
+    e.preventDefault();
+    IATI.dashboard.clear();
+    window.location.reload();
+  });
   
   // If this is a function that returns a deferred promise, then it will
   // be called before new content is loaded in.

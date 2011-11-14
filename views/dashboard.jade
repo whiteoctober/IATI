@@ -1,5 +1,8 @@
 section.slide-panel.dashboard
+  a.dev#clear(href='#') Clear All
+  
   h1.icn.favourite.large My dashboard
+  
   
   ol.groups
     li
@@ -29,9 +32,15 @@ section.slide-panel.dashboard
     h2 My widgets
     
     ol.content
+      li widget
   
   section.datafiles
     h2 My data files
 
     ol.content
 
+
+script
+  inlines.push(function(){
+    $('.dashboard .widgets .content').dashboardContent('widgets');
+  })
