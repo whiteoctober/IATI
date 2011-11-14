@@ -35,7 +35,7 @@ script
     wrapper.activityZoom({
       transition2d: true,
       afterZoom: function(zoom, zoomed) {
-        var min = Math.round(11 / zoom);
+        var min = Math.round(9 / zoom);
         var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
         content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
       },

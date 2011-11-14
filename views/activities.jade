@@ -37,12 +37,18 @@ script
     var content = activities.find(".content");
 
     Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
-    container.bubbleLayout({palette: palette, layout: 'pack', font: {min: 9, max: 25}, diameter: {min: 100, max: 250}});
+    container.bubbleLayout({
+      palette: palette, 
+      layout: 'pack', 
+      font: {min: 9, max: 25}, 
+      diameter: {min: 100, max: 250}
+    });
     wrapper.activityZoom({
       transition2d: true,
       afterZoom: function(zoom, zoomed) {
-        var min = Math.round(11 / zoom);
-        var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
+        var min = Math.round(9 / zoom);
+        if (zoomed > 0) { var filter = ".truncated"; }
+        else { var filter = function() { return parseInt($(this).css("font-size"), 10) < min; }; }
         content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
       },
       onResize: function() {

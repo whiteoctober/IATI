@@ -10,33 +10,33 @@ nav.sorting
     span A-Z 
 
 section.slide-panel
+<<<<<<< HEAD
+  .inner.clearfix
+    aside
+      ul
+        li: a.icn.favourite(href="#") Save to my favourites
+        li: a.icn.print(href="#") Print
+        li: a.icn.pdf(href="#") PDF
+        li: a.icn.csv(href="#") CSV
 
-  aside
-    ul
-      li: a.icn.favourite(href="#") Save to my favourites
-      li: a.icn.print(href="#") Print
-      li: a.icn.pdf(href="#") PDF
-      li: a.icn.csv(href="#") CSV
-
-  div.main
-  
-    h1 Results viewed as a list
-  
-    table.full
-      each activity in activities
-        tr 
-          td.name 
-            a.xhr.content(href='/activity/' + activity.code, data-history='{"enter":"slideUp"}')
-              = activity.name
-          td
-           = to_currency(activity.value)
-
-    script
-      inlines.push(function(){
-        contentExit = function(){
-          return $('#content_inner').deferredAnimate({marginTop:600}, function(){
-            $(this).empty().css({marginTop:0});
-          });
-        }
-      });
+    div.main
     
+      h1 Results viewed as a list
+    
+      table.full
+        each activity in activities
+          tr 
+            td.name 
+              a.xhr.content(href='/activity/' + activity.code, data-history='{"enter":"slideUp"}')
+                = activity.name
+            td
+             = to_currency(activity.value)
+
+  script
+    inlines.push(function(){
+      contentExit = function(){
+        return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+          $(this).empty().css({marginTop:0});
+        });
+      }
+    });
