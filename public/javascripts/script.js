@@ -16,9 +16,10 @@ var palette = [
   var dimmer = $("#dimmer");
   var embed = $("#embed");
   var dimmed = false;
-  query = window.location.search.replace(/^\?/, "");
+  var query = window.location.search.replace(/^\?/, "");
   var activeChange = false;
   var cacheBugFix = function(xhr, settings) { settings.url = settings.url.replace("?&", "?"); };
+  
   //This calls all of the inline scripts, set on page/dynamic content load
   var runInlines = function() { while(inlines.length) { inlines.pop()(); } }
   
@@ -63,30 +64,29 @@ var palette = [
     
     //jQuery Cache bug fix
     url = url.replace("?&", "?");
-    
-    var loadContent = function(){
-      $('#content_inner').load(url, function(response, status, xhr){
-        if(status == 'error'){
+        
+    var loadContent = function() {
+      $('#content_inner').load(url, function(response, status, xhr) {
+        if (status == 'error') {
           alert('request error');
           return;
         }
-        if(State.data.enter == 'slideUp'){
-          $(this).css('margin-top',600).animate({'margin-top':0});
+        if (State.data.enter == 'slideUp') {
+          $(this).css('margin-top', 600).animate({'margin-top': 0});
         }
         runInlines();
       });
     };
     
     // if there is an exit animation/function - then fire that before loading 
-    if(window.contentExit){
-      window.contentExit().then(function(){
+    if (window.contentExit) {
+      window.contentExit().then(function() {
         window.contentExit = null;
         loadContent();
       });
     } else {
       loadContent();
     }
-    
   });
   
   $('a.xhr').live('click', function() {
