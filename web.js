@@ -28,6 +28,13 @@ var clientScripts = [
   'script.js'
 ];
 
+
+// set the cache to the time at which the app was started
+// (ideally - this would be a hash of the script files or the
+// most recent modification date)
+var cacheKey = (new Date()).getTime();
+
+
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -45,12 +52,9 @@ app.configure(function(){
   //custom app settings
   app.set('pageSize', 20);
   
-  app.set('view options', {
-    title: 'IATI data browser',
-    clientScripts: clientScripts,
-  });
   
-  /* todo
+  // combination and minification of static files
+  
   app.use(assetManager({
     'js':{
       'route' : /\/static\/js\/[0-9]+\/.*\.js/,
@@ -61,8 +65,32 @@ app.configure(function(){
           '^': [assetHandler.uglifyJsOptimize]
       }
     }
+    /* todo, problems:
+        - no import inlining
+        - fs *.css wont be written to fs until requested
+    
+    , 'css': {
+      'route': /\/static\/css\/[0-9]+\/.*\.css/,
+      'path': './public/stylesheets/',
+      'dataType': 'css', 
+      'files': ['style.css'],
+      'preManipulate': {
+        '^': [
+          assetHandler.yuiCssOptimize,
+          assetHandler.replaceImageRefToBase64(root)
+        ]
+      }
+    }*/
   }));
-  */
+  
+  
+  // set this to false to load the scripts as normal
+  var clientScriptsCache = ['../static/js/' + cacheKey + '/client.js'];
+  
+  app.set('view options', {
+    title: 'IATI data browser',
+    clientScripts: clientScriptsCache || clientScripts,
+  });
   
 });
 
