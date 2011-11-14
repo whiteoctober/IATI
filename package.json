@@ -12,7 +12,8 @@
     "jade": "0.16.2",
     "underscore" : "1.2.1",
     "less": "1.1.4",
-    "log4js": "0.3.9"
+    "log4js": "0.3.9",
+    "memcached" : "0.0.5"
   },
   "devDependencies": {
     "jasmine-node":"1.0.11",
