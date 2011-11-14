@@ -46,7 +46,7 @@
     options = $.extend(defaults, options);
     var items = this.toArray();
     var standardFontSize = 14;
-    var fontTolerance = 0.1;
+    var fontTolerance = 0.15;
     var predefinedEdges = {
       circular: function(height) { return 1 - Math.cos(Math.asin((height - 0.5) * 2)); },
       none: function() { return 0; }
