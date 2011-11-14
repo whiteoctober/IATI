@@ -9,13 +9,13 @@ var express = require('express'),
     assetHandler = require('connect-assetmanager-handlers'),
     helpers = require('./lib/helpers.js');
 
-// all the script files that should be served to the client
+//All the script files that should be served to the client
 var clientScripts = [
   'lib/jquery.js', 
   'lib/jquery.form.min.js', 
   'lib/d3.min.js', 
   'lib/d3.layout.min.js', 
-  'lib/jquery.history.js', //causes problems when minified
+  'lib/jquery.history.js', //Causes problems when minified
   'lib/jquery.transform.min.js', 
   'lib/zynga/Animate.js', 
   'lib/zynga/Scroller.js', 
@@ -35,7 +35,7 @@ var clientScripts = [
 var cacheKey = (new Date()).getTime();
 
 
-app.configure(function(){
+app.configure(function() {
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.bodyParser());
@@ -82,8 +82,8 @@ app.configure(function(){
       }
     }*/
   }));
-  
-  
+
+
   // set this to false to load the scripts as normal
   var clientScriptsCache = ['../static/js/' + cacheKey + '/client.js'];
   
@@ -91,57 +91,56 @@ app.configure(function(){
     title: 'IATI data browser',
     clientScripts: clientScriptsCache || clientScripts,
   });
-  
 });
 
-app.configure('development', function(){
+app.configure('development', function() {
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
-app.configure('production', function(){
+app.configure('production', function() {
   app.use(express.errorHandler()); 
 });
 
 _.mixin({
-  // to wrap singular responses in array
-  as_array:function(obj_or_array){
-    return obj_or_array === undefined ? [] : (_.isArray(obj_or_array) ? obj_or_array : [obj_or_array]);
+  //Returns an array by wrapping non-arrays in an array
+  as_array: function(something) {
+    return something === undefined ? [] : (_.isArray(something) ? something : [something]);
   }
 });
 
 app.dynamicHelpers({
-  query:function(req){
+  query: function(req){
     return req.query;
   },
-  
-  // adds parameters to the url
-  url_with:function(req,res){
-    return function(pathname, params){
+
+  //Adds parameters to the url
+  url_with: function(req,res) {
+    return function(pathname, params) {
       
-      // parse the current url along with the query string
+      //Parse the current url along with the query string
       var parsedUrl = url.parse(req.originalUrl,true);
       
-      if(pathname){
+      if (pathname) {
         parsedUrl.pathname = pathname;
       }
       
-      if(params){
-        // default to empty query object and remove search query 
-        // so it's not used to generate the url
+      if (params) {
+        //Default to empty query object and remove search query 
+        //So it's not used to generate the url
         parsedUrl.query = parsedUrl.query || {};
         delete parsedUrl.search;
         
-        // assign the new parameters
+        //Assign the new parameters
         _.extend(parsedUrl.query, params);
       }
       
-      //remove the xhr param (this is used as a work around for cache issues)
-      if(parsedUrl.query && parsedUrl.query.xhr){
+      //Remove the xhr param (this is used as a work around for cache issues)
+      if (parsedUrl.query && parsedUrl.query.xhr) {
         delete parsedUrl.query.xhr;
-        delete parsedUrl.search; //force the query to be used
+        delete parsedUrl.search; //Force the query to be used
       }
       
-      // return the formatted url
+      //Return the formatted url
       return url.format(parsedUrl);
     };
   }
@@ -149,31 +148,22 @@ app.dynamicHelpers({
 
 app.helpers(helpers);
 
-// Routes
+//Routes
 
-var beforeFilter = function(req, res, next){
-  
-  //assign the filter query
-  
+var beforeFilter = function(req, res, next) {
+  //Get query, filtering unwanted values
   var keep = 'Region Country Sector SectorCategory Funder orderby'.split(' ');
-  
-  req.filter_query = _.reduce(req.query, function(memo, value, key){
-    if(_.include(keep, key)) memo[key] = value;
-    
+  req.filter_query = _.reduce(req.query, function(memo, value, key) {
+    if (_.include(keep, key)) memo[key] = value;
     return memo;
   },{});
   
-  
   req.queryString = req.originalUrl.split('?')[1] || '';
-  
-  
-  //assign xhr
   req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
-  
   next();
 };
 
-app.get('/', beforeFilter, function(req, res){
+app.get('/', beforeFilter, function(req, res) {
   res.render('index', {
     title: 'Home',
     page: 'home',
@@ -182,22 +172,20 @@ app.get('/', beforeFilter, function(req, res){
   });
 });
 
-app.get('/activities', beforeFilter, function(req, res, next){
+app.get('/activities', beforeFilter, function(req, res, next) {
   var page = parseInt(req.query.p || 1, 10);
   var start = ((page - 1) * app.settings.pageSize) + 1;
-  var view = req.query.view;
-  var count = 0;
-  var activities;
-  var funders = {};
-  
   var params = {
-    result: view == 'data' ? 'full' : 'values',
+    result: 'values',
     pagesize: app.settings.pageSize, 
     start: start
   };
-  
-  var render = function(activities, amounts) {
-    var total = activities['@activity-count'];
+
+  _.extend(params, req.filter_query);
+  new api.Request(params)
+  .on('success', function(data) {
+    var activities = _.as_array(data['iati-activity']);
+    var total = data['@activity-count'];
     var pagination = (total <= app.settings.pageSize) ? false : {
       current: parseInt(req.query.p || 1, 10),
       total: Math.ceil(total / app.settings.pageSize)
@@ -208,82 +196,68 @@ app.get('/activities', beforeFilter, function(req, res, next){
     res.render(template, {
       title: 'Activities',
       page: 'activities',
-      funders: JSON.stringify(funders),
       filter_paths: req.filter_paths,
       query: req.query,
-      activities: _.as_array(activities['iati-activity']),
+      activities: activities,
       actitity_count: total,
       current_page: req.query.p || 1,
       pagination: pagination,
       layout: !req.isXHR
     });
-  };
-  
-  if (view == 'data') {
-    count++;
-    _.extend(params, {groupby: 'Funder', orderby: 'values', result: 'values'});
-    new api.Request(params)
-      .on('success', function(data) {
-        var max = 6;
-        _(data.Funder).each(function(f) { 
-          f.value = parseFloat(f.value); 
-          f.name = f.name === null ? "Unknown" : f.name;
-        });
-
-        funders = _(data.Funder).chain()
-          .sortBy(function(f) { return -f.value; })
-          .map(function(f) { return [f.name, f.value]; })
-        .value();
-        
-        count--;
-        if (count <= 0) render(activities, funders);
-      })
-      .on('error', function(e){
-        next(e);
-      })
-      .end();
-  }
-
-  count++;
-  _.extend(params, req.filter_query);
-  new api.Request(params)
-  .on('success', function(data) {
-    activities = _.as_array(data['iati-activity']);
-    count--;
-    if (count <= 0) render(activities, funders);
   })
-  .on('error', function(e){
+  .on('error', function(e) {
     next(e);
   })
   .end();
 });
 
-app.get('/activity/:id', beforeFilter, function(req, res, next){
-  
-  
+app.get('/data-file', beforeFilter, function(req, res, next) {
+  var params = { result: 'full' };
+
+  _.extend(params, req.filter_query);
+  new api.Request(params)
+  .on('success', function(data) {
+    var activities = _.as_array(data['iati-activity']);
+    var total = activities['@activity-count'];
+    
+    res.render('data-file', {
+      title: 'Data File',
+      page: 'data-file',
+      filter_paths: req.filter_paths,
+      query: req.query,
+      activities: _.as_array(activities['iati-activity']),
+      actitity_count: total,
+      current_page: req.query.p || 1,
+      layout: !req.isXHR
+    });
+  })
+  .on('error', function(e) {
+    next(e);
+  })
+  .end();
+});
+
+app.get('/activity/:id', beforeFilter, function(req, res, next) {
   api.Request({ID:req.params.id, result:'full'})
-    .on('success', function(data){
+    .on('success', function(data) {
       res.render('activity', {
         activity: data['iati-activity'],
         layout: !req.isXHR
       });
     })
-    .on('error', function(e){
+    .on('error', function(e) {
       next(e);
     })
     .end();
 });
 
-
-app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
+app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
   var filter_key = req.params.filter_key;
-  
   var params = {result:'values', groupby:filter_key};
-  
   _.extend(params, req.filter_query);
   
   new api.Request(params)
-    .on('success', function(data){
+    .on('success', function(data) {
       res.render('filter', {
         choices: _.as_array(data[filter_key]),
         key: filter_key,
@@ -292,7 +266,7 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res, next){
         layout: !req.isXHR
       });
     })
-    .on('error', function(e){
+    .on('error', function(e) {
       next(e);
     })
     .end();
@@ -306,8 +280,40 @@ app.get('/dashboard', beforeFilter, function(req, res, next){
 });
 
 
-// Only listen on $ node app.js
+app.get('/list', beforeFilter, function(req, res) {
+  res.render('activities-list', {
+    layout: !req.isXHR
+  });
+});
 
+
+app.get('/widgets/donors', beforeFilter, function(req, res) {
+  _.extend(params, {groupby: 'Funder', orderby: 'values', result: 'values'});
+    new api.Request(params)
+      .on('success', function(data) {
+        var max = 6;
+        _(data.Funder).each(function(f) { 
+          f.value = parseFloat(f.value); 
+          f.name = f.name === null ? "Unknown" : f.name;
+        });
+
+        var funders = _(data.Funder).chain()
+          .sortBy(function(f) { return -f.value; })
+          .map(function(f) { return [f.name, f.value]; })
+        .value();
+        
+        res.render('widgets/donors', {
+          funders: JSON.stringify(funders),
+          layout: 'widget'
+        });
+      })
+      .on('error', function(e) {
+        next(e);
+      })
+      .end();
+});
+
+//Only listen on $ node app.js
 if (!module.parent) {
   app.listen(process.env.PORT || 3000);
   console.log("Express server listening on port %d", app.address().port);

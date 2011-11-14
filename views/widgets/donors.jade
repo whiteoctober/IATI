@@ -1,0 +1,16 @@
+#chart(data-funders=funders)
+
+script
+  inlines.push(function(){
+    google.setOnLoadCallback(function() {
+      var chart = document.getElementById('chart');
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Topping');
+      data.addColumn('number', 'Slices');
+      data.addRows(JSON.parse(chart.attributes['data-funders'].value));
+
+      var options = {width: 220, height: 165, backgroundColor: 'none', chartArea: {left: 10, top: 10, width: '100%', height: '100%'}};
+      var chart = new google.visualization.PieChart(chart);
+      chart.draw(data, options);
+    });
+  });
