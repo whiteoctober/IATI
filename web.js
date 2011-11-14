@@ -183,45 +183,79 @@ app.get('/', beforeFilter, function(req, res){
 });
 
 app.get('/activities', beforeFilter, function(req, res, next){
-  
   var page = parseInt(req.query.p || 1, 10);
   var start = ((page - 1) * app.settings.pageSize) + 1;
+  var view = req.query.view;
+  var count = 0;
+  var activities;
+  var funders = {};
   
-  var params = {result:'values', pagesize:app.settings.pageSize, start:start};
+  var params = {
+    result: view == 'data' ? 'full' : 'values',
+    pagesize: app.settings.pageSize, 
+    start: start
+  };
   
-  _.extend(params, req.filter_query);
-
-  
-  new api.Request(params)
-  .on('success', function(data){
-    
-    var total = data['activity-count'];
+  var render = function(activities, amounts) {
+    var total = activities['@activity-count'];
     var pagination = (total <= app.settings.pageSize) ? false : {
-      current: page,
+      current: parseInt(req.query.p || 1, 10),
       total: Math.ceil(total / app.settings.pageSize)
     };
     
-    var template = {data:'data-file', list:'activities-list'}[req.query.view] || 'activities';
     delete req.query.view;
     
     res.render(template, {
       title: 'Activities',
       page: 'activities',
+      funders: JSON.stringify(funders),
       filter_paths: req.filter_paths,
       query: req.query,
-      activities: _.as_array(data['iati-activity']),
-      activity_count: total,
+      activities: _.as_array(activities['iati-activity']),
+      actitity_count: total,
+      current_page: req.query.p || 1,
       pagination: pagination,
       layout: !req.isXHR
     });
+  };
+  
+  if (view == 'data') {
+    count++;
+    _.extend(params, {groupby: 'Funder', orderby: 'values', result: 'values'});
+    new api.Request(params)
+      .on('success', function(data) {
+        var max = 6;
+        _(data.Funder).each(function(f) { 
+          f.value = parseFloat(f.value); 
+          f.name = f.name === null ? "Unknown" : f.name;
+        });
+
+        funders = _(data.Funder).chain()
+          .sortBy(function(f) { return -f.value; })
+          .map(function(f) { return [f.name, f.value]; })
+        .value();
+        
+        count--;
+        if (count <= 0) render(activities, funders);
+      })
+      .on('error', function(e){
+        next(e);
+      })
+      .end();
+  }
+
+  count++;
+  _.extend(params, req.filter_query);
+  new api.Request(params)
+  .on('success', function(data) {
+    activities = _.as_array(data['iati-activity']);
+    count--;
+    if (count <= 0) render(activities, funders);
   })
   .on('error', function(e){
     next(e);
   })
   .end();
-
-
-
 });
 
 app.get('/activity/:id', beforeFilter, function(req, res, next){

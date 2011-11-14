@@ -1,97 +1,100 @@
-.data_file.clearfix
-  h1.title Data file: Somewhere
-  .third.left
-    .summary.section
-      table.full
-        tr
-          td Total commitments:
-          td!= "$<strong>235</strong> billion"
-        tr
-          td Total disbursments:
-          td!= "$<strong>189</strong> billion"
-        tr
-          td Total activities:
-          td!= "$<strong>38</strong>"
-  .third.left
-    .stats.section
-      strong World Bank data (2009)
-      table.full
-        tr
-          td GDP
-          td $75.5 biilion
-        tr
-          td GNI per capita
-          td $3,880
-        tr
-          td External debt stocks (% of GNI)
-          td 28.8%
-        tr
-          td Life expectancy at birth, total
-          td 50 yeard
-        tr
-          td Population, total
-          td 18.6 million
-  .third.left
-    .links.section.right
-      a(href='')
-        img(src='/images/sprites/save.png')
-        | Save to my dashboard
-      a(href='')
-        img(src='/images/sprites/print.png')
-        | Print
-      a(href='')
-        img(src='/images/sprites/pdf.png')
-        | PDF
-      a(href='')
-        img(src='/images/sprites/csv.png')
-        | CSV
-  .clear
-  .third.left
-    .widget.section
-      .corner
-        a.save(href='#save')
-         img(src='/images/sprites/save.png')
-      .content
-        h3 New projects in Somewhere:
-        p
-          | 3rd Social Action Fund(FAS III)
-          br
-          | Commitments: $467,017
-          br
-          br
-          | Accountable Grant With One World Action for LUPP Building Influence, Strengthening...
-          br
-          | Commitments: $1,871,781
-          br
-          br
-          | HIV/AIDS, Malaria and TB Control Project (HAMSET)
-          br
-          | Commitments: $457,000
-  .third.left
-    .widget.section
-      .corner
-        a.save(href='#save')
-         img(src='/images/sprites/save.png')
-      .content
-        h3 Top donors in Somewhere:
-        img(src='/images/example_graph_1.png')
-  .third.left
-    .widget.section
-      .corner
-        a.save(href='#save')
-         img(src='/images/sprites/save.png')
-      .content
-        h3 Top sectors in Somewhere: 
-        img(src='/images/example_graph_2.png')
-  .third.left
-    .widget.section
-      h3 Aid type breakdown:
-  .third.left
-    .widget.section
-      h3 Regional allocations:
-  .third.left
-    .widget.section
-      h3 Spare box
+section.data_file.slide-panel
+  .inner.clearfix
+    h1.title Data file: Somewhere
+    .third.left
+      .summary.section
+        table.full
+          tr
+            td Total commitments:
+            td!= "$<strong>235</strong> billion"
+          tr
+            td Total disbursments:
+            td!= "$<strong>189</strong> billion"
+          tr
+            td Total activities:
+            td!= "$<strong>38</strong>"
+    .third.left
+      .stats.section
+        strong World Bank data (2009)
+        table.full
+          tr
+            td GDP
+            td $75.5 biilion
+          tr
+            td GNI per capita
+            td $3,880
+          tr
+            td External debt stocks (% of GNI)
+            td 28.8%
+          tr
+            td Life expectancy at birth, total
+            td 50 yeard
+          tr
+            td Population, total
+            td 18.6 million
+    .third.left
+      .links.section.left
+        a(href='')
+          img(src='/images/sprites/save.png')
+          | Save to my dashboard
+        a(href='')
+          img(src='/images/sprites/print.png')
+          | Print
+        a(href='')
+          img(src='/images/sprites/pdf.png')
+          | PDF
+        a(href='')
+          img(src='/images/sprites/csv.png')
+          | CSV
+    .clear
+    .third.left
+      .widget.section
+        .corner
+          a.save(href='#save')
+           img(src='/images/sprites/save.png')
+        .content
+          h3 New projects in Somewhere:
+          p
+            | 3rd Social Action Fund(FAS III)
+            br
+            | Commitments: $467,017
+            br
+            br
+            | Accountable Grant With One World Action for LUPP Building Influence, Strengthening...
+            br
+            | Commitments: $1,871,781
+            br
+            br
+            | HIV/AIDS, Malaria and TB Control Project (HAMSET)
+            br
+            | Commitments: $457,000
+    .third.left
+      .widget.section
+        .corner
+          a.save(href='#save')
+            img(src='/images/sprites/save.png')
+        .content
+          h3 Top donors in Somewhere:
+          // img(src='/images/example_graph_1.png')
+          #chart1(data-funders=funders)
+    .third.left
+      .widget.section
+        .corner
+          a.save(href='#save')
+            img(src='/images/sprites/save.png')
+        .content
+          h3 Top sectors in Somewhere: 
+          // img(src='/images/example_graph_2.png')
+          #chart2()
+    .third.left
+      .widget.section
+        h3 Aid type breakdown:
+    .third.left
+      .widget.section
+        h3 Regional allocations:
+    .third.left
+      .widget.section
+        h3 Spare box
 
 script
   inlines.push(function(){
@@ -100,4 +103,36 @@ script
         $(this).empty().css({marginTop:0});
       });
     }
+  });
+  inlines.push(function(){
+    google.setOnLoadCallback(function() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Topping');
+      data.addColumn('number', 'Slices');
+      data.addRows(JSON.parse(document.getElementById('chart1').attributes['data-funders'].value));
+
+      var options = {width: 220, height: 165, backgroundColor: 'none', chartArea: {left: 10, top: 10, width: '100%', height: '100%'}};
+      var chart = new google.visualization.PieChart(document.getElementById('chart1'));
+      chart.draw(data, options);
+    });
+  });
+  inlines.push(function(){
+    google.setOnLoadCallback(function() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Topping');
+      data.addColumn('number', 'Slices');
+      data.addRows([
+        ['Mushrooms', 3],
+        ['Onions', 1],
+        ['Olives', 1], 
+        ['Zucchini', 1],
+        ['Pepperoni', 2]
+      ]);
+
+      var options = {width: 220, height: 165, backgroundColor: 'none', chartArea: {left: 10, top: 10, width: '100%', height: '90%'}};
+      var chart = new google.visualization.LineChart(document.getElementById('chart2'));
+      chart.draw(data, options);
+    });
   });
