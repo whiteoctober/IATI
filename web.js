@@ -22,6 +22,7 @@ var clientScripts = [
   'lib/zynga/Engine.js', 
   'lib/zynga/Style.js',
   'lib/seedrandom.js',
+  'lib/underscore.js',
   'dashboard.js',
   'bubble.jquery.js', 
   'zoom.js', 
