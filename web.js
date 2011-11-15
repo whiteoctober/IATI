@@ -26,6 +26,7 @@ var clientScripts = [
   'dashboard.js',
   'bubble.jquery.js', 
   'zoom.js', 
+  'zoomer.js',
   'plugins.js', 
   'script.js'
 ];
