@@ -20,7 +20,7 @@ var IATI = IATI || {};
   }
   
   function fetch(){
-    data = JSON.parse(storage.getItem('dashboard'));
+    data = JSON.parse(storage.getItem('dashboard')) || [];
   }
   fetch();
   
@@ -34,6 +34,7 @@ var IATI = IATI || {};
   
   //public interface
   IATI.dashboard = {
+    data:data,
     clear:function(){
       data = [];
       persist();
@@ -48,7 +49,7 @@ var IATI = IATI || {};
     get:function(key){
       return _.filter(data,function(d){
         return d.section == key;
-      })
+      });
     },
     contains:contains
   };
@@ -57,14 +58,13 @@ var IATI = IATI || {};
   // jQuery helper to put the content in the dashboard page
   $.fn.dashboardContent = function(){
     var $this = this;
-    
     _.each(data, function(d){
       var section = $this.find('section.' + d.section + ' .content');
       
       var content = $('<li>').text(d.href);
       content.appendTo(section);
       
-    })
+    });
     
   };
   
