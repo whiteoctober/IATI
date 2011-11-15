@@ -73,7 +73,7 @@ h3.inner {
 }
 #content_inner {
   position: relative;
-  padding: 115px 0px;
+  padding: 120px 35px;
 }
 #header, #footer {
    transform-origin: 0 0;
@@ -247,10 +247,15 @@ h3.inner {
   font-weight: normal;
 }
 
+.data_file .summary table tr {
+  border: 0px;
+}
+
 .data_file .summary table td {
   font-size: 15px;
   color: #2d5ea9;
   vertical-align: baseline;
+  padding: 0px;
 }
 .data_file .summary strong {
   font-size: 25px;
@@ -266,20 +271,20 @@ h3.inner {
   vertical-align: text-bottom;
 }
 
-.data_file .widget {
+.widget {
   position: relative;
-  height: 200px; padding-top: 9px; padding-bottom: 9px;
+  height: 200px; margin: 8px 10px; padding: 9px 12px;
   background: #efefef;
   width: 240px;
 }
 
-.data_file .widget .corner {
+.widget .corner {
   position: absolute; top: -2px; right: -2px;
   height: 45px; width: 45px;
   background: url('/images/widget_corner.png') no-repeat;
 }
 
-.data_file .widget .corner .save {
+.widget .corner .save {
   display: block;
   margin-left: 20px;
   padding: 4px;

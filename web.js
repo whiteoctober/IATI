@@ -29,9 +29,9 @@ var clientScripts = [
 ];
 
 
-// set the cache to the time at which the app was started
-// (ideally - this would be a hash of the script files or the
-// most recent modification date)
+//Set the cache to the time at which the app was started.
+//Ideally this would be a hash of the script files or 
+//the most recent modification date
 var cacheKey = (new Date()).getTime();
 
 
@@ -49,11 +49,11 @@ app.configure(function() {
   
   app.use(express.static(__dirname + '/public'));
   
-  //custom app settings
+  //Custom app settings
   app.set('pageSize', 20);
   
   
-  // combination and minification of static files
+  //Combination and minification of static files
   
   app.use(assetManager({
     'js':{
@@ -84,12 +84,12 @@ app.configure(function() {
   }));
 
 
-  // set this to false to load the scripts as normal
+  //Set this to false to load the scripts as normal
   var clientScriptsCache = ['../static/js/' + cacheKey + '/client.js'];
   
   app.set('view options', {
-    title: 'IATI data browser',
-    clientScripts: clientScriptsCache || clientScripts,
+    title: 'IATI Data Browser',
+    clientScripts: clientScriptsCache || clientScripts
   });
 });
 
@@ -114,7 +114,7 @@ app.dynamicHelpers({
   },
 
   //Adds parameters to the url
-  url_with: function(req,res) {
+  url_with: function(req, res) {
     return function(pathname, params) {
       
       //Parse the current url along with the query string
@@ -126,7 +126,7 @@ app.dynamicHelpers({
       
       if (params) {
         //Default to empty query object and remove search query 
-        //So it's not used to generate the url
+        //so it's not used to generate the url
         parsedUrl.query = parsedUrl.query || {};
         delete parsedUrl.search;
         
@@ -168,7 +168,7 @@ app.get('/', beforeFilter, function(req, res) {
     title: 'Home',
     page: 'home',
     filter_paths: req.filter_paths,
-    layout:!req.isXHR
+    layout: !req.isXHR
   });
 });
 
@@ -185,7 +185,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
   new api.Request(params)
   .on('success', function(data) {
     var activities = _.as_array(data['iati-activity']);
-    var total = data['@activity-count'];
+    var total = data['@activity-count'] || 0;
     var pagination = (total <= app.settings.pageSize) ? false : {
       current: parseInt(req.query.p || 1, 10),
       total: Math.ceil(total / app.settings.pageSize)
@@ -193,13 +193,13 @@ app.get('/activities', beforeFilter, function(req, res, next) {
     
     delete req.query.view;
     
-    res.render(template, {
+    res.render('activities', {
       title: 'Activities',
       page: 'activities',
       filter_paths: req.filter_paths,
       query: req.query,
       activities: activities,
-      actitity_count: total,
+      activity_count: total,
       current_page: req.query.p || 1,
       pagination: pagination,
       layout: !req.isXHR
@@ -218,7 +218,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   new api.Request(params)
   .on('success', function(data) {
     var activities = _.as_array(data['iati-activity']);
-    var total = activities['@activity-count'];
+    var total = data['@activity-count'] || 0;
     
     res.render('data-file', {
       title: 'Data File',
@@ -226,7 +226,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
       filter_paths: req.filter_paths,
       query: req.query,
       activities: _.as_array(activities['iati-activity']),
-      actitity_count: total,
+      activity_count: total,
       current_page: req.query.p || 1,
       layout: !req.isXHR
     });
@@ -253,7 +253,7 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
   var filter_key = req.params.filter_key;
-  var params = {result:'values', groupby:filter_key};
+  var params = {result: 'values', groupby: filter_key};
   _.extend(params, req.filter_query);
   
   new api.Request(params)
@@ -287,31 +287,8 @@ app.get('/list', beforeFilter, function(req, res) {
 });
 
 
-app.get('/widgets/donors', beforeFilter, function(req, res) {
-  _.extend(params, {groupby: 'Funder', orderby: 'values', result: 'values'});
-    new api.Request(params)
-      .on('success', function(data) {
-        var max = 6;
-        _(data.Funder).each(function(f) { 
-          f.value = parseFloat(f.value); 
-          f.name = f.name === null ? "Unknown" : f.name;
-        });
-
-        var funders = _(data.Funder).chain()
-          .sortBy(function(f) { return -f.value; })
-          .map(function(f) { return [f.name, f.value]; })
-        .value();
-        
-        res.render('widgets/donors', {
-          funders: JSON.stringify(funders),
-          layout: 'widget'
-        });
-      })
-      .on('error', function(e) {
-        next(e);
-      })
-      .end();
-});
+var widgets = require('./widgets.js');
+widgets.init(app, beforeFilter, api, _);
 
 //Only listen on $ node app.js
 if (!module.parent) {

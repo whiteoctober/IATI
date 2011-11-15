@@ -1,0 +1,18 @@
+!!! 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  script
+    window.inlines = [];
+  body
+    != body
+    
+    each script in clientScripts
+      script(src='/javascripts/'+script)
+    script(src="https://www.google.com/jsapi")
+    script
+      google.load('visualization', '1.0', {'packages':['corechart']});
+    script
+      var runInlines = function() { while(inlines.length) { inlines.pop()(); } }
+      $(runInlines);

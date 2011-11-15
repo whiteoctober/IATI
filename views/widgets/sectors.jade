@@ -3,25 +3,29 @@
     a.save(href='#save')
       img(src='/images/sprites/save.png')
   .content
-    h3 Top Donors
-    #chart(data-funders=funders)
+    h3 Top Sectors
+    #chart(data-sectors=sectors)
 
 script
   inlines.push(function(){
     google.setOnLoadCallback(function() {
       var chart = $("#chart");
       var data = new google.visualization.DataTable();
-      var funders = chart.data('funders');
+      var sectors = chart.data('sectors');
+      var others = 0;
+      $.map(sectors.slice(6), function(s) { others = others + s[1]; });
+      var byValue = function(a, b) { return a[1] - b[1]; };
+      sectors = sectors.slice(0, 6).concat([["Other", others]]).sort(byValue);
       data.addColumn('string', 'Name');
       data.addColumn('number', 'Amount');
-      data.addRows(funders);
+      data.addRows(sectors);
 
       var options = {
         width: chart.innerWidth() - 10, 
         height: $(".widget").innerHeight() - $(".content").height() - 18 - 15, 
         backgroundColor: 'none', 
-        chartArea: {left: 10, top: 10, width: '100%', height: '100%'}
+        chartArea: {left: 60, top: 10, width: '100%', height: '100%'}
       };
-     (new google.visualization.PieChart(chart[0])).draw(data, options);
+      (new google.visualization.BarChart(chart[0])).draw(data, options);
     });
   });
