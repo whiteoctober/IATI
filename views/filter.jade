@@ -31,6 +31,23 @@ script
         $(textLines.slice(-2)).addClass("small");
       }
     });
+    
+    /*
+    
+    //-- new version
+    var els = [];
+    wrapper.find('li').each(function(){
+      els.push($(this).get(0));
+    });
+
+    new Zoomer(wrapper.get(0), els);
+
+    //-- compararison zynga
+    wrapper.activityZoom({
+      transition2d: true
+    });
+    */
+    
     wrapper.activityZoom({
       transition2d: true,
       afterZoom: function(zoom, zoomed) {
