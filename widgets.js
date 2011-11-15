@@ -17,8 +17,9 @@
             f.value = parseFloat(f.value); 
             f.name = f.name === null ? "Unknown" : f.name;
           });
-
+          
           var funders = _(data.Funder).chain()
+            .as_array()
             .sortBy(function(f) { return -f.value; })
             .map(function(f) { return [f.name, parseFloat(f.value)]; })
             .value();
