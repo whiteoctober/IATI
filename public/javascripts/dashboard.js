@@ -1,8 +1,19 @@
 var IATI = IATI || {};
 
-(function(IATI, $){
+(function(IATI, $, _){
   var storage = window.localStorage,
-      data = {};
+      data = [];
+  
+  /* Data Format
+  [{
+    href:'/some/content/endpoint',
+    section:'activities',
+    subsection:'My USA AID Activities'
+  },{
+    href:'/some/content/endpoint.df',
+    section:'datafile'
+  }]
+  */
   
   function persist(){
     storage.setItem('dashboard', JSON.stringify(data));
@@ -15,62 +26,65 @@ var IATI = IATI || {};
   
   // see if a url is in any of the sections of the dashboard
   function contains(url){
-    for(var key in data){
-      if(data.hasOwnProperty(key)){
-        var urls = data[key];
-        for (var i=0; i < urls.length; i++) {
-          if(url == urls[i]){
-            return true;
-          }
-        }
-      }
-    }
-    return false;
+    return _.any(data, function(part){
+      return part.href == url;
+    });
   }
   
   
   //public interface
   IATI.dashboard = {
     clear:function(){
-      data = {};
+      data = [];
       persist();
     },
     add:function(key, url){
-      data[key] = data[key] || [];
-      data[key].push(url);
+      data.push({
+        href:url,
+        section:key
+      });
       persist();
     },
     get:function(key){
-      return data[key] || [];
+      return _.filter(data,function(d){
+        return d.section == key;
+      })
     },
     contains:contains
   };
   
   
   // jQuery helper to put the content in the dashboard page
-  
-  $.fn.dashboardContent = function(key){
-    var _this = this.empty();
+  $.fn.dashboardContent = function(){
+    var $this = this;
     
-    $.each(IATI.dashboard.get(key), function(k,url){
-      _this.append($('<li>').text(url));
-    });
+    _.each(data, function(d){
+      var section = $this.find('section.' + d.section + ' .content');
+      
+      var content = $('<li>').text(d.href);
+      content.appendTo(section);
+      
+    })
     
   };
   
+  //update the class based on if this is on the dashboard
   $.fn.favourite = function(){
     return this.each(function(){
       var $this = $(this);
-      
       $this.toggleClass('added', contains($this.attr('href')));
-      
-      $this.click(function(){
-        
-        // add()
-      });
-      
     });
   };
   
-})(IATI, jQuery);
+  
+  $('.favourite').live('click', function(e){
+    e.preventDefault();
+    var $this = $(this);
+    
+    IATI.dashboard.add($this.data('dashkey'), $this.attr('href'));
+    
+    $this.addClass('added');
+  });
+  
+})(IATI, jQuery, _);
 

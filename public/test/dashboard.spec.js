@@ -4,11 +4,13 @@ describe("dashboard", function(){
     });
 });
 
+
+beforeEach(function(){
+  IATI.dashboard.clear();
+});
+
 describe("widgets", function(){
   
-  beforeEach(function(){
-    IATI.dashboard.clear();
-  });
   
   it('a widget can be added to the dashboard', function(){
     
@@ -16,7 +18,7 @@ describe("widgets", function(){
     
     expect(IATI.dashboard.get('widgets').length).toBe(1);
     
-    expect(IATI.dashboard.get('widgets')[0]).toBe('http://my-widget-url');
+    expect(IATI.dashboard.get('widgets')[0].href).toBe('http://my-widget-url');
     
   });
   
@@ -25,20 +27,64 @@ describe("widgets", function(){
 
 describe("persitance", function(){
   
-  beforeEach(function(){
-    IATI.dashboard.clear();
-  });
-  
   it('should persist the dashboard to localStorage on add', function(){
     
     IATI.dashboard.add('widgets', 'url');
     
-    expect(window.localStorage.getItem('dashboard')).toBe(JSON.stringify({widgets:['url']}));
+    expect(window.localStorage.getItem('dashboard')).toBe(JSON.stringify([{href:'url', section:'widgets'}]));
     
     IATI.dashboard.add('widgets', 'url2');
     
-    expect(window.localStorage.getItem('dashboard')).toBe(JSON.stringify({widgets:['url','url2']}));
+    expect(window.localStorage.getItem('dashboard')).toBe(JSON.stringify([{href:'url', section:'widgets'},{href:'url2', section:'widgets'}]));
     
     
   });
 });
+
+
+
+describe("containment", function(){
+  
+  it('should know if there is a url present', function(){
+    
+      IATI.dashboard.add('widgets', 'my-url');
+      
+      expect(IATI.dashboard.contains('my-url')).toBeTruthy();
+      
+      expect(IATI.dashboard.contains('not-my-url')).toBeFalsy();
+      
+  });
+  
+});
+
+
+describe('dashboard content', function(){
+  
+  it('should add widgets', function(){
+    
+    IATI.dashboard.add('widgets', 'my-url');
+    IATI.dashboard.add('widgets', 'my-url2');
+    
+    var dash = $('<section class="dashboard"><ol class="groups"></ol><section class="widgets"><ol class="content"></ol></section><section class="datafiles"><ol class="content"></ol></section></section>');
+    
+    
+    dash.dashboardContent();
+    
+    expect(dash.find('.widgets .content').children().size()).toBe(2);
+    
+    expect(dash.find('.widgets .content').children().first().text()).toBe('my-url');
+    
+    
+  });
+  
+});
+
+
+describe('favourite links', function(){
+  
+  it('should add to the dashboard', function(){
+    $('<a href="link-url" class="favourite" data-dashkey="activities">').click();
+    expect(IATI.dashboard.contains('link-url')).toBeTruthy();
+  })
+  
+})

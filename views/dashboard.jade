@@ -32,7 +32,6 @@ section.slide-panel.dashboard
     h2 My widgets
     
     ol.content
-      li widget
   
   section.datafiles
     h2 My data files
@@ -42,5 +41,5 @@ section.slide-panel.dashboard
 
 script
   inlines.push(function(){
-    $('.dashboard .widgets .content').dashboardContent('widgets');
+    $('.dashboard').dashboardContent();
   })
