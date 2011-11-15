@@ -2,4 +2,16 @@
 - if (typeof(height) === 'undefined') height = 234;
 - if (typeof(name) !== 'undefined')
   h1= name
-iframe(src=url, scrolling='no', style='width: #{width}px; height: #{height}px; border: 0px;')
+  
+
+.widget
+  nav.linkup
+    ul
+      li
+        a.icn.cut(href='#')
+          span.onshow embed
+      li.onshow
+        a.icn.favourite(href=url, data-dashkey="widgets")
+          | save to dashboard
+
+  iframe(src=url, scrolling='no', style='width: #{width}px; height: #{height}px; border: 0px;')
