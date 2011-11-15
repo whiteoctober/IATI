@@ -86,6 +86,7 @@ app.configure(function() {
 
   //Set this to false to load the scripts as normal
   var clientScriptsCache = ['../static/js/' + cacheKey + '/client.js'];
+  clientScriptsCache = false;
   
   app.set('view options', {
     title: 'IATI Data Browser',
@@ -116,29 +117,17 @@ app.dynamicHelpers({
   //Adds parameters to the url
   url_with: function(req, res) {
     return function(pathname, params) {
-      
-      //Parse the current url along with the query string
-      var parsedUrl = url.parse(req.originalUrl,true);
-      
-      if (pathname) {
-        parsedUrl.pathname = pathname;
-      }
-      
-      if (params) {
-        //Default to empty query object and remove search query 
-        //so it's not used to generate the url
-        parsedUrl.query = parsedUrl.query || {};
-        delete parsedUrl.search;
-        
-        //Assign the new parameters
-        _.extend(parsedUrl.query, params);
-      }
+      //Parse the current url, inserting updated query paramaters and specified options
+      var parsedUrl = url.parse(req.originalUrl, true);
+      parsedUrl.query = req.query;
+      if (pathname) parsedUrl.pathname = pathname;
+      if (params) _.extend(parsedUrl.query, params);
       
       //Remove the xhr param (this is used as a work around for cache issues)
-      if (parsedUrl.query && parsedUrl.query.xhr) {
-        delete parsedUrl.query.xhr;
-        delete parsedUrl.search; //Force the query to be used
-      }
+      if (parsedUrl.query.xhr) delete parsedUrl.query.xhr;
+      
+      //Remove search query string, forcing query object to be used
+      delete parsedUrl.search;
       
       //Return the formatted url
       return url.format(parsedUrl);
@@ -192,7 +181,6 @@ app.get('/activities', beforeFilter, function(req, res, next) {
     };
     
     delete req.query.view;
-    
     res.render('activities', {
       title: 'Activities',
       page: 'activities',

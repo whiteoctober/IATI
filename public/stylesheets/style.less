@@ -25,6 +25,10 @@ body {
   font: 12px Arial, sans-serif;
   color: #828281;
 }
+input {
+  font: 12px Arial, sans-serif;
+  color: #222;
+}
 a, a:active, a:visited {
   color: #828281;
   text-decoration: none;
@@ -168,22 +172,21 @@ h3.inner {
   background: url(/images/dimmer_background.png);
   background: rgba(0,0,0,0.75);
   display: none;
+  z-index: 20;
 }
 
 #embed {
-  position: fixed;  top: 50%; left: 50%;
+  position: fixed; top: 50%; left: 50%;
   width: 800px; height: 220px;  margin-left: -400px; margin-top: -110px;
+  z-index: 25;
 }
-#embed .widget {
+#embed .widget_wrapper {
   float: left;
-  padding: 10px;
-  width: 290px;
-  background: #EFEFEF;
 }
 #embed .links {
   float: left;
   padding: 0px 20px;
-  width: 450px;
+  width: 420px;
 }
 #embed .links h2 {
   margin: 0px;
@@ -194,6 +197,12 @@ h3.inner {
   margin: 0px;
   color: white;
   font-size: 18px;
+}
+#embed input.large {
+  margin: 5px 0;
+  padding: 9px 6px;
+  width: 350px;
+  font-size: 16px;
 }
 
 .landing_message {

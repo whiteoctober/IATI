@@ -1,6 +1,7 @@
 (function(exports) {
   //Initialises up widget pages and routes
   exports.init = function(app, filters, api, _) {
+  
     //Top donors widget
     app.get('/widgets/donors', filters, function(req, res) {
       var params = {
@@ -36,6 +37,7 @@
         .end();
     });
 
+    
     //Top sectors widget
     app.get('/widgets/sectors', filters, function(req, res) {
       var params = {
@@ -69,5 +71,19 @@
         })
         .end();
     });
+
+    //Renders an embed dialog
+    app.get('/embed', filters, function(req, res) {
+      var widget = req.query.widget;
+      console.log(req.query);
+
+      delete req.query.widget;
+      res.render('embed_dialog', {
+        title: "Big long title of the widget",
+        url: "/widgets/" + widget,
+        layout: false
+      });
+    });
+  
   };
 })(exports);

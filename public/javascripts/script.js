@@ -10,15 +10,13 @@ var palette = [
 ];
 
 (function() {
-  Math.seedrandom('z6m44E4MB5');
-  var content = $("#content");
-  var popup = $("#popup");
+  var query = window.location.search.replace(/^\?/, "");
   var dimmer = $("#dimmer");
   var embed = $("#embed");
   var dimmed = false;
-  var query = window.location.search.replace(/^\?/, "");
-  var activeChange = false;
-  var cacheBugFix = function(xhr, settings) { settings.url = settings.url.replace("?&", "?"); };
+  
+  //Sets a seed for deterministic randomness
+  Math.seedrandom('z6m44E4MB5');
   
   //This calls all of the inline scripts, set on page/dynamic content load
   var runInlines = function() { while(inlines.length) { inlines.pop()(); } }
@@ -35,11 +33,19 @@ var palette = [
   $(".widget").each(function() {
     var widget = $(this);
     widget.find(".save").click(function() {
-      dimmer.fadeIn(180, function() { 
-        embed.removeClass("hidden");
-        embed.children(".widget").empty().append(widget.children(".content").clone());
+      var link = $(this);
+      dimmer.fadeIn(180, function() {
+        embed.load(link.attr("href"), function(response, status) {
+          if (status == 'error') {
+            alert('request error');
+            dimmer.fadeOut(180);
+            return;
+          }
+          embed.removeClass("hidden");
+        });
         dimmed = true; 
       });
+      return false;
     });
   });
   
@@ -66,11 +72,9 @@ var palette = [
     url = url.replace("?&", "?");
         
     var loadContent = function() {
-      $('#content_inner').load(url, function(response, status, xhr) {
-        if (status == 'error') {
-          alert('request error');
-          return;
-        }
+      $('#content_inner').load(url, function(response, status) {
+        if (status == 'error') return alert('request error');
+        
         if (State.data.enter == 'slideUp') {
           $(this).css('margin-top', 600).animate({'margin-top': 0});
         }
