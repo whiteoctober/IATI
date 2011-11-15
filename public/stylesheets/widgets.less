@@ -1,0 +1,82 @@
+
+.widget {
+  position: relative;
+  height: 200px; margin: 8px 10px; padding: 9px 12px;
+  background: #efefef;
+  width: 240px;
+  overflow:hidden;
+}
+
+// inside the iframe
+.widgetcontent{
+  background: #efefef;
+}
+
+
+
+
+
+// the panel that the widget is embedded on the page
+.widgetPane{
+  position:relative;
+  margin:0;
+}
+
+nav.linkup{
+  background:url(/images/widget-slide-bg.png) bottom left;
+  overflow:hidden;
+  margin:0;
+  position:absolute;
+  right:0;
+  top:0;
+  float:right;
+  padding-left:10px;
+  padding-bottom:10px;
+  -webkit-transition:all .1s linear;
+  
+  text-align:right;
+  ul{
+    float:right;
+    background:url(/images/widget-slide-bg.png) center center;
+    width:3em;
+    height:3em;
+    -webkit-transition:all .1s linear;
+    
+    li{
+      text-align:right;
+    }
+    
+    a{
+      line-height:1em;
+      padding-top:18px;
+      background-position:top right;
+      font-size:.75em;
+      width:6em;
+      float:right;
+      margin-bottom:5px;
+    }
+  }
+  
+  .onshow{
+    visibility:hidden;
+  }
+  a{
+     pointer-events: none;
+  }
+  &:hover, &.shown{
+    
+    a{
+       pointer-events: auto;
+    }
+    ul{
+      height:10em;
+      width:10em;
+    }
+    .onshow{
+      visibility:visible;
+    }
+  }
+}
+
+
+
