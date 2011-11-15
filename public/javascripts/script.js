@@ -30,27 +30,24 @@ var palette = [
     }
   });
   
-  $(".widget").each(function() {
-    var widget = $(this);
-    widget.find(".save").click(function() {
-      var link = $(this);
-      dimmer.fadeIn(180, function() {
-        embed.load(link.attr("href"), function(response, status) {
-          if (status == 'error') {
-            alert('request error');
-            dimmer.fadeOut(180);
-            return;
-          }
-          embed.removeClass("hidden");
-        });
-        dimmed = true; 
+  $(".widget .save").live('click', function() {
+    var link = $(this);
+    dimmer.fadeIn(180, function() {
+      embed.load(link.attr("href"), function(response, status) {
+        if (status == 'error') {
+          alert('Sorry, an error occured!');
+          dimmer.fadeOut(180);
+          return;
+        }
+        embed.removeClass("hidden");
       });
-      return false;
+      dimmed = true; 
     });
+    return false;
   });
   
-  $('#dialog').live('click', function(){
-    $(this).fadeOut(function(){
+  $('#dialog').live('click', function() {
+    $(this).fadeOut(function() {
       $(this).remove();
     });
   })
