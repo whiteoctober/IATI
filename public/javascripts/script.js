@@ -96,6 +96,12 @@ var palette = [
     }
   });
   
+  // stop event from propagating to cancel it 
+  // hiding the shown element
+  $(document).click(function(){
+    $('.showone').removeClass('showone');
+  });
+  
   $('a.xhr').live('click', function() {
     var $this = $(this);
     window.History.pushState($this.data('history'), "", $this.attr('href'));
