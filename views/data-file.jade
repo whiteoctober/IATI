@@ -66,20 +66,4 @@ script
         $(this).empty().css({marginTop:0});
       });
     };
-    
-    
-    // toggle the nav
-    $('nav.linkup').click(function(e){
-      e.stopPropagation();
-      var $this = $(this);
-      
-      var shown = $this.hasClass('showone');
-      
-      //remove from all
-      $('.showone').removeClass('showone');
-      
-      // and toggle 
-      $(this).toggleClass('showone',!shown);
-    })
-    
   });

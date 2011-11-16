@@ -30,7 +30,8 @@ var palette = [
     }
   });
   
-  $(".embed").live('click', function() {
+  //Load embed widget dialog when requested
+  $(".embed").live('click', function(e) {
     var link = $(this);
     dimmer.fadeIn(180, function() {
       embed.load(link.attr("href"), function(response, status) {
@@ -43,7 +44,7 @@ var palette = [
       });
       dimmed = true; 
     });
-    return false;
+    e.preventDefault();
   });
   
   $('#dialog').live('click', function() {
@@ -85,7 +86,7 @@ var palette = [
       });
     };
     
-    // if there is an exit animation/function - then fire that before loading 
+    //If there is an exit animation/function then fire that before loading 
     if (window.contentExit) {
       window.contentExit().then(function() {
         window.contentExit = null;
@@ -95,13 +96,26 @@ var palette = [
       loadContent();
     }
   });
-  
-  // stop event from propagating to cancel it 
-  // hiding the shown element
-  $(document).click(function(){
-    $('.showone').removeClass('showone');
+   
+  //Shows widget buttons
+  $('.widget nav.linkup').live("click", function(){
+    var $this = $(this);
+    if(!$this.hasClass('showone')){
+      //Remove from all
+      $('.showone').removeClass('showone');
+
+      //Then add to current 
+      $this.addClass('showone');
+      return false;
+    }
   });
+   
+  //Hides widget buttons
+  $("body").live('click', function(){
+    $('.showone').removeClass('showone');
+  }); 
   
+  //Connects AJAX links to page state system
   $('a.xhr').live('click', function() {
     var $this = $(this);
     window.History.pushState($this.data('history'), "", $this.attr('href'));
@@ -109,5 +123,4 @@ var palette = [
   });
   
   $(runInlines);
-
 })();
