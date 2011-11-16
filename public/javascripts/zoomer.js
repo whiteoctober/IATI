@@ -4,8 +4,16 @@
 
 (function(window){
   
+  // Prevent native scrolling if zoomer is used
+  var noscroll;
+  document.body.addEventListener('touchmove', function(e) {
+    if(noscroll) e.preventDefault();
+  }, false);
+  
   
   var Zoomer = function(element, elements) {
+    noscroll = true;
+    
     this.elements = elements;
     this.element = element;
     this.oScale = this.scale = 1;
@@ -36,6 +44,7 @@
         this.onGestureEnd(e);
         break;
       case 'touchstart':
+        this.preventEvent(e);
         this.onTouchStart(e);
         break;
       case 'touchmove':
@@ -43,6 +52,7 @@
         break;
       case 'touchend':
         this.onTouchEnd(e);
+        this.firePreventedEvent(e);
         break;
     }
   };
@@ -66,16 +76,11 @@
   
   
   Zoomer.prototype.onTouchStart = function(e) {
-    // TODO : refire event on tap
-    e.preventDefault();
-    
     if(!this.touches) this.go3d(true);
-    
     this.touches++;
     
     this.startX = (e.touches[0].pageX + this.x);
     this.startY = (e.touches[0].pageY + this.y);
-    
   };
   
   
@@ -85,7 +90,6 @@
     this.y = this.startY - e.touches[0].pageY;
     this.render(true);
   };
-  
   
   Zoomer.prototype.onTouchEnd = function(e) {
     this.touches--;
@@ -113,6 +117,32 @@
     
     this.element.style.webkitTransform = transform;
     
+  };
+  
+  
+  Zoomer.prototype.preventEvent = function(e){
+    e.preventDefault();
+    if(!this.touches) {
+      this.preventedEvent = e;
+      this.touchStartTime = (new Date()).getTime();
+    }
+  };
+  
+  
+  // fire the prevented event maybe
+  Zoomer.prototype.firePreventedEvent = function(){
+    
+    //the last touch was less than 500ms ago
+    if(!this.touches && (new Date()).getTime() - this.touchStartTime < 500){
+      
+      //simulate clicking
+      var evt = document.createEvent("MouseEvents");
+      evt.initMouseEvent("click", true, true, window,
+         0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      
+      this.preventedEvent.target.dispatchEvent(evt);
+      
+    }
   };
   
   
