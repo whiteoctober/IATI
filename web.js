@@ -57,7 +57,6 @@ app.configure(function() {
   
   
   //Combination and minification of static files
-  
   app.use(assetManager({
     'js':{
       'route' : /\/static\/js\/[0-9]+\/.*\.js/,
@@ -89,7 +88,6 @@ app.configure(function() {
 
   //Set this to false to load the scripts as normal
   var clientScriptsCache = ['../static/js/' + cacheKey + '/client.js'];
-  clientScriptsCache = false;
   
   app.set('view options', {
     title: 'IATI Data Browser',
