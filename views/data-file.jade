@@ -29,9 +29,6 @@ section.data_file.slide-panel.clearfix
   .clear
   .third.left
     .widget
-      .corner
-        a.save(href=url_with('/embed', {widget: 'donors'}))
-         img(src='/images/sprites/save.png')
       .content
         h3 New projects in Somewhere:
         p
@@ -49,9 +46,9 @@ section.data_file.slide-panel.clearfix
           br
           | Commitments: $457,000
   .third.left
-     != partial('embed_widget', {locals: {url: url_with('/widgets/donors')}})
+     != partial('embed_widget', {locals: {url: url_with('/widgets/donors'), links: true}})
   .third.left
-    != partial('embed_widget', {locals: {url: url_with('/widgets/sectors')}})
+    != partial('embed_widget', {locals: {url: url_with('/widgets/sectors'), links: true}})
   .third.left
     .widget
       h3 Aid type breakdown:

@@ -7,15 +7,9 @@
   overflow:hidden;
 }
 
-// inside the iframe
+//Widget container inside embedded widget
 .widget_content{
   background: #efefef;
-}
-
-// the panel that the widget is embedded on the page
-.widgetPane{
-  position:relative;
-  margin:0;
 }
 
 nav.linkup{
@@ -28,15 +22,16 @@ nav.linkup{
   float:right;
   padding-left:10px;
   padding-bottom:10px;
-  -webkit-transition:all .1s linear;
-  
+  -webkit-transition:all .1s ease-in;
+  cursor: pointer;
   text-align:right;
+  
   ul{
     float:right;
     background:url(/images/widget-slide-bg.png) center center;
     width:3em;
     height:3em;
-    -webkit-transition:all .1s linear;
+    -webkit-transition:all .1s ease-in;
     
     li{
       text-align:right;

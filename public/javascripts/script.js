@@ -30,7 +30,7 @@ var palette = [
     }
   });
   
-  $(".widget .save").live('click', function() {
+  $(".embed").live('click', function() {
     var link = $(this);
     dimmer.fadeIn(180, function() {
       embed.load(link.attr("href"), function(response, status) {
