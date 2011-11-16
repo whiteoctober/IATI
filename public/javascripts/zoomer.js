@@ -2,6 +2,7 @@
     A pan/zoom plugin for iOS devices
     
     TODO:
+      - (bug) iOS 4 doesn't update url on emulated mouse click
       - constrain to within window
       - constrain min/max zoom
       - zoom from origin of touch
@@ -19,7 +20,6 @@
   
   
   var Zoomer = function(element, elements, options) {
-    noscroll = true;
     options = options || {};
     this.finish = options.finish || false;
     
@@ -38,7 +38,11 @@
     element.addEventListener('touchmove', this, false);
     element.addEventListener('touchend', this, false);
     
+    // switch to 2d
     this.render(true);
+    
+    //move to top and prevent scroll actions
+    document.body.scrollTop = 0; noscroll = true;
   };
   
   
@@ -67,7 +71,11 @@
         this.firePreventedEvent(e);
         break;
     }
+    
+    // debug : display debugging info in the menu bar
+    // window.document.title = "touches:" + this.touches + ", preventedEvent:" + (this.preventedEvent ? 'YES' : 'NO');
   };
+  
   
   
   Zoomer.prototype.onGestureStart = function(e) {
@@ -99,6 +107,9 @@
     this.x = this.startX - e.touches[0].pageX;
     this.y = this.startY - e.touches[0].pageY;
     this.render(true);
+    
+    // cancel firing the original event
+    this.preventedEvent = null;
   };
   
   Zoomer.prototype.onTouchEnd = function(e) {
@@ -136,18 +147,16 @@
   
   Zoomer.prototype.preventEvent = function(e){
     e.preventDefault();
+     // store the event on the first touch
     if(!this.touches) {
       this.preventedEvent = e;
-      this.touchStartTime = (new Date()).getTime();
     }
   };
   
   
   // fire the prevented event maybe
   Zoomer.prototype.firePreventedEvent = function(){
-    
-    //the last touch was less than 500ms ago
-    if(!this.touches && (new Date()).getTime() - this.touchStartTime < 250){
+    if(this.preventedEvent && !this.touches){
       
       //simulate clicking
       var evt = document.createEvent("MouseEvents");

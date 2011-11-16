@@ -40,6 +40,9 @@ This app can be deployed to [heroku](http://heroku.com)
     heroku create --stack cedar
     git push heroku develop:master
     
+    # make the app run in production mode
+    heroku config:add NODE_ENV=production
+    
     # to set a custom api endpoint (remember the trailing question mark)
     heroku config:add ENDPOINT=http://109.104.101.243:8080/exist/rest/db/apps/iati-api/xquery/woapi.xq?
     
