@@ -61,11 +61,13 @@ var IATI = IATI || {};
     _.each(data, function(d){
       var section = $this.find('section.' + d.section + ' .content');
       
-      var content = $('<li>').text(d.href);
-      content.appendTo(section);
-      
+      var widget = $('<li class="widget">');
+      widget.appendTo(section);
+      $('<iframe>', {
+        src: d.href,  frameborder: 0, scrolling: "no",
+        css: {width: widget.width(), height: widget.height()}
+      }).appendTo(widget);
     });
-    
   };
   
   //update the class based on if this is on the dashboard
