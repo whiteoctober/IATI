@@ -1,5 +1,5 @@
 .widget_content
-  h3 Top Sectors
+  h3.title Top Sectors
   #chart(data-sectors=sectors)
 
 script
@@ -18,7 +18,7 @@ script
 
       var options = {
         width: $("body").width(), 
-        height: $("body").height() - $(".title").height(), 
+        height: $("body").height() - $(".title").outerHeight(true), 
         backgroundColor: 'none', 
         chartArea: {left: 60, top: 10, width: '100%', height: '100%'}
       };
