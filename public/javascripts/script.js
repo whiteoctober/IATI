@@ -80,9 +80,13 @@ var palette = [
         if (status == 'error') return alert('request error');
         
         if (State.data.enter == 'slideUp') {
-          $(this).css('margin-top', 600).animate({'margin-top': 0});
+          $(this).css('margin-top', 600).animate({'margin-top': 0}, function() {
+            runInlines();
+          });
         }
-        runInlines();
+        else {
+          runInlines();
+        }
       });
     };
     
