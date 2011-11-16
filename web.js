@@ -120,7 +120,7 @@ app.dynamicHelpers({
     return function(pathname, params) {
       //Parse the current url, inserting updated query paramaters and specified options
       var parsedUrl = url.parse(req.originalUrl, true);
-      parsedUrl.query = req.query;
+      parsedUrl.query = _(req.query).clone();
       if (pathname) parsedUrl.pathname = pathname;
       if (params) _.extend(parsedUrl.query, params);
       
@@ -138,7 +138,6 @@ app.dynamicHelpers({
 
 app.helpers(helpers);
 
-//Routes
 
 var beforeFilter = function(req, res, next) {
   //Get query, filtering unwanted values
@@ -153,6 +152,8 @@ var beforeFilter = function(req, res, next) {
   next();
 };
 
+//Routes
+
 app.get('/', beforeFilter, function(req, res) {
   res.render('index', {
     title: 'Home',
@@ -161,6 +162,7 @@ app.get('/', beforeFilter, function(req, res) {
     layout: !req.isXHR
   });
 });
+
 
 app.get('/activities', beforeFilter, function(req, res, next) {
   var page = parseInt(req.query.p || 1, 10);
@@ -200,6 +202,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
   .end();
 });
 
+
 app.get('/data-file', beforeFilter, function(req, res, next) {
   var params = { result: 'full' };
 
@@ -226,6 +229,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   .end();
 });
 
+
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
   api.Request({ID:req.params.id, result:'full'})
     .on('success', function(data) {
@@ -239,6 +243,7 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
     })
     .end();
 });
+
 
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
   var filter_key = req.params.filter_key;
@@ -278,6 +283,7 @@ app.get('/list', beforeFilter, function(req, res) {
 
 var widgets = require('./widgets.js');
 widgets.init(app, beforeFilter, api, _);
+
 
 //Only listen on $ node app.js
 if (!module.parent) {
