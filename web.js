@@ -107,6 +107,11 @@ _.mixin({
   //Returns an array by wrapping non-arrays in an array
   as_array: function(something) {
     return something === undefined ? [] : (_.isArray(something) ? something : [something]);
+  },
+  
+  //Sums an array of values
+  sum : function(array) {
+    return _(array).reduce(function(a, b) { return a + b; }, 0);
   }
 });
 
@@ -204,21 +209,51 @@ app.get('/activities', beforeFilter, function(req, res, next) {
 
 
 app.get('/data-file', beforeFilter, function(req, res, next) {
+  //Sums all transactions with a particular code
+  var transactionsTotal = function(activities, code) {
+    return _(activities).chain()
+      .map(function(a) {
+        return _(a.transaction || []).filter(function(t) {
+          return (t['transaction-type'] || {})['@code'] == code;
+        });
+      })
+      .flatten()
+      .map(function(t) { return parseFloat(t.value["@iati-ad:USD-value"] || 0); })
+      .sum().value();
+  };
+  
+  var newProjects = function(activities, limit) {
+    return _(activities).chain()
+      .sortBy(function(a) {
+        var date = _(a['activity-date'] || []).find(function(t) {
+          return (t["@type"]) == "start-actual";
+        });
+        console.log(date ? Date.parse(date["#text"]) : 0);
+        return date ? Date.parse(date["#text"]) : 0;
+      })
+      .map(function(a) {
+        return a.title || "No description available";
+      })
+      .value().slice(0, limit);
+  };
+
   var params = { result: 'full' };
 
   _.extend(params, req.filter_query);
   new api.Request(params)
   .on('success', function(data) {
     var activities = _.as_array(data['iati-activity']);
-    var total = data['@activity-count'] || 0;
     
     res.render('data-file', {
       title: 'Data File',
       page: 'data-file',
       filter_paths: req.filter_paths,
       query: req.query,
-      activities: _.as_array(activities['iati-activity']),
-      activity_count: total,
+      activities: activities,
+      new_projects: newProjects(activities, 3),
+      total_budget: transactionsTotal(activities, 'C'),
+      total_spend: transactionsTotal(activities, 'D') + transactionsTotal(activities, 'E'),
+      activity_count: data['@activity-count'] || 0,
       current_page: req.query.p || 1,
       layout: !req.isXHR
     });

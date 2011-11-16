@@ -4,14 +4,14 @@ section.data_file.slide-panel.clearfix
     .summary.section
       table.full
         tr
-          td Total commitments:
-          td!= "$<strong>235</strong> billion"
+          td Total budget:
+          td!= "$<strong>"+total_budget+"</strong> billion"
         tr
-          td Total disbursments:
-          td!= "$<strong>189</strong> billion"
+          td Total spend to date:
+          td!= "$<strong>"+total_spend+"</strong> billion"
         tr
           td Total activities:
-          td!= "$<strong>38</strong>"
+          td!= "<strong>"+activity_count+"</strong>"
   .third.right
     .links.section.left
       a(href='')
@@ -30,21 +30,14 @@ section.data_file.slide-panel.clearfix
   .third.left
     .widget
       .content
-        h3 New projects in Somewhere:
+        h3 New projects:
         p
-          | 3rd Social Action Fund(FAS III)
-          br
-          | Commitments: $467,017
-          br
-          br
-          | Accountable Grant With One World Action for LUPP Building Influence, Strengthening...
-          br
-          | Commitments: $1,871,781
-          br
-          br
-          | HIV/AIDS, Malaria and TB Control Project (HAMSET)
-          br
-          | Commitments: $457,000
+          each project in new_projects
+            = project
+            br
+            | Commitments: $0
+            br
+            br
   .third.left
     .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/donors'), links: true, padding: 0}})
   .third.left
@@ -57,7 +50,7 @@ section.data_file.slide-panel.clearfix
       h3 Regional allocations:
   .third.left
     .widget
-      h3 Spare box
+      h3 Funding breakdown:
 
 script
   inlines.push(function(){
