@@ -36,7 +36,7 @@ var clientScripts = [
 //Ideally this would be a hash of the script files or 
 //the most recent modification date
 var cacheKey = (new Date()).getTime();
-
+var clientScripts_combined = ['../static/js/' + cacheKey + '/client.js'];
 
 app.configure(function() {
   app.set('views', __dirname + '/views');
@@ -84,23 +84,28 @@ app.configure(function() {
       }
     }*/
   }));
-
-
-  //Set this to false to load the scripts as normal
-  var clientScriptsCache = ['../static/js/' + cacheKey + '/client.js'];
-  
-  app.set('view options', {
-    title: 'IATI Data Browser',
-    clientScripts: clientScriptsCache || clientScripts
-  });
 });
 
 app.configure('development', function() {
+  
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  
+  app.set('view options', {
+    title: '[DEV] IATI Data Browser',
+    clientScripts: clientScripts
+  });
+  
 });
 
 app.configure('production', function() {
+  
   app.use(express.errorHandler()); 
+  
+  app.set('view options', {
+    title: 'IATI Data Browser',
+    clientScripts: clientScripts_combined
+  });
+  
 });
 
 _.mixin({
@@ -156,8 +161,6 @@ var beforeFilter = function(req, res, next) {
 
 app.get('/', beforeFilter, function(req, res) {
   res.render('index', {
-    title: 'Home',
-    page: 'home',
     filter_paths: req.filter_paths,
     layout: !req.isXHR
   });
