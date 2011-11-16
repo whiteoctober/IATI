@@ -20,7 +20,6 @@
   
   
   var Zoomer = function(element, elements, options) {
-    noscroll = true;
     options = options || {};
     this.finish = options.finish || false;
     
@@ -41,6 +40,9 @@
     
     // switch to 2d
     this.render(true);
+    
+    //move to top and prevent scroll actions
+    document.body.scrollTop = 0; noscroll = true;
   };
   
   
