@@ -46,9 +46,9 @@ section.data_file.slide-panel.clearfix
           br
           | Commitments: $457,000
   .third.left
-     != partial('embed_widget', {locals: {url: url_with('/widgets/donors'), links: true}})
+    .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/donors'), links: true, padding: 0}})
   .third.left
-    != partial('embed_widget', {locals: {url: url_with('/widgets/sectors'), links: true}})
+    .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/sectors'), links: true, padding: 0}})
   .third.left
     .widget
       h3 Aid type breakdown:
