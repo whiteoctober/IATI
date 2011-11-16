@@ -1,5 +1,12 @@
 /*
     A pan/zoom plugin for iOS devices
+    
+    TODO:
+      - constrain to within window
+      - constrain min/max zoom
+      - zoom from origin of touch
+      - allow allow clicks to give feedback target element
+    
 */
 
 (function(window){
@@ -11,8 +18,11 @@
   }, false);
   
   
-  var Zoomer = function(element, elements) {
+  var Zoomer = function(element, elements, options) {
     noscroll = true;
+    options = options || {};
+    this.finish = options.finish || false;
+    
     
     this.elements = elements;
     this.element = element;
@@ -42,6 +52,8 @@
         break;
       case 'gestureend':
         this.onGestureEnd(e);
+        if(this.afterGesture)
+          this.afterGesture(e);
         break;
       case 'touchstart':
         this.preventEvent(e);
@@ -59,8 +71,7 @@
   
   
   Zoomer.prototype.onGestureStart = function(e) {
-    // TODO - offset this appropriately
-    this.gesturing = true;
+    // TODO - provide offset for 'zooming from a point'
   };
   
   
@@ -71,7 +82,6 @@
   
   Zoomer.prototype.onGestureEnd = function(e) {
     this.oScale = this.scale;
-    this.gesturing = false;
   };
   
   
@@ -96,8 +106,12 @@
     
     this.render();
     
-    if(!this.touches) this.go3d(false);
-    
+    if(!this.touches){
+      this.go3d(false);
+      if(this.finish){
+        this.finish.apply(this);
+      }
+    }
   };
   
   
@@ -133,7 +147,7 @@
   Zoomer.prototype.firePreventedEvent = function(){
     
     //the last touch was less than 500ms ago
-    if(!this.touches && (new Date()).getTime() - this.touchStartTime < 500){
+    if(!this.touches && (new Date()).getTime() - this.touchStartTime < 250){
       
       //simulate clicking
       var evt = document.createEvent("MouseEvents");
