@@ -3,7 +3,7 @@
   .choices_wrapper
     ul.choices.clearfix
       each choice in choices.slice(0, 30)
-        li.choice.bubble(
+        li.choice.bubble.hidden(
           id='choice-' + choice.code, 
           data-name=choice.name, data-value=choice.value, data-colour=''
         )
