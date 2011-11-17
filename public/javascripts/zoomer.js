@@ -30,6 +30,8 @@
     this.x = 0;
     this.y = 0;
     this.touches = 0;
+    this.touchRemoved = false;
+    this.starts = [];
     
     element.addEventListener('gesturestart', this, false);
     element.addEventListener('gesturechange', this, false);
@@ -93,17 +95,33 @@
   
   Zoomer.prototype.onTouchStart = function(e) {
     if(!this.touches) this.go3d(true);
-    this.touches++;
     
-    this.startX = (e.touches[0].pageX + this.x);
-    this.startY = (e.touches[0].pageY + this.y);
+    this.start = {
+      x: e.touches[0].pageX + this.x, 
+      y: e.touches[0].pageY + this.y
+    };
+    this.touches++;
   };
   
   
   Zoomer.prototype.onTouchMove = function(e) {
+    if (this.touchRemoved) {
+      var diff = [
+        Math.abs(this.x - (this.start.x - e.touches[0].pageX)),
+        Math.abs(this.y - (this.start.y - e.touches[0].pageY))
+      ];
+      
+      if (Math.max.apply(Math, diff) > 50) {
+        this.start = {
+          x: e.touches[0].pageX + this.x, 
+          y: e.touches[0].pageY + this.y
+        };
+      }
+      this.touchRemoved = false;
+    }
     //TODO : multiple touches, snaps between them as fingers lift
-    this.x = this.startX - e.touches[0].pageX;
-    this.y = this.startY - e.touches[0].pageY;
+    this.x = this.start.x - e.touches[0].pageX;
+    this.y = this.start.y - e.touches[0].pageY;
     this.render(true);
     
     // cancel firing the original event
@@ -111,6 +129,7 @@
   };
   
   Zoomer.prototype.onTouchEnd = function(e) {
+    this.touchRemoved = true;
     this.touches--;
     
     this.render();
