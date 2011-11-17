@@ -262,6 +262,24 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 });
 
 
+
+app.get('/activity/:id', beforeFilter, function(req, res, next) {
+  if(req.query.view != 'embed') return next();
+  
+  api.Request({ID:req.params.id, result:'full'})
+    .on('success', function(data) {
+      res.render('activity-embed', {
+        activity: data['iati-activity'],
+        layout: false
+      });
+    })
+    .on('error', function(e) {
+      next(e);
+    })
+    .end();
+  
+});
+
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
   api.Request({ID:req.params.id, result:'full'})
     .on('success', function(data) {
