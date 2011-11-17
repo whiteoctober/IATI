@@ -1,7 +1,10 @@
 section.slide-panel.clearfix
+  
+  // the params for adding this activity to the dashboard
+  - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'activities', subkey:false})
   aside
     ul
-      li: a.icn.favourite(href=url_with(false,{view:'embed'}), data-dashkey="activities") Save to my favourites
+      li: a.icn.favourite(href='#', data-dash=dashParams) Save to my favourites
       li: a.icn.print(href="#") Print
       li: a.icn.pdf(href="#") PDF
       li: a.icn.csv(href="#") CSV
