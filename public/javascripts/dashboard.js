@@ -7,11 +7,11 @@ var IATI = IATI || {};
   /* Data Format
   [{
     href:'/some/content/endpoint',
-    section:'activities',
-    subsection:'My USA AID Activities'
+    key:'activities',
+    subkey:'My USA AID Activities'
   },{
     href:'/some/content/endpoint.df',
-    section:'datafile'
+    key:'datafile'
   }]
   */
   
@@ -40,15 +40,23 @@ var IATI = IATI || {};
       persist();
     },
     add:function(key, url){
-      data.push({
+      this.aadd({
         href:url,
-        section:key
+        key:key
       });
+    },
+    aadd:function(obj){
+      data.push(obj);
       persist();
+    },
+    subkeysFor:function(key){
+      return _(data).chain().filter(function(d){
+        return d.key == key;
+      }).pluck('subkey').uniq().value();
     },
     get:function(key){
       return _.filter(data,function(d){
-        return d.section == key;
+        return d.key == key;
       });
     },
     contains:contains
@@ -59,7 +67,7 @@ var IATI = IATI || {};
   $.fn.dashboardContent = function(){
     var $this = this;
     _.each(data, function(d){
-      var section = $this.find('section.' + d.section + ' .content');
+      var section = $this.find('section.' + d.key + ' .content');
       
       var widget = $('<li class="widget">');
       widget.appendTo(section);
@@ -74,19 +82,97 @@ var IATI = IATI || {};
   $.fn.favourite = function(){
     return this.each(function(){
       var $this = $(this);
-      $this.toggleClass('added', contains($this.attr('href')));
+      var href = $this.data('dash') ? 
+        $this.data('dash').href :
+        $this.attr('href');
+      
+      $this.toggleClass('added', contains(href));
     });
   };
   
   
-  $('.favourite').live('click', function(e){
+  var subkeyChoiceTmpl = '<ol><li><form><input type="text" name="groupname"/><input type="submit" value="create"/></form></li></ol>';
+  
+  $('[data-dash]').live('click', function(e){
+    e.preventDefault();
+    
+    var _data = _.clone($(this).data('dash'));
+    
+    if(_data.subkey === false){
+      //subkey required, display dialog
+      
+      var content = $(subkeyChoiceTmpl);
+      
+      
+      // add in the sub keys
+      //find the sub keys
+      _.each(IATI.dashboard.subkeysFor(_data.key), function(subkey){
+        var k = $('<li>').text(subkey);
+        k.click(function(){
+          _data.subkey = subkey;
+          IATI.dashboard.aadd(_data);
+          
+          $.iatiDialog('added');
+        });
+        content.prepend(k);
+      });
+      
+      
+      content.find('form').submit(function(e){
+        e.preventDefault();
+        
+        // get the input text, and create a subkey
+        var subkey = content.find('input').val();
+        if(subkey === '') return;
+        
+        _data.subkey = subkey;
+        
+        IATI.dashboard.aadd(_data);
+        
+        $.iatiDialog('added');
+        
+      });
+      
+      $.iatiDialog("Add to group",content);
+      
+      
+    } else {
+      // add to the dashboard
+      $.iatiDialog("Add to favourites","added to dashboard");
+      
+      IATI.dashboard.aadd(_data);
+      
+    }
+    
+    console.log(_data);
+  });
+  
+  /*
+  $('.favouritex').live('click', function(e){
     e.preventDefault();
     var $this = $(this);
     
-    IATI.dashboard.add($this.data('dashkey'), $this.attr('href'));
+    var key = $this.data('dashkey');
+    var type = $this.data('dashtype') || 'iframe';
     
-    $this.addClass('added');
-  });
+    if(key == 'activities'){
+      //choose a subgroup
+      
+      
+    } else {
+      // just assign it
+      
+      IATI.dashboard.add($this.data('dashkey'), $this.attr('href'));
+
+      $this.addClass('added');
+    }
+    
+    
+      var c = $('<ol><li><a href="#">Group one</a></li><li><a href="#">Group two</a></li><li><input type="text" name="groupname"/><button>create</button></li></ol>');
+      $.iatiDialog("Add to favourites…",c)
+    
+    
+  });*/
   
 })(IATI, jQuery, _);
 

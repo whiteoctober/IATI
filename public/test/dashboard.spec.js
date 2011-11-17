@@ -31,11 +31,11 @@ describe("persitance", function(){
     
     IATI.dashboard.add('widgets', 'url');
     
-    expect(window.localStorage.getItem('dashboard')).toBe(JSON.stringify([{href:'url', section:'widgets'}]));
+    expect(window.localStorage.getItem('dashboard')).toBe(JSON.stringify([{href:'url', key:'widgets'}]));
     
     IATI.dashboard.add('widgets', 'url2');
     
-    expect(window.localStorage.getItem('dashboard')).toBe(JSON.stringify([{href:'url', section:'widgets'},{href:'url2', section:'widgets'}]));
+    expect(window.localStorage.getItem('dashboard')).toBe(JSON.stringify([{href:'url', key:'widgets'},{href:'url2', key:'widgets'}]));
     
     
   });
@@ -72,7 +72,7 @@ describe('dashboard content', function(){
     
     expect(dash.find('.widgets .content').children().size()).toBe(2);
     
-    expect(dash.find('.widgets .content').children().first().text()).toBe('my-url');
+    expect(dash.find('.widgets .content').children().first('iframe').html()).toContain('my-url');
     
     
   });
@@ -85,6 +85,6 @@ describe('favourite links', function(){
   it('should add to the dashboard', function(){
     $('<a href="link-url" class="favourite" data-dashkey="activities">').click();
     expect(IATI.dashboard.contains('link-url')).toBeTruthy();
-  })
+  });
   
-})
+});
