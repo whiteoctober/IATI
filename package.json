@@ -1,7 +1,7 @@
 {
   "name": "iati",
   "version" : "0.0.1",
-  "description": "IATI development insight",
+  "description": "IATI Aid View",
   "author": "White October <info@whiteoctober.co.uk>",
   "dependencies": {
     "express": "2.4.7",

@@ -85,7 +85,7 @@ app.configure('development', function() {
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
   
   app.set('view options', {
-    title: '[DEV] IATI Data Browser',
+    title: '[DEV] Aid View',
     clientScripts: clientScripts
   });
   
@@ -96,7 +96,7 @@ app.configure('production', function() {
   app.use(express.errorHandler()); 
   
   app.set('view options', {
-    title: 'IATI Data Browser',
+    title: 'Aid View',
     clientScripts: clientScripts_combined
   });
   
