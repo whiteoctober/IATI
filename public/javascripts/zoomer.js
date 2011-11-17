@@ -56,8 +56,6 @@
         break;
       case 'gestureend':
         this.onGestureEnd(e);
-        if(this.afterGesture)
-          this.afterGesture(e);
         break;
       case 'touchstart':
         this.preventEvent(e);
