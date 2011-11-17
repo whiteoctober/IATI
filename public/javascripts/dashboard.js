@@ -168,7 +168,7 @@ var IATI = IATI || {};
       
     } else {
       // add to the dashboard
-      $.iatiDialog("Add to favourites","added to dashboard");
+      $.iatiDialog("Add to dashboard","added to dashboard");
       
       IATI.dashboard.aadd(_data);
       
@@ -177,32 +177,6 @@ var IATI = IATI || {};
     console.log(_data);
   });
   
-  /*
-  $('.favouritex').live('click', function(e){
-    e.preventDefault();
-    var $this = $(this);
-    
-    var key = $this.data('dashkey');
-    var type = $this.data('dashtype') || 'iframe';
-    
-    if(key == 'activities'){
-      //choose a subgroup
-      
-      
-    } else {
-      // just assign it
-      
-      IATI.dashboard.add($this.data('dashkey'), $this.attr('href'));
-
-      $this.addClass('added');
-    }
-    
-    
-      var c = $('<ol><li><a href="#">Group one</a></li><li><a href="#">Group two</a></li><li><input type="text" name="groupname"/><button>create</button></li></ol>');
-      $.iatiDialog("Add to favourites…",c)
-    
-    
-  });*/
   
 })(IATI, jQuery, _);
 
