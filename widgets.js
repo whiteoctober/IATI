@@ -39,7 +39,7 @@
 
     
     //Top sectors widget
-    app.get('/widgets/sectors', filters, function(req, res) {
+    app.get('/widgets/sectors', filters, function(req, res, next) {
       var params = {
         result: 'values',
         groupby: 'Sector',
