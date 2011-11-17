@@ -142,7 +142,6 @@ app.dynamicHelpers({
 
 app.helpers(helpers);
 
-
 var beforeFilter = function(req, res, next) {
   //Get query, filtering unwanted values
   var keep = 'Region Country Sector SectorCategory Funder orderby'.split(' ');
@@ -153,6 +152,23 @@ var beforeFilter = function(req, res, next) {
   
   req.queryString = req.originalUrl.split('?')[1] || '';
   req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
+  
+  //Sums all transactions for one or more activities with a particular code
+  req.transactionsTotal = function(activities, code) {
+    return _(activities).chain().as_array()
+      .map(function(a) { 
+        return _(a.transaction || []).chain()
+          .filter(function(t) {
+            return (t['transaction-type'] || {})['@code'] == code;
+          })
+          .map(function(t) { 
+            return parseFloat(t.value["@iati-ad:USD-value"] || 0); 
+          })
+          .sum().value();
+      })
+      .sum().value();
+  };
+  
   next();
 };
 
@@ -206,36 +222,8 @@ app.get('/activities', beforeFilter, function(req, res, next) {
 
 
 app.get('/data-file', beforeFilter, function(req, res, next) {
-  //Sums all transactions with a particular code
-  var transactionsTotal = function(activities, code) {
-    return _(activities).chain()
-      .map(function(a) {
-        return _(a.transaction || []).filter(function(t) {
-          return (t['transaction-type'] || {})['@code'] == code;
-        });
-      })
-      .flatten()
-      .map(function(t) { return parseFloat(t.value["@iati-ad:USD-value"] || 0); })
-      .sum().value();
-  };
-  
-  var newProjects = function(activities, limit) {
-    return _(activities).chain()
-      .sortBy(function(a) {
-        var date = _(a['activity-date'] || []).find(function(t) {
-          return (t["@type"]) == "start-actual";
-        });
-        console.log(date ? Date.parse(date["#text"]) : 0);
-        return date ? Date.parse(date["#text"]) : 0;
-      })
-      .map(function(a) {
-        return a.title || "No description available";
-      })
-      .value().slice(0, limit);
-  };
-
   var params = { result: 'full' };
-
+  
   _.extend(params, req.filter_query);
   new api.Request(params)
   .on('success', function(data) {
@@ -247,9 +235,8 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
       filter_paths: req.filter_paths,
       query: req.query,
       activities: activities,
-      new_projects: newProjects(activities, 3),
-      total_budget: transactionsTotal(activities, 'C'),
-      total_spend: transactionsTotal(activities, 'D') + transactionsTotal(activities, 'E'),
+      total_budget: req.transactionsTotal(activities, 'C'),
+      total_spend: req.transactionsTotal(activities, 'D') + req.transactionsTotal(activities, 'E'),
       activity_count: data['@activity-count'] || 0,
       current_page: req.query.p || 1,
       layout: !req.isXHR

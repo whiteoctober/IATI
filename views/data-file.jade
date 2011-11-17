@@ -4,11 +4,13 @@ section.data_file.slide-panel.clearfix
     .summary.section
       table.full
         tr
+          - budget = format_value(total_budget)
           td Total budget:
-          td!= "$<strong>"+total_budget+"</strong> billion"
+          td!= "$<strong>"+budget.value+"</strong> "+budget.unit
         tr
+          - spend = format_value(total_spend)
           td Total spend to date:
-          td!= "$<strong>"+total_spend+"</strong> billion"
+          td!= "$<strong>"+spend.value+"</strong> "+spend.unit
         tr
           td Total activities:
           td!= "<strong>"+activity_count+"</strong>"
@@ -28,16 +30,7 @@ section.data_file.slide-panel.clearfix
         | CSV
   .clear
   .third.left
-    .widget
-      .content
-        h3 New projects:
-        p
-          each project in new_projects
-            = project
-            br
-            | Commitments: $0
-            br
-            br
+    .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/new_projects'), links: true, padding: 0}}) 
   .third.left
     .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/donors'), links: true, padding: 0}})
   .third.left
