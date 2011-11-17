@@ -12,20 +12,13 @@ var express = require('express'),
 //All the script files that should be served to the client
 var clientScripts = [
   'lib/jquery.js', 
-  'lib/jquery.form.min.js', 
   'lib/d3.min.js', 
   'lib/d3.layout.min.js', 
   'lib/jquery.history.js', //Causes problems when minified
-  'lib/jquery.transform.min.js', 
-  // 'lib/zynga/Animate.js', 
-  // 'lib/zynga/Scroller.js', 
-  // 'lib/zynga/Engine.js', 
-  // 'lib/zynga/Style.js',
   'lib/seedrandom.js',
   'lib/underscore.js',
   'dashboard.js',
   'bubble.jquery.js', 
-  // 'zoom.js', 
   'zoomer.js', 
   'scroller.js',
   'plugins.js', 
@@ -116,7 +109,7 @@ _.mixin({
   },
   
   //Sums an array of values
-  sum : function(array) {
+  sum: function(array) {
     return _(array).reduce(function(a, b) { return a + b; }, 0);
   }
 });
