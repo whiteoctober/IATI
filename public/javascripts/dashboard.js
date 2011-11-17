@@ -92,12 +92,19 @@ var IATI = IATI || {};
       
       var section = target.find('.content');
       
-      var widget = $('<li class="widget">');
-      widget.appendTo(section);
-      $('<iframe>', {
-        src: d.href,  frameborder: 0, scrolling: "no",
-        css: {width: widget.width(), height: widget.height()}
-      }).appendTo(widget);
+      if(d.type == 'embed'){
+        $('<li class="embed">').appendTo(section).load(d.href);
+        
+      } else {
+        //presume iframe
+        var widget = $('<li class="widget">');
+        widget.appendTo(section);
+        $('<iframe>', {
+          src: d.href,  frameborder: 0, scrolling: "no",
+          css: {width: widget.width(), height: widget.height()}
+        }).appendTo(widget);
+      }
+      
     });
   };
   
