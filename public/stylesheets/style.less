@@ -458,3 +458,53 @@ nav.sorting{
     font-size:1.8em;
   }
 }
+
+#modal{
+  position:absolute;
+  z-index:30;
+  left:0;
+  top:15em;
+  text-align:center;
+  width:100%;
+  
+  -webkit-transition: all .2s ease-out;
+  
+  .close{
+    float:right;
+    font-size:2em;
+  }
+  
+  .inner{
+    width:20em;
+    text-align:left;
+    display:block;
+    margin:auto;
+
+    padding:1em;
+
+    background-color:#fff;
+    border-radius: .5em; 
+    -moz-border-radius: .5em;
+    border: 1px solid #ccc;
+    
+    h1,h2{
+      .thinned_text;
+    }
+    h1{
+      font-size:2em;
+      color:@blue;
+    }
+    h2{
+      font-size:1.5em;
+    }
+    
+    ol{
+      padding:0;
+      li{
+        list-style:none;
+      }
+    }
+    
+  }
+  
+}

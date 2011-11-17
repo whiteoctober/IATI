@@ -1,4 +1,4 @@
-(function() {
+(function($) {
   
   // This fires an animation,  but returns a 
   // deferred object rather than the jQuery object
@@ -181,4 +181,30 @@
     //Fits text to elements in a staggered way
     fitTextTo(items);
   };
-})();
+  
+  
+  $.iatiDialog = function(title, body, appendTarget){
+    $('#modal').remove();
+    if(title == 'remove') return;
+    
+    var modal = $('<div id="modal" style="opacity:0;margin-top:0"><div class="inner"><a class="close">&times;</a><h1></h1><div class="content"></div></div></div>');
+    
+    modal.find('.close').click(function(){
+      modal.css({opacity:0, marginTop:0});
+      setTimeout(function(){
+        modal.remove();
+      },200)
+    })
+    
+    modal.find('h1').text(title).after(body || '');
+
+    $(appendTarget || 'body').prepend(modal);
+    
+    setTimeout(function(){
+      modal.css({opacity:1, marginTop:3});
+    },0);
+    
+    return modal;
+  }
+  
+})(jQuery);
