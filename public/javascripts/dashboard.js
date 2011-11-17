@@ -63,11 +63,34 @@ var IATI = IATI || {};
   };
   
   
+  var subSectionTmpl = '<li class="sub"><h2></h2><ol class="content"></ol></li>';
+  
   // jQuery helper to put the content in the dashboard page
   $.fn.dashboardContent = function(){
     var $this = this;
+    
     _.each(data, function(d){
-      var section = $this.find('section.' + d.key + ' .content');
+      var target = $('[data-dashkey='+d.key+']',$this);
+      
+      if(d.subkey !== undefined){
+        
+        var newTarget = $('.sub', target).filter(function(){
+          return $(this).data('subkey') == d.subkey;
+        })
+        
+        if(!newTarget.size()){
+          // create a new sub section
+          newTarget = $(subSectionTmpl)
+            .data('subkey', d.subkey)
+            .find('h2').text(d.subkey).end()
+            .prependTo(target);
+        }
+        
+        target = newTarget;
+        
+      }
+      
+      var section = target.find('.content');
       
       var widget = $('<li class="widget">');
       widget.appendTo(section);
