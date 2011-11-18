@@ -18,10 +18,10 @@
       var isLeafNode = function(d) { return !d.children; };
       var area = {x: container.parent().width(), y: container.parent().height() - 150};
       
-      // Finds a circluar sector from the center point of an area
-      var sectorIndex = function(position, area, sectors) {
+      // the rotation from the centre as 0 -> 1
+      var rotation = function(position) {
         var delta = { x: area.x / 2 - position.x, y: area.y / 2 - position.y };
-        return parseInt(sectors * (Math.atan2(delta.x, delta.y) / Math.PI + 1)/2, 10) % sectors;
+        return (Math.atan2(delta.x, delta.y) / (Math.PI*2)) + .5;
       };
       
       // Generates data objects from DOM objects
@@ -68,16 +68,30 @@
         });
       });
       
-      // Set colours
-      var angleOffset = parseInt(Math.random() * options.palette.length, 10);
-      items.each(function(i) {
-        var colourIndex = sectorIndex(positions[i] || {radius: 10, x: 0, y: 0}, area, options.palette.length);
-        var colours = options.palette[((colourIndex || 0) + angleOffset) % options.palette.length];
-        $(this).children().css({
-          background: colours.colour,
-          color: colours.text
+      
+      // Set colours/classes
+      var offset = Math.random();
+      
+      if(options.bubbleClasses){
+        items.each(function(i){
+          var angle = (rotation(positions[i]) + offset) % 1;
+          var idx = parseInt(angle * options.bubbleClasses.length,10);
+          var classname = options.bubbleClasses[idx];
+          $(this).addClass(classname);
         });
-      });
+      }
+      
+      if(options.palette){
+        items.each(function(i){
+          var angle = (rotation(positions[i]) + offset) % 1;
+          var idx = parseInt(angle * options.palette.length,10);
+          var colours = options.palette[idx];
+          $(this).children().css({
+            background: colours.colour,
+            color: colours.text
+          });
+        });
+      }
       
       container.height(area.y).width(area.x);
     },
@@ -96,16 +110,28 @@
         $(this).css({'margin-top': margin + item.data("scaled-value") % 2, 'margin-bottom': margin });
       });
       
-      // Set colours
-      var random = Math.floor(Math.random() * options.palette.length);
-      items.each(function(i) {
-        var item = $(this);
-        var colours = options.palette[(random + i++) % options.palette.length];
-        item.children().css({ 
-          background: item.data("colour") || colours.colour,
-          color: item.data("text-colour") || colours.text
+      
+      // Set colours/classes
+      if(options.bubbleClasses){
+        var random = Math.floor(Math.random() * options.bubbleClasses.length);
+        items.each(function(i){
+          var idx = (random + i++) % options.bubbleClasses.length;
+          var classname = options.bubbleClasses[idx];
+          $(this).addClass(classname);
         });
-      });
+      }
+      
+      if(options.palette){
+        var random = Math.floor(Math.random() * options.palette.length);
+        items.each(function(i){
+          var item = $(this);
+          var colours = options.palette[(random + i++) % options.palette.length];
+          item.children().css({ 
+            background: item.data("colour") || colours.colour,
+            color: item.data("text-colour") || colours.text
+          });
+        });
+      }
     }
   };
   
@@ -113,8 +139,7 @@
   $.fn.bubbleLayout = function(options) {
     var defaults = {
       diameter: {min: 100, max: 200},
-      layout: 'pack',
-      palette: [{colour: '#3366FF', text: '#fff'}]
+      layout: 'pack'
     };
     options = $.extend(defaults, options);
     options.layout = layouts[options.layout] ? options.layout : 'pack';
