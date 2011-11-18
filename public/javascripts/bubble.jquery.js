@@ -32,14 +32,10 @@
       
       data.sort(randomly);
 
-      // Gets bubble positions using the D3 algorithm and computes the padding around them
+      // Gets bubble positions using the pack layout algorithm and computes the padding around them
       var positions = [];
       var padding = {left: area.x, top: area.y, right: 0, bottom: 0};
-      var bubble = d3.layout.pack().size([area.x, area.y]);
-      console.log(container.parent().width() / container.parent().height());
       $.map(packLayout($.map(data, function(i) { return i.value; }), Math.pow(container.parent().width() / container.parent().height(), 2)), function(position) {
-      // $.map(bubble.nodes({children: data}).filter(isLeafNode), function(position) {
-        console.log(position);
         position.x = parseInt(position.x, 10);
         position.y = parseInt(position.y, 10);
         position.radius = parseInt(position.r, 10);

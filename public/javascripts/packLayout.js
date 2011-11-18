@@ -50,7 +50,6 @@ var packLayout = function(sizes, ratio) {
       }
     }
     pairs = _(pairs).sortBy(function(pair) { return (dist(pair[0], centre, ratio) + dist(pair[1], centre, ratio)) / 2; });
-    //console.log(JSON.stringify(pairs));
     if (j++ > 100) break;
   }
   return positions;
