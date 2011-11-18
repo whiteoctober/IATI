@@ -1,0 +1,11 @@
+.widget_content
+  h3.title New projects:
+  .new_projects
+    each project in new_projects
+      .new_project
+        != project.description + "<br>Commitments: " + to_currency(project.commitments)
+
+script
+  inlines.push(function(){
+    $(".new_projects").height($("body").height() - $(".title").outerHeight(true));
+  });
