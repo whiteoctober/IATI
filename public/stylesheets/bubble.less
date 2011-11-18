@@ -1,0 +1,56 @@
+.bubble {
+  position: relative;
+  display: block; float: left;
+  width: 150px; height: 150px; margin: 1px;
+  list-style: none;
+
+  .outline {
+    position: absolute;
+    width: 100%; height: 100%;
+    opacity: 0.6; background-color: #ccc;
+    border-radius: 10000px;
+  }
+  
+  .inner {
+    position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+    margin: 8px; padding: 3px;
+    background-color: #ccc; 
+    border-radius: 10000px;
+  }
+  .content {
+    display: block;
+    color: white;
+    width: 100%; height: 100%;
+    .text {
+      text-align: center;
+    }
+  }
+  
+  .coloured(@color, @fg){
+    color:@fg;//lighten(@color, 60%);
+    
+    // thin the text
+    text-shadow:@color 0 0 1px;  
+    
+    .outline, .inner{
+      background-color:@color;
+    }
+  }
+  
+  &.c1  { .coloured(#2D1835,#DDA3D7) }
+  &.c2  { .coloured(#55435D,#DDA3D7) }
+  &.c3  { .coloured(#7D7EB7,#3443A2) }
+  &.c4  { .coloured(#B269A5,#2D1835) }
+  &.c5  { .coloured(#992434,#E6A6AE) }
+  
+  &.c6  { .coloured(#88B642,#3A5C19) }
+  &.c7  { .coloured(#D0D138,#517B2A) }
+  &.c8  { .coloured(#E3911C,#CB1812) }
+  &.c9  { .coloured(#E75955,#8D0018) }
+  &.c10 { .coloured(#E23634,#6B0008) }
+  
+  &.c11 { .coloured(#75B6B5,#294952) }
+  &.c12 { .coloured(#4F727A,#B4D0D5) }
+  &.c13 { .coloured(#E54282,#820011) }
+
+}
