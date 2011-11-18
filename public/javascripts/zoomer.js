@@ -73,7 +73,7 @@
     }
     
     // debug : display debugging info in the menu bar
-    // window.document.title = "touches:" + this.touches + ", preventedEvent:" + (this.preventedEvent ? 'YES' : 'NO');
+    window.document.title = "touches:" + this.touches + ", preventedEvent:" + (this.preventedEvent ? 'YES' : 'NO');
   };
   
   
@@ -100,7 +100,7 @@
       x: e.touches[0].pageX + this.x, 
       y: e.touches[0].pageY + this.y
     };
-    this.touches++;
+    this.touches = e.touches.length;
   };
   
   
@@ -130,7 +130,7 @@
   
   Zoomer.prototype.onTouchEnd = function(e) {
     this.touchRemoved = true;
-    this.touches--;
+    this.touches = e.touches.length;
     
     this.render();
     

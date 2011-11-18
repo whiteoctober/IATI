@@ -12,12 +12,11 @@ var express = require('express'),
 //All the script files that should be served to the client
 var clientScripts = [
   'lib/jquery.js', 
-  'lib/d3.min.js', 
-  'lib/d3.layout.min.js', 
   'lib/jquery.history.js', //Causes problems when minified
   'lib/seedrandom.js',
   'lib/underscore.js',
   'dashboard.js',
+  'packLayout.js',
   'bubble.jquery.js', 
   'zoomer.js', 
   'scroller.js',

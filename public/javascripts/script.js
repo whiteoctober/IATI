@@ -16,7 +16,7 @@ var palette = [
   var dimmed = false;
   
   //Sets a seed for deterministic randomness
-  Math.seedrandom('z6m44E4MB5');
+  //Math.seedrandom('z6m44E4MB5');
   
   //This calls all of the inline scripts, set on page/dynamic content load
   var runInlines = function() { while(inlines.length) { inlines.pop()(); } };

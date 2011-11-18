@@ -16,7 +16,7 @@
     pack: function(items, container, options) {
       var randomly = function(a,b) { return Math.random() * 2 - 1; };
       var isLeafNode = function(d) { return !d.children; };
-      var area = {x: container.parent().width(), y: container.parent().height()};
+      var area = {x: container.parent().width(), y: container.parent().height() - 150};
       
       // Finds a circluar sector from the center point of an area
       var sectorIndex = function(position, area, sectors) {
@@ -29,12 +29,17 @@
         var item = $(this);
         return { id: item.attr("id"), name: item.data("name"), value: item.data("scaled-value") };
       }).toArray();
+      
+      data.sort(randomly);
 
       // Gets bubble positions using the D3 algorithm and computes the padding around them
       var positions = [];
       var padding = {left: area.x, top: area.y, right: 0, bottom: 0};
       var bubble = d3.layout.pack().size([area.x, area.y]);
-      $.map(bubble.nodes({children: data}).filter(isLeafNode), function(position) {
+      console.log(container.parent().width() / container.parent().height());
+      $.map(packLayout($.map(data, function(i) { return i.value; }), Math.pow(container.parent().width() / container.parent().height(), 2)), function(position) {
+      // $.map(bubble.nodes({children: data}).filter(isLeafNode), function(position) {
+        console.log(position);
         position.x = parseInt(position.x, 10);
         position.y = parseInt(position.y, 10);
         position.radius = parseInt(position.r, 10);
@@ -47,25 +52,17 @@
       var actualArea = { x: padding.right - padding.left, y: padding.bottom - padding.top };
 
       // Scales values according to the desired area
-      // var scale = Math.min(area.x / actualArea.x, area.y / actualArea.y);
-      // var scaledArea = {x: parseInt(actualArea.x * scale), y: parseInt(actualArea.y * scale)};
-      // $.map(positions, function(position) {
-        // position.x = (area.x - scaledArea.x) / 2 + scale * (position.x - padding.left);
-        // position.y = (area.y - scaledArea.y) / 2 + scale * (position.y - padding.top);
-        // position.radius = scale * position.radius;
-      // });
-      var scale = {x: area.x / actualArea.x, y: area.y / actualArea.y};
-      var scaledArea = {x: parseInt(actualArea.x * scale.x), y: parseInt(actualArea.y * scale.y)};
+      var scale = Math.min(area.x / actualArea.x, area.y / actualArea.y);
       $.map(positions, function(position) {
-        position.x = (area.x - scaledArea.x) / 2 + scale.x * (position.x - padding.left);
-        position.y = (area.y - scaledArea.y) / 2 + scale.y * (position.y - padding.top);
-        position.radius = Math.min(scale.x, scale.y) * position.radius;
+        position.x = (area.x - actualArea.x * scale) / 2 + scale * (position.x - padding.left);
+        position.y = (area.y - actualArea.y * scale) / 2 + scale * (position.y - padding.top);
+        position.radius = scale * position.radius;
       });
       
 
       // Set positions
       items.each(function(i) {
-        var position = positions[i];
+        var position = positions[i] || {radius: 10, x: 0, y: 0};
         $(this).css({
           position: 'absolute',
           left: position.x - position.radius,
@@ -78,7 +75,7 @@
       // Set colours
       var angleOffset = parseInt(Math.random() * options.palette.length, 10);
       items.each(function(i) {
-        var colourIndex = sectorIndex(positions[i], area, options.palette.length);
+        var colourIndex = sectorIndex(positions[i] || {radius: 10, x: 0, y: 0}, area, options.palette.length);
         var colours = options.palette[((colourIndex || 0) + angleOffset) % options.palette.length];
         $(this).children().css({
           background: colours.colour,
@@ -119,7 +116,7 @@
   // Renders bubbles with text inside using the chosen layout
   $.fn.bubbleLayout = function(options) {
     var defaults = {
-      diameter: {min: 100, max: 250},
+      diameter: {min: 100, max: 200},
       layout: 'pack',
       palette: [{colour: '#3366FF', text: '#fff'}]
     };
