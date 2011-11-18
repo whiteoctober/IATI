@@ -19,21 +19,24 @@
   }
   .content {
     display: block;
-    color: white;
     width: 100%; height: 100%;
     .text {
       text-align: center;
     }
   }
   
-  .coloured(@color, @fg){
-    color:@fg;//lighten(@color, 60%);
+  // mixin for colouring bubbles
+  .coloured(@bg, @fg){
+    color:@fg;
+    a{
+      color:@fg;
+    }
     
     // thin the text
-    text-shadow:@color 0 0 1px;  
+    text-shadow:@bg 0 0 1px;  
     
     .outline, .inner{
-      background-color:@color;
+      background-color:@bg;
     }
   }
   
