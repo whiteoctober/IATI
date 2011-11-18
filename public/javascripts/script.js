@@ -1,13 +1,5 @@
-//Colour palette for activity bubbles
-var palette = [
-  {colour: '#96BD50', text: '#fff'},
-  {colour: '#EDB24D', text: '#fff'},
-  {colour: '#EA6D65', text: '#fff'},
-  {colour: '#E85890', text: '#fff'},
-  {colour: '#BE547C', text: '#fff'},
-  {colour: '#8588BB', text: '#fff'},
-  {colour: '#7BBABA', text: '#fff'}
-];
+// the set of classes to be assigned to bubbles (giving colours)
+var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
 
 (function() {
   var query = window.location.search.replace(/^\?/, "");

@@ -17,14 +17,13 @@
 script
   inlines.push(function() {
     var wrapper = $(".choices_wrapper");
-    wrapper.width($("#content").width()).height($("#content").height() - 230);
     var container = wrapper.children(".choices");
     var activities = container.children(".choice");
     var content = activities.find(".content");
     
     Math.seedrandom($('.choices').map(function() { return $(this).attr("id"); }).toArray().join(""));
     $('.choices').bubbleLayout({
-      palette: palette, layout: 'list', font: {min: 9, max: 25}, diameter: {min: 130, max: 250},
+      bubbleClasses: bubbleClasses, layout: 'list', font: {min: 9, max: 25}, diameter: {min: 130, max: 250},
       afterFit: function() {
         var notEmpty = function() { return $(this).text() !== ""; }
         var textLines = $(this).children().filter(notEmpty).toArray();

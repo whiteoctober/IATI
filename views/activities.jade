@@ -31,14 +31,13 @@ nav.foot
 script
   inlines.push(function() {
     var wrapper = $(".activity_wrapper");
-    wrapper.width($("#content").width()).height($("#content").height() - 230);
     var container = wrapper.children(".activities");
     var activities = container.children(".activity");
     var content = activities.find(".content");
 
     Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
     container.bubbleLayout({
-      palette: palette, 
+      bubbleClasses: bubbleClasses,
       layout: 'pack', 
       font: {min: 9, max: 25}, 
       diameter: {min: 100, max: 200}
