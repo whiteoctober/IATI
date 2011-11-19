@@ -1,3 +1,19 @@
-h3= activity.title
 
-p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+.activity_embed
+
+  // TODO : make the colour deterministic
+  div(
+    class = 'bubble c' + (Math.floor(Math.random()*13)+1)
+  )
+    .outline
+    .inner
+      a.xhr.content(href='/activity/' + activity['iati-identifier'], data-history='{"enter":"slideUp"}')
+        span.text= activity.title
+
+
+  p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+  
+script
+  inlines.push(function(){
+    $('.bubble a',this).fitText('circular', {font: {min: 10, max: 25}});
+  })
