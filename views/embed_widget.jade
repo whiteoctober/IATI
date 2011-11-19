@@ -12,7 +12,7 @@
         a.icn.cut.embed(href=url_with('/embed', {widget: 'donors'}))
           span.onshow embed
       li.onshow
-        - dashParams = JSON.stringify({href:url, type:'iframe', key:'widgets'})
+        - dashParams = JSON.stringify({href:frame_url, type:'iframe', key:'widgets'})
         a.icn.favourite(href="#", data-dash=dashParams)
           | save to dashboard
-iframe(src=url, scrolling='no', style='padding: #{padding}; width: #{width}px; height: #{height}px; border: 0px;')
+iframe(src=frame_url, scrolling='no', style='padding: #{padding}; width: #{width}px; height: #{height}px; border: 0px;')

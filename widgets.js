@@ -121,7 +121,7 @@
       delete req.query.widget;
       res.render('embed_dialog', {
         title: "Big long title of the widget",
-        url: "/widgets/" + widget,
+        frame_url: "/widgets/" + widget,
         layout: false
       });
     });
