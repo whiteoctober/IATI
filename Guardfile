@@ -33,8 +33,8 @@ end
 
 group :test do
   
-  guard 'process', :name => 'Jasmine Tests', :command => './node_modules/jasmine-node/bin/jasmine-node test' do
-    watch(/.*\.js/)
+  guard 'process', :name => 'Jasmine Tests', :command => './node_modules/jasmine-node/bin/jasmine-node --coffee test' do
+    watch(/.*\.(js|coffee)/)
   end
   
 end
