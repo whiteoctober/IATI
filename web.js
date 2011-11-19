@@ -234,13 +234,24 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   var params = { result: 'full' };
   
   _.extend(params, req.filter_query);
-  new api.Request(params)
-  .on('success', function(data) {
+  
+  var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
+  
+  // the requests that have to be made for this page
+  var requestDatafile = api.Request(params);
+  var requestFilters  = filterTitles.Request(filters);
+  
+  new and('success', requestDatafile, requestFilters)
+  .on('success', function(data, filters) {
+    console.log("Filters", filters);
+    var keys = _(filters).chain().values().flatten().value();
+    
     var activities = _.as_array(data['iati-activity']);
     
     res.render('data-file', {
       title: 'Data File',
       page: 'data-file',
+      keys: keys,
       filter_paths: req.filter_paths,
       query: req.query,
       activities: activities,
@@ -253,8 +264,11 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   })
   .on('error', function(e) {
     next(e);
-  })
-  .end();
+  });
+  
+  
+  requestDatafile.end();
+  requestFilters.end();
 });
 
 
