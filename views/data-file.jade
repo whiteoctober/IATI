@@ -16,7 +16,8 @@ section.data_file.slide-panel.clearfix
           td!= "<strong>"+activity_count+"</strong>"
   .third.right
     .links.section.left
-      a(href='')
+      - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'datafiles'})
+      a(href='#', data-dash=dashParams)
         img(src='/images/sprites/save.png')
         | Save to my dashboard
       a(href='')

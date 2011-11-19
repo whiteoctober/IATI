@@ -195,6 +195,17 @@ app.get('/activities', beforeFilter, function(req, res, next) {
 });
 
 
+
+app.get('/data-file', beforeFilter, function(req, res, next) {
+  if(req.query.view != 'embed') return next();
+  
+  res.render('data-file-embed',{
+    layout:false
+  });
+  
+});
+
+
 app.get('/data-file', beforeFilter, function(req, res, next) {
   var params = { result: 'full' };
   
