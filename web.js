@@ -47,6 +47,20 @@ app.configure(function() {
   //Custom app settings
   app.set('pageSize', 20);
   
+});
+
+app.configure('development', function() {
+  
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  
+  app.set('view options', {
+    title: '[DEV] Aid View',
+    clientScripts: clientScripts
+  });
+  
+});
+
+app.configure('production', function() {
   
   //Combination and minification of static files
   app.use(assetManager({
@@ -76,20 +90,6 @@ app.configure(function() {
       }
     }*/
   }));
-});
-
-app.configure('development', function() {
-  
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
-  
-  app.set('view options', {
-    title: '[DEV] Aid View',
-    clientScripts: clientScripts
-  });
-  
-});
-
-app.configure('production', function() {
   
   app.use(express.errorHandler()); 
   
