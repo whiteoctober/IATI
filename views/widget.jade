@@ -5,6 +5,7 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   script
     window.inlines = [];
+    window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
   body
     != body
     
