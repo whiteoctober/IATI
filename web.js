@@ -1,6 +1,8 @@
 var express = require('express'),
     connect = require('connect'),
     api = require('./lib/api.js'),
+    filterTitles = require('./lib/filterTitles.js'),
+    and = require('./lib/womitter.js').and,
     app = module.exports = express.createServer(),
     _ = require('underscore'),
     assetManager = require('connect-assetmanager'),
@@ -109,6 +111,17 @@ _.mixin({
   //Sums an array of values
   sum: function(array) {
     return _(array).reduce(function(a, b) { return a + b; }, 0);
+  },
+  
+  //Returns an object (shallow clone) with only the specified keys
+  only: function(obj, keptKeys){
+    var next = {};
+    _.each(obj, function(value, key){
+      if(_.include(keptKeys, key)){
+        next[key] = value;
+      }
+    });
+    return next;
   }
 });
 
@@ -119,10 +132,7 @@ app.helpers(helpers);
 var beforeFilter = function(req, res, next) {
   //Get query, filtering unwanted values
   var keep = 'Region Country Sector SectorCategory Funder orderby'.split(' ');
-  req.filter_query = _.reduce(req.query, function(memo, value, key) {
-    if (_.include(keep, key)) memo[key] = value;
-    return memo;
-  },{});
+  req.filter_query = _.only(req.query, keep);
   
   req.queryString = req.originalUrl.split('?')[1] || '';
   req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
@@ -199,9 +209,23 @@ app.get('/activities', beforeFilter, function(req, res, next) {
 app.get('/data-file', beforeFilter, function(req, res, next) {
   if(req.query.view != 'embed') return next();
   
-  res.render('data-file-embed',{
-    layout:false
-  });
+  var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
+  
+  new filterTitles.Request(filters).on('success', function(expanded){
+    
+    // just the values of the filters
+    var keys = _(expanded).chain().values().flatten().value();
+    
+    res.render('data-file-embed',{
+      keys:keys,
+      layout:false
+    });
+    
+  }).on('error', function(e){
+    next(e);
+    
+  }).end();
+  
   
 });
 
