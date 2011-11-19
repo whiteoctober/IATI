@@ -10,9 +10,6 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
   //Sets a seed for deterministic randomness
   //Math.seedrandom('z6m44E4MB5');
   
-  //This calls all of the inline scripts, set on page/dynamic content load
-  var runInlines = function() { while(inlines.length) { inlines.pop()(); } };
-  
   //Dim the page when requested
   dimmer.click(function() {
     if (dimmed) {
@@ -72,12 +69,10 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
         if (status == 'error') return alert('request error');
         
         if (State.data.enter == 'slideUp') {
-          $(this).css('margin-top', 600).animate({'margin-top': 0}, function() {
-            runInlines();
-          });
+          $(this).css('margin-top', 600).animate({'margin-top': 0},runInlines);
         }
         else {
-          runInlines();
+          runInlines.apply(this);
         }
       });
     };

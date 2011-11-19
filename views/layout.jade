@@ -7,6 +7,7 @@ html
     meta.viewport(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
   script
     window.inlines = [];
+    window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
   body#body
     #content
       #content_inner.clearfix!= body
