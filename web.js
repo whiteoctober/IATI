@@ -2,12 +2,11 @@ var express = require('express'),
     connect = require('connect'),
     api = require('./lib/api.js'),
     app = module.exports = express.createServer(),
-    querystring = require('querystring'),
-    url = require('url'),
     _ = require('underscore'),
     assetManager = require('connect-assetmanager'),
     assetHandler = require('connect-assetmanager-handlers'),
-    helpers = require('./lib/helpers.js');
+    helpers = require('./lib/helpers.js'),
+    dynamicHelpers = require('./lib/dynamicHelpers.js');
 
 //All the script files that should be served to the client
 var clientScripts = [
@@ -113,32 +112,8 @@ _.mixin({
   }
 });
 
-app.dynamicHelpers({
-  query: function(req){
-    return req.query;
-  },
-
-  //Adds parameters to the url
-  url_with: function(req, res) {
-    return function(pathname, params) {
-      //Parse the current url, inserting updated query paramaters and specified options
-      var parsedUrl = url.parse(req.originalUrl, true);
-      parsedUrl.query = _(req.query).clone();
-      if (pathname) parsedUrl.pathname = pathname;
-      if (params) _.extend(parsedUrl.query, params);
-      
-      //Remove the xhr param (this is used as a work around for cache issues)
-      if (parsedUrl.query.xhr) delete parsedUrl.query.xhr;
-      
-      //Remove search query string, forcing query object to be used
-      delete parsedUrl.search;
-      
-      //Return the formatted url
-      return url.format(parsedUrl);
-    };
-  }
-});
-
+// add helpers from the lib directory
+app.dynamicHelpers(dynamicHelpers);
 app.helpers(helpers);
 
 var beforeFilter = function(req, res, next) {
