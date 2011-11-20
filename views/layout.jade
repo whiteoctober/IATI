@@ -5,9 +5,16 @@ html
     link(rel='stylesheet', href='/stylesheets/boilerplate.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     meta.viewport(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
-  script
-    window.inlines = [];
-    window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
+    meta(name="apple-mobile-web-app-status-bar-style", content="pink")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    //iPad landscape
+    link(rel="apple-touch-startup-image", href="/images/icons/splash_1024x748.png",  media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)")
+    //iPad portrait
+    link(rel="apple-touch-startup-image", href="/images/icons/splash_748x1024.png",  media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)")
+    link(rel="apple-touch-icon", sizes="72x72", href="/images/icons/icon72x72.png")
+    script
+      window.inlines = [];
+      window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
   body#body
     #content
       #content_inner.clearfix!= body
@@ -19,7 +26,7 @@ html
         img.text(src='/images/sector_filter_text.png')
         img.button(src='/images/sector_filter.png')
       .main_navigation
-        a(href='/') 
+        a.xhr(href='/') 
           img.button(src='/images/home_button.png')
         a(href='javascript:history.back()') 
           img.button(src='/images/back_button.png')
