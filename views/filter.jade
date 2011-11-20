@@ -1,22 +1,23 @@
 .filter
   h2 Filter by #{key}
-  .choices_wrapper
-    ul.choices.clearfix
-      each choice in choices.slice(0, 30)
-        li.choice.bubble.hidden(
-          id='choice-' + choice.code, 
-          data-name=choice.name, data-value=choice.value, data-colour=''
-        )
-          .outline
-          .inner
-            - var query = {};
-            - query[key] = choice.code
-            a.content.xhr(href=url_with('/activities', query))
-              p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
+
+.zoomable
+  ul.choices.clearfix
+    each choice in choices.slice(0, 30)
+      li.choice.bubble.hidden(
+        id='choice-' + choice.code, 
+        data-name=choice.name, data-value=choice.value, data-colour=''
+      )
+        .outline
+        .inner
+          - var query = {};
+          - query[key] = choice.code
+          a.content.xhr(href=url_with('/activities', query))
+            p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
 
 script
   inlines.push(function() {
-    var wrapper = $(".choices_wrapper");
+    var wrapper = $(".zoomable");
     var container = wrapper.children(".choices");
     var activities = container.children(".choice");
     var content = activities.find(".content");
@@ -33,7 +34,8 @@ script
     
     
     var currentScale = 1;
-    new Zoomer(wrapper.get(0), wrapper.find('li').toArray(),{
+    var zoom = $(".zoomable");
+    z = new Zoomer(zoom.get(0), zoom.find('li').toArray(),{
         finish:function(){
           
           // assign the variables that would be supplied by zynga
