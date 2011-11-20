@@ -206,18 +206,35 @@ h3.inner {
   width: 350px;
   font-size: 16px;
 }
-
 .landing_message {
-  margin-top: 70px;
+  text-align:center;
+  margin-top: 70px; 
+  .thinned_text(#fff);
+  h1 {
+    background: url('/images/home_logo.png') no-repeat scroll top center;
+    height: 117px;
+    margin-bottom:.7em;
+    span{
+      display:none;
+    }
+  }
+  h2{
+    margin:0;
+    font-weight:normal;
+    color:@light-blue;
+    font-size:3.3em;
+    strong{
+      font-size:1.4em;
+      font-weight:normal;
+    }
+  }
+  h3{
+    margin:0;
+    font-size:2.25em;
+    color: #334784;
+  }
 }
-.landing_message .logo {
-  width: 300px; margin: 0px auto 9px;
-}
-.landing_message .logo h2 {
-  width: 150px; margin: 18px 0;
-  line-height: 30px;
-}
-
+/*
 .large_message {
   padding: 20px 0;
   text-align: center;
@@ -232,7 +249,7 @@ h3.inner {
   font-weight: normal; font-size: 150%;
   font-weight: normal;
   font-size: 150%;
-}
+}*/
 
 .data_file {
 }
