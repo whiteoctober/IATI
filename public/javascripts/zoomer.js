@@ -73,7 +73,7 @@
     }
     
     // debug : display debugging info in the menu bar
-    window.document.title = "touches:" + this.touches + ", preventedEvent:" + (this.preventedEvent ? 'YES' : 'NO');
+    // window.document.title = "touches:" + e.touches.length + ", preventedEvent:" + (this.preventedEvent ? 'YES' : 'NO');
   };
   
   
@@ -94,13 +94,12 @@
   
   
   Zoomer.prototype.onTouchStart = function(e) {
-    if(!this.touches) this.go3d(true);
+    if(e.touches.length == 1) this.go3d(true);
     
     this.start = {
       x: e.touches[0].pageX + this.x, 
       y: e.touches[0].pageY + this.y
     };
-    this.touches = e.touches.length;
   };
   
   
@@ -119,7 +118,7 @@
       }
       this.touchRemoved = false;
     }
-    //TODO : multiple touches, snaps between them as fingers lift
+    
     this.x = this.start.x - e.touches[0].pageX;
     this.y = this.start.y - e.touches[0].pageY;
     this.render(true);
@@ -130,11 +129,10 @@
   
   Zoomer.prototype.onTouchEnd = function(e) {
     this.touchRemoved = true;
-    this.touches = e.touches.length;
     
     this.render();
     
-    if(!this.touches){
+    if(!e.touches.length){
       this.go3d(false);
       if(this.finish){
         this.finish.apply(this);
