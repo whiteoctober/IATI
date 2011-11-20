@@ -23,7 +23,6 @@
     options = options || {};
     this.finish = options.finish || false;
     
-    
     this.elements = elements;
     this.element = element;
     this.oScale = this.scale = 1;
@@ -40,11 +39,17 @@
     element.addEventListener('touchmove', this, false);
     element.addEventListener('touchend', this, false);
     
+    // if(options.constrainToWindow)
+      this.setConstraints();
+    
     // switch to 2d
     this.render(true);
     
     //move to top and prevent scroll actions
     document.body.scrollTop = 0; noscroll = true;
+    
+    // transform from top-left to make constraining easier
+    element.style.webkitTransformOrigin = '0 0';
   };
   
   
@@ -151,6 +156,9 @@
   
   
   Zoomer.prototype.render = function(_3d) {
+    if(this.constrain)
+      this.constrain();
+    
     var transform = _3d ?
       'translate3d('+this.x*-1+'px, '+this.y*-1+'px, 0) scale3d('+this.scale+','+this.scale+', 1)' :
       'translate('+this.x*-1+'px, '+this.y*-1+'px) scale('+this.scale+')' ;
@@ -182,6 +190,46 @@
       
     }
   };
+  
+  // this sets the .constrain function based on the 
+  // element and viewport widths
+  Zoomer.prototype.setConstraints = function(){
+    var elementWidth = this.element.clientWidth;
+    var windowWidth = window.innerWidth;
+    
+    var elementHeight = this.element.clientHeight;
+    var windowHeight = window.innerHeight;
+    
+    // optimised slightly for changing scale, would like
+    // to see this nicer
+    var currentScale = 0;
+    var maxx = 0;
+    var maxy = 0;
+    
+    this.constrain = function(){
+      if(this.scale < 1){
+        this.scale = 1;
+      }
+      if(this.scale != currentScale){
+        currentScale = this.scale;
+        maxx = (currentScale*elementWidth) - windowWidth;
+        maxy = (currentScale*elementHeight) - windowHeight;
+      }
+      
+      if(this.x > maxx){
+        this.x = maxx;
+      } else if(this.x < 0){
+        this.x = 0;
+      }
+
+      if(this.y > maxy){
+        this.y = maxy;
+      } else if(this.y < 0){
+        this.y = 0;
+      }
+    };
+  };
+  
   
   
   window.Zoomer = Zoomer;
