@@ -28,7 +28,8 @@
     this.oScale = this.scale = 1;
     this.x = 0;
     this.y = 0;
-    this.touches = 0;
+    this.xoff = this.oxoff = 0;
+    this.yoff = this.oyoff = 0;
     this.touchRemoved = false;
     this.starts = [];
     
@@ -84,17 +85,25 @@
   
   
   Zoomer.prototype.onGestureStart = function(e) {
-    // TODO - provide offset for 'zooming from a point'
+    this.oxoff = e.pageX + this.x;
+    this.oyoff = e.pageY + this.y;
   };
   
   
   Zoomer.prototype.onGestureChange = function(e) {
     this.scale = this.oScale * e.scale;
+    
+    this.xoff = ((e.pageX + this.x) * e.scale) - this.oxoff;
+    this.yoff = ((e.pageY + this.y) * e.scale) - this.oyoff;
   };
   
   
   Zoomer.prototype.onGestureEnd = function(e) {
     this.oScale = this.scale;
+    this.x += this.xoff;
+    this.y += this.yoff;
+    this.xoff = 0;
+    this.yoff = 0;
   };
   
   
@@ -159,9 +168,12 @@
     if(this.constrain)
       this.constrain();
     
+    var x = (this.x + this.xoff) * -1;
+    var y = (this.y + this.yoff) * -1;
+    
     var transform = _3d ?
-      'translate3d('+this.x*-1+'px, '+this.y*-1+'px, 0) scale3d('+this.scale+','+this.scale+', 1)' :
-      'translate('+this.x*-1+'px, '+this.y*-1+'px) scale('+this.scale+')' ;
+      'translate3d('+x+'px, '+y+'px, 0) scale3d('+this.scale+','+this.scale+', 1)' :
+      'translate('+x+'px, '+y+'px) scale('+this.scale+')' ;
     
     this.element.style.webkitTransform = transform;
     
@@ -216,16 +228,16 @@
         maxy = (currentScale*elementHeight) - windowHeight;
       }
       
-      if(this.x > maxx){
-        this.x = maxx;
-      } else if(this.x < 0){
-        this.x = 0;
+      if(this.x > maxx - this.xoff){
+        this.x = maxx - this.xoff;
+      } else if(this.x < -this.xoff){
+        this.x = -this.xoff;
       }
 
-      if(this.y > maxy){
-        this.y = maxy;
-      } else if(this.y < 0){
-        this.y = 0;
+      if(this.y > maxy - this.yoff){
+        this.y = maxy - this.yoff;
+      } else if(this.y < - this.yoff){
+        this.y =  -this.yoff;
       }
     };
   };
