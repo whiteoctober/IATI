@@ -23,13 +23,13 @@
     options = options || {};
     this.finish = options.finish || false;
     
-    
     this.elements = elements;
     this.element = element;
     this.oScale = this.scale = 1;
     this.x = 0;
     this.y = 0;
-    this.touches = 0;
+    this.xoff = this.oxoff = 0;
+    this.yoff = this.oyoff = 0;
     this.touchRemoved = false;
     this.starts = [];
     
@@ -40,11 +40,17 @@
     element.addEventListener('touchmove', this, false);
     element.addEventListener('touchend', this, false);
     
+    // if(options.constrainToWindow)
+      this.setConstraints();
+    
     // switch to 2d
     this.render(true);
     
     //move to top and prevent scroll actions
     document.body.scrollTop = 0; noscroll = true;
+    
+    // transform from top-left to make constraining easier
+    element.style.webkitTransformOrigin = '0 0';
   };
   
   
@@ -79,17 +85,25 @@
   
   
   Zoomer.prototype.onGestureStart = function(e) {
-    // TODO - provide offset for 'zooming from a point'
+    this.oxoff = e.pageX + this.x;
+    this.oyoff = e.pageY + this.y;
   };
   
   
   Zoomer.prototype.onGestureChange = function(e) {
     this.scale = this.oScale * e.scale;
+    
+    this.xoff = ((e.pageX + this.x) * e.scale) - this.oxoff;
+    this.yoff = ((e.pageY + this.y) * e.scale) - this.oyoff;
   };
   
   
   Zoomer.prototype.onGestureEnd = function(e) {
     this.oScale = this.scale;
+    this.x += this.xoff;
+    this.y += this.yoff;
+    this.xoff = 0;
+    this.yoff = 0;
   };
   
   
@@ -151,9 +165,15 @@
   
   
   Zoomer.prototype.render = function(_3d) {
+    if(this.constrain)
+      this.constrain();
+    
+    var x = (this.x + this.xoff) * -1;
+    var y = (this.y + this.yoff) * -1;
+    
     var transform = _3d ?
-      'translate3d('+this.x*-1+'px, '+this.y*-1+'px, 0) scale3d('+this.scale+','+this.scale+', 1)' :
-      'translate('+this.x*-1+'px, '+this.y*-1+'px) scale('+this.scale+')' ;
+      'translate3d('+x+'px, '+y+'px, 0) scale3d('+this.scale+','+this.scale+', 1)' :
+      'translate('+x+'px, '+y+'px) scale('+this.scale+')' ;
     
     this.element.style.webkitTransform = transform;
     
@@ -182,6 +202,46 @@
       
     }
   };
+  
+  // this sets the .constrain function based on the 
+  // element and viewport widths
+  Zoomer.prototype.setConstraints = function(){
+    var elementWidth = this.element.clientWidth;
+    var windowWidth = window.innerWidth;
+    
+    var elementHeight = this.element.clientHeight;
+    var windowHeight = window.innerHeight;
+    
+    // optimised slightly for changing scale, would like
+    // to see this nicer
+    var currentScale = 0;
+    var maxx = 0;
+    var maxy = 0;
+    
+    this.constrain = function(){
+      if(this.scale < 1){
+        this.scale = 1;
+      }
+      if(this.scale != currentScale){
+        currentScale = this.scale;
+        maxx = (currentScale*elementWidth) - windowWidth;
+        maxy = (currentScale*elementHeight) - windowHeight;
+      }
+      
+      if(this.x > maxx - this.xoff){
+        this.x = maxx - this.xoff;
+      } else if(this.x < -this.xoff){
+        this.x = -this.xoff;
+      }
+
+      if(this.y > maxy - this.yoff){
+        this.y = maxy - this.yoff;
+      } else if(this.y < - this.yoff){
+        this.y =  -this.yoff;
+      }
+    };
+  };
+  
   
   
   window.Zoomer = Zoomer;

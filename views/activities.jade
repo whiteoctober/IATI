@@ -7,7 +7,7 @@ h3.inner #{activity_count} records found
     h2 <strong>#{activity_count}</strong> projects found
     p Refine search by selecting another sector, sub-sector, funder or area
 
-.activity_wrapper
+.zoomable
   ul.activities.clearfix
     each activity in activities
       li.activity.bubble.hidden(
@@ -30,7 +30,7 @@ nav.foot
 
 script
   inlines.push(function() {
-    var wrapper = $(".activity_wrapper");
+    var wrapper = $(".zoomable");
     var container = wrapper.children(".activities");
     var activities = container.children(".activity");
     var content = activities.find(".content");
