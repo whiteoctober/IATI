@@ -31,7 +31,7 @@ section.data_file.slide-panel.clearfix
         | CSV
   .clear
   .third.left
-    .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/new_projects'), links: true, padding: 0}}) 
+    .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/new_projects'), links: true, padding: 0}}) 
   .third.left
     .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/donors'), links: true, padding: 0}})
   .third.left
