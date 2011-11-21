@@ -27,15 +27,15 @@ section.activity.slide-panel.clearfix
         td $<strong>000</strong> thousand
 
     .third.left
-      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/project_description', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_description', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
     .third.left
-      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/participating_organisations', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/participating_organisations', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
     .third.left
-      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/project_sectors', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_sectors', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
     .third.left
-      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/project_map', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_map', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
     .two_thirds.left
-      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/funding_breakdown', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/funding_breakdown', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
 
 
 script
