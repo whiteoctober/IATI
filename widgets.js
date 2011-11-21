@@ -142,10 +142,12 @@
       new api.Request(params)
         .on('success', function(data) {
           var activity = data['iati-activity'];
+          var description = activity.description && activity.description['#text'];
+          console.log(description);
           
           res.render('widgets/project_description', {
             title: "Project Description Widget",
-            description: activity.description || "No description available.",
+            description: description || "No description available.",
             layout: 'widget'
           });
         })
