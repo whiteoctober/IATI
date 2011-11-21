@@ -15,6 +15,9 @@ The default endpoint is http://109.104.101.243:8080/exist/rest/db/apps/iati-api/
 
     # run the app with a custom endpoint
     ENDPOINT=http://my-custom/endpoint? node app.js
+    
+    # run the app with a custom corpus
+    CORPUS=fullA node app.js
 
 
 ## Vagrant
@@ -45,6 +48,9 @@ This app can be deployed to [heroku](http://heroku.com)
     
     # to set a custom api endpoint (remember the trailing question mark)
     heroku config:add ENDPOINT=http://109.104.101.243:8080/exist/rest/db/apps/iati-api/xquery/woapi.xq?
+    
+    # to set the corpus used
+    heroku config:add CORPUS=fullA
     
     # to rename for a nicer url
     heroku apps:rename my-iati-app
