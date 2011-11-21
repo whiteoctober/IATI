@@ -104,7 +104,6 @@
         .on('success', function(data) {
           var activity = data['iati-activity'];
           var allLocations = _(activity.location).as_array() || [];
-          console.log(activity);
           var mode = 'coordinates';
           var locations = _(allLocations).chain()
             .filter(function(l) { return l.coordinates; })
