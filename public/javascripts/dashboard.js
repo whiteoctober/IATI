@@ -76,7 +76,7 @@ var IATI = IATI || {};
         
         var newTarget = $('.sub', target).filter(function(){
           return $(this).data('subkey') == d.subkey;
-        })
+        });
         
         if(!newTarget.size()){
           // create a new sub section
@@ -174,7 +174,6 @@ var IATI = IATI || {};
       
     }
     
-    console.log(_data);
   });
   
   
