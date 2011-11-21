@@ -126,7 +126,11 @@ var IATI = IATI || {};
   $('[data-dash]').live('click', function(e){
     e.preventDefault();
     
-    var _data = _.clone($(this).data('dash'));
+    var $this = $(this);
+    
+    $this.addClass('added');
+    
+    var _data = _.clone($this.data('dash'));
     
     if(_data.subkey === false){
       //subkey required, display dialog
@@ -168,7 +172,10 @@ var IATI = IATI || {};
       
     } else {
       // add to the dashboard
-      $.iatiDialog("Add to dashboard","added to dashboard");
+      $('.dashboard .saving').addClass('active');
+      setTimeout(function(){
+        $('.dashboard .saving').removeClass('active');
+      }, 2500);
       
       IATI.dashboard.aadd(_data);
       
