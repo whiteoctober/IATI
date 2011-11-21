@@ -303,11 +303,34 @@ h3.inner {
   clear: both;
 }
 
-.main_navigation {
+nav.main_navigation {
   position: absolute; left: 0; top: 0;
   padding: 9px 12px;
+  
+  a{
+    cursor:pointer;
+    // TODO: common background, with others overlayed
+    background: url('../images/home_button.png') no-repeat scroll top left;
+    width: 75px;
+    height: 87px;
+    float:left;
+    span{
+      display:none;
+    }
+  }
+  .home{
+    background-image:url('../images/home_button.png')
+    span{
+      display:none
+    }
+  }
+  .back{
+    background-image:url('/images/back_button.png')
+  }
+  .dashboard{
+    background-image:url('/images/favourites_button.png')
+  }
 }
-
 .activities_navigation {
   position: relative; width: 228px; margin: 0 auto; 
   padding: 18px 12px 0px;

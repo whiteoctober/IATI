@@ -25,13 +25,14 @@ html
       a.sector_filter.filter.xhr(href=url_with('/filter/SectorCategory'))
         img.text(src='/images/sector_filter_text.png')
         img.button(src='/images/sector_filter.png')
-      .main_navigation
-        a.xhr(href='/') 
-          img.button(src='/images/home_button.png')
-        a(href='javascript:history.back()') 
-          img.button(src='/images/back_button.png')
-        a.xhr(href='/dashboard', data-history='{"enter":"slideUp"}') 
-          img.button(src='/images/favourites_button.png')
+      nav.main_navigation
+        a.home.xhr(href='/')
+          span home
+        a.back(href='javascript:history.back()')
+          span back
+        a.dashboard.xhr(href='/dashboard', data-history='{"enter":"slideUp"}')
+          span dashboard
+        
     #footer
       .left_corner.corner
       .centre
