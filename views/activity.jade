@@ -1,4 +1,4 @@
-section.slide-panel.clearfix
+section.activity.slide-panel.clearfix
   
   // the params for adding this activity to the dashboard
   - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'activities', subkey:false})
@@ -25,7 +25,19 @@ section.slide-panel.clearfix
       tr
         th Allocated to date:
         td $<strong>000</strong> thousand
-  
+
+    .third.left
+      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/project_description', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+    .third.left
+      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/participating_organisations', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+    .third.left
+      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/project_sectors', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+    .third.left
+      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/project_map', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+    .two_thirds.left
+      .widget!= partial('embed_widget', {locals: {url: url_with('/widgets/funding_breakdown', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+
+
 script
   inlines.push(function(){
     contentExit = function(){

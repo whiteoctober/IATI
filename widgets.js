@@ -2,7 +2,7 @@
   //Initialises up widget pages and routes
   exports.init = function(app, filters, api, _) {
   
-    //Top donors widget
+    //Widget displaying a pie chart of the biggest donors
     app.get('/widgets/donors', filters, function(req, res) {
       var params = {
         result: 'values',
@@ -26,7 +26,7 @@
             .value();
           
           res.render('widgets/donors', {
-            title: "IATI Top Donors Widget",
+            title: "Top Donors Widget",
             funders: JSON.stringify(funders),
             layout: 'widget'
           });
@@ -38,7 +38,7 @@
     });
 
     
-    //Top sectors widget
+    //Widget displaying a bar chart of the 6 most significant sectors
     app.get('/widgets/sectors', filters, function(req, res, next) {
       var params = {
         result: 'values',
@@ -61,7 +61,7 @@
             .value();
           
           res.render('widgets/sectors', {
-            title: "IATI Top Sectors Widget",
+            title: "Top Sectors Widget",
             sectors: JSON.stringify(sectors),
             layout: 'widget'
           });
@@ -73,36 +73,146 @@
     });
 
     
-    //New projects widget
-    app.get('/widgets/new_projects', filters, function(req, res, next) {
-      var newProjects = function(activities, limit) {
-        return _(activities).chain()
-          .sortBy(function(a) {
-            var date = _(a['activity-date'] || []).find(function(t) {
-              return (t["@type"]) == "start-actual";
-            });
-            console.log(date ? Date.parse(date["#text"]) : 0);
-            return date ? Date.parse(date["#text"]) : 0;
-          })
-          .map(function(a) {
-            return {
-              description: a.title || "No description available",
-              commitments: req.transactionsTotal(a, 'C')
-            };
-          })
-          .value().slice(0, limit);
-      };
-    
+    //Widget displaying up to 5 of the newest projects
+    app.get('/widgets/new_projects', filters, function(req, res, next) {    
       var params = {result: 'full'};
 
       _.extend(params, req.filter_query);
       new api.Request(params)
         .on('success', function(data) {
-          var activities = _.as_array(data['iati-activity']);
+          var activities = _(data['iati-activity']).as_array();
           
           res.render('widgets/new_projects', {
-            title: "IATI Top Sectors Widget",
-            new_projects: newProjects(activities, 5),
+            title: "New Projects Widget",
+            new_projects: req.newProjects(activities, 5),
+            layout: 'widget'
+          });
+        })
+        .on('error', function(e) {
+          next(e);
+        })
+        .end();
+    });
+    
+    
+    //Widget displaying a map with the location of an activity
+    app.get('/widgets/project_map', filters, function(req, res, next) {
+      var params = {result: 'geo'};
+
+      _.extend(params, req.filter_query);
+      new api.Request(params)
+        .on('success', function(data) {
+          var activity = data['iati-activity'];
+          var allLocations = _(activity.location).as_array() || [];
+          console.log(activity);
+          var mode = 'coordinates';
+          var locations = _(allLocations).chain()
+            .filter(function(l) { return l.coordinates; })
+            .map(function(l) { 
+              l.lat = l.coordinates['@latitude'];
+              l.lng = l.coordinates['@longitude'];
+              return l;
+            })
+            .value();
+          
+          if (locations.length == 0) {
+            // mode = 'countries';
+            // locations = _(allLocations).chain()
+            // .filter(function(l) { return l['location-type']; });
+            //String replace to get country, geolocate position?
+          }
+          
+          res.render('widgets/project_map', {
+            title: "Geographical Location Widget",
+            locations: locations,
+            layout: 'widget'
+          });
+        })
+        .on('error', function(e) {
+          next(e);
+        })
+        .end();
+    });
+    
+    
+    //Widget displaying a project description
+    app.get('/widgets/project_description', filters, function(req, res, next) {
+      var params = {result: 'full'};
+
+      _.extend(params, req.filter_query);
+      new api.Request(params)
+        .on('success', function(data) {
+          var activity = data['iati-activity'];
+          
+          res.render('widgets/project_description', {
+            title: "Project Description Widget",
+            description: activity.description || "No description available.",
+            layout: 'widget'
+          });
+        })
+        .on('error', function(e) {
+          next(e);
+        })
+        .end();
+    });
+    
+    
+    //Widget displaying a list of participating organisations
+    app.get('/widgets/participating_organisations', filters, function(req, res, next) {
+      var params = {result: 'full'};
+
+      _.extend(params, req.filter_query);
+      new api.Request(params)
+        .on('success', function(data) {
+          var activity = data['iati-activity'];
+          var orgs = _(activity['participating-org'] || [])
+            .chain().as_array().map(function(o) { return o['#text']; }).value();
+          
+          res.render('widgets/participating_organisations', {
+            title: "Participating Organisations Widget",
+            participating_organisations: orgs,
+            layout: 'widget'
+          });
+        })
+        .on('error', function(e) {
+          next(e);
+        })
+        .end();
+    });
+    
+    
+    //Widget displaying a graph of project sectors for an activity
+    app.get('/widgets/project_sectors', filters, function(req, res, next) {
+      var params = {result: 'full'};
+
+      _.extend(params, req.filter_query);
+      new api.Request(params)
+        .on('success', function(data) {
+          var activity = data['iati-activity'];
+          
+          res.render('widgets/project_sectors', {
+            title: "Project Sectors Widget",
+            layout: 'widget'
+          });
+        })
+        .on('error', function(e) {
+          next(e);
+        })
+        .end();
+    });
+    
+    
+    //Widget displaying a bar chart of funding figures
+    app.get('/widgets/funding_breakdown', filters, function(req, res, next) {
+      var params = {result: 'full'};
+
+      _.extend(params, req.filter_query);
+      new api.Request(params)
+        .on('success', function(data) {
+          var activity = data['iati-activity'];
+          
+          res.render('widgets/funding_breakdown', {
+            title: "Funding Breakdown Widget",
             layout: 'widget'
           });
         })
@@ -116,11 +226,10 @@
     //Renders an embed dialog
     app.get('/embed', filters, function(req, res) {
       var widget = req.query.widget;
-      console.log(req.query);
 
       delete req.query.widget;
       res.render('embed_dialog', {
-        title: "Big long title of the widget",
+        title: "Embed Widget",
         frame_url: "/widgets/" + widget,
         layout: false
       });

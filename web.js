@@ -13,7 +13,7 @@ var express = require('express'),
 //All the script files that should be served to the client
 var clientScripts = [
   'lib/jquery.js', 
-  'lib/jquery.history.js', //Causes problems when minified
+  'lib/jquery.history.js',
   'lib/seedrandom.js',
   'lib/underscore.js',
   'dashboard.js',
@@ -25,12 +25,12 @@ var clientScripts = [
   'script.js'
 ];
 
-
 //Set the cache to the time at which the app was started.
 //Ideally this would be a hash of the script files or 
 //the most recent modification date
 var cacheKey = (new Date()).getTime();
 var clientScripts_combined = ['../static/js/' + cacheKey + '/client.js'];
+
 
 app.configure(function() {
   app.set('views', __dirname + '/views');
@@ -48,22 +48,20 @@ app.configure(function() {
   
   //Custom app settings
   app.set('pageSize', 20);
-  
 });
 
+
 app.configure('development', function() {
-  
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
   
   app.set('view options', {
     title: '[DEV] Aid View',
     clientScripts: clientScripts
   });
-  
 });
 
-app.configure('production', function() {
-  
+
+app.configure('production', function() { 
   //Combination and minification of static files
   app.use(assetManager({
     'js':{
@@ -99,8 +97,8 @@ app.configure('production', function() {
     title: 'Aid View',
     clientScripts: clientScripts_combined
   });
-  
 });
+
 
 _.mixin({
   //Returns an array by wrapping non-arrays in an array
@@ -125,13 +123,15 @@ _.mixin({
   }
 });
 
+
 // add helpers from the lib directory
 app.dynamicHelpers(dynamicHelpers);
 app.helpers(helpers);
 
+
 var beforeFilter = function(req, res, next) {
   //Get query, filtering unwanted values
-  var keep = 'Region Country Sector SectorCategory Funder orderby'.split(' ');
+  var keep = 'Region Country Sector SectorCategory Funder orderby ID'.split(' ');
   req.filter_query = _.only(req.query, keep);
   
   req.queryString = req.originalUrl.split('?')[1] || '';
@@ -151,6 +151,24 @@ var beforeFilter = function(req, res, next) {
           .sum().value();
       })
       .sum().value();
+  };
+      
+  //Sorts projects by start date
+  req.newProjects = function(activities, limit) {
+    return _(activities).chain()
+      .sortBy(function(a) {
+        var date = _(a['activity-date'] || []).find(function(t) {
+          return (t["@type"]) == "start-actual";
+        });
+        return date ? Date.parse(date["#text"]) : 0;
+      })
+      .map(function(a) {
+        return {
+          description: a.title || "No description available",
+          commitments: req.transactionsTotal(a, 'C')
+        };
+      })
+      .value().slice(0, limit);
   };
   
   next();
@@ -207,9 +225,8 @@ app.get('/activities', beforeFilter, function(req, res, next) {
 });
 
 
-
 app.get('/data-file', beforeFilter, function(req, res, next) {
-  if(req.query.view != 'embed') return next();
+  if (req.query.view != 'embed') return next();
   
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
@@ -227,8 +244,6 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
     next(e);
     
   }).end();
-  
-  
 });
 
 
@@ -245,7 +260,6 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   
   new and('success', requestDatafile, requestFilters)
   .on('success', function(data, filters) {
-    console.log("Filters", filters);
     var keys = _(filters).chain().values().flatten().value();
     
     var activities = _.as_array(data['iati-activity']);
@@ -268,11 +282,9 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
     next(e);
   });
   
-  
   requestDatafile.end();
   requestFilters.end();
 });
-
 
 
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
@@ -289,8 +301,8 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
       next(e);
     })
     .end();
-  
 });
+
 
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
   api.Request({ID:req.params.id, result:'full'})

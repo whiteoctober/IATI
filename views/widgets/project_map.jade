@@ -1,0 +1,50 @@
+.widget_content
+  h3.title(style='margin-bottom: 22px;') Geographical location
+  - if (locations.length > 0)
+    .map(data-locations=JSON.stringify(locations))
+  - else
+    p No location information available.
+
+script(src='http://maps.googleapis.com/maps/api/js?sensor=false')
+script
+  inlines.push(function(){
+    var map = $(".map");
+    if (map.length > 0) {
+      map.width($("body").width());
+      map.height($("body").height() - $(".title").outerHeight(true));
+      
+      var options = {
+        zoom: 8,
+        center: new google.maps.LatLng(-34.397, 150.644),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false,
+        streetViewControl: false
+      };
+      var gmap = new google.maps.Map(map[0], options);
+      google.maps.event.addListener(gmap, 'zoom_changed', function() {
+        zoomChangeBoundsListener = 
+          google.maps.event.addListener(gmap, 'bounds_changed', function(event) {
+            if (this.getZoom() > 10 && this.initialZoom) {
+              this.setZoom(10);
+              this.initialZoom = false;
+            }
+          google.maps.event.removeListener(zoomChangeBoundsListener);
+        });
+      });
+      gmap.initialZoom = true;
+      
+      var bounds = new google.maps.LatLngBounds();
+      
+      $.map(map.data("locations"), function(location) {
+        var latLng = new google.maps.LatLng(location.lat,location.lng);
+        var marker = new google.maps.Marker({
+          position: latLng, 
+          title: location.name,
+          map: gmap
+        });
+        bounds.extend(latLng);
+      });
+      
+      gmap.fitBounds(bounds);
+    }
+  });
