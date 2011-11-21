@@ -185,8 +185,10 @@ app.get('/activities', beforeFilter, function(req, res, next) {
       total: Math.ceil(total / app.settings.pageSize)
     };
     
+    var view = req.query.view == 'list' ? 'activities-list' : 'activities';
+    
     delete req.query.view;
-    res.render('activities', {
+    res.render(view, {
       title: 'Activities',
       page: 'activities',
       filter_paths: req.filter_paths,
