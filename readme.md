@@ -63,3 +63,5 @@ Responses from the api can be cached using memcached by setting the env variable
     MEMCACHE_SERVERS=127.0.0.1:11211 node web.js
 
 This won't work on heroku as yet (because the memcached is user/pass protected) - though can help with local development.
+
+(note, to clear memcached: `echo "flush_all" | nc localhost 11211` )
