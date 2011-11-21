@@ -2,6 +2,7 @@
 @import url(dashboard.css);
 @import url(widgets.css);
 @import url(bubble.css);
+@import url(nav.css);
 
 @blue:#2d5ea9;
 @light-blue:#1e99d6;
@@ -303,34 +304,6 @@ h3.inner {
   clear: both;
 }
 
-nav.main_navigation {
-  position: absolute; left: 0; top: 0;
-  padding: 9px 12px;
-  
-  a{
-    cursor:pointer;
-    // TODO: common background, with others overlayed
-    background: url('../images/home_button.png') no-repeat scroll top left;
-    width: 75px;
-    height: 87px;
-    float:left;
-    span{
-      display:none;
-    }
-  }
-  .home{
-    background-image:url('../images/home_button.png')
-    span{
-      display:none
-    }
-  }
-  .back{
-    background-image:url('/images/back_button.png')
-  }
-  .dashboard{
-    background-image:url('/images/favourites_button.png')
-  }
-}
 .activities_navigation {
   position: relative; width: 228px; margin: 0 auto; 
   padding: 18px 12px 0px;
@@ -385,56 +358,6 @@ div.filter{
   margin: 4em;
 }
 
-nav.foot{
-  position: fixed;
-  bottom: 0;
-  z-index: 10;
-  width: 100%;
-  text-align: center;
-}
-nav.sorting{
-  position: fixed;
-  top: 0;
-  right:0;
-  z-index: 10;
-  margin:1em 3em;
-  
-  text-transform:uppercase;
-  font-weight:bold;
-  color:@grey;
-  .thinned_text;
-  
-  //possibly move this out to a.toggle
-  a{
-    background-image:url("/images/toggles/off.png");
-    height:64px;
-    width:64px;
-    
-    span{
-      height:64px;
-      width:64px;
-      display:block;
-      text-indent: -3000px;
-    }
-    
-    display:inline-block;
-    
-    vertical-align:middle;
-    &.active{
-      background-image:url("/images/toggles/on.png");
-    }
-    &.funding{
-      span{
-        background-image:url("/images/toggles/label-funding.png");
-      }
-    }
-    &.az{
-      span{
-        background-image:url("/images/toggles/label-az.png");
-      }
-    }
-  }
-}
 
 
 #dialog{

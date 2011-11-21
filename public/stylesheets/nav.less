@@ -1,0 +1,126 @@
+@blue:#2d5ea9;
+@light-blue:#1e99d6;
+@grey:#999;
+
+.thinned_text(@bg:#fff){
+  text-shadow:@bg 0 0 1px;  
+}
+
+
+
+nav.main_navigation {
+  position: absolute; left: 0; top: 0;
+  padding: 9px 12px;
+  
+  a{
+    cursor:pointer;
+    background: url('/images/nav/base.png') no-repeat scroll top left;
+    float:left;
+    span{
+      width: 75px;
+      height: 87px;
+      display:block;
+      text-indent:-6000px;
+      line-height:0;
+    }
+  }
+  .home span{
+    background-image:url('/images/nav/home.png')
+  }
+  .back span{
+    background-image:url('/images/nav/back.png')
+  }
+  .dashboard span{
+    background-image:url('/images/nav/dashboard.png')
+  }
+  .dashboard .saving{
+    background-image:url('/images/nav/dashboard-throb.png');
+    opacity:0;
+    &.active{
+      -webkit-animation-name:throb;
+      -webkit-animation-duration:1s;
+      -webkit-animation-iteration-count:2;
+      -webkit-animation-timing-function:ease-out;
+    }
+  }
+  @-webkit-keyframes throb{
+    0%{opacity:0;}
+    50%{opacity:1;}
+    100%{opacity:0;}
+  }
+
+}
+
+nav.foot{
+  position: fixed;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+  text-align: center;
+  
+  a{
+    cursor:pointer;
+    background: url('/images/nav/base.png') no-repeat scroll top left;
+    display:inline-block;
+    span{
+      width: 75px;
+      height: 87px;
+      display:block;
+      text-indent:-6000px;
+    }
+  }
+  
+  .datafile span{
+    background-image:url('/images/nav/datafile.png')
+  }
+  .map span{
+    background-image:url('/images/nav/map.png')
+  }
+  .list span{
+    background-image:url('/images/nav/list.png')
+  }
+}
+
+nav.sorting{
+  position: fixed;
+  top: 0;
+  right:0;
+  z-index: 10;
+  margin:1em 3em;
+  
+  text-transform:uppercase;
+  font-weight:bold;
+  color:@grey;
+  .thinned_text;
+  
+  //possibly move this out to a.toggle
+  a{
+    background-image:url("/images/toggles/off.png");
+    height:64px;
+    width:64px;
+    
+    span{
+      height:64px;
+      width:64px;
+      display:block;
+      text-indent: -3000px;
+    }
+    
+    display:inline-block;
+    
+    vertical-align:middle;
+    &.active{
+      background-image:url("/images/toggles/on.png");
+    }
+    &.funding{
+      span{
+        background-image:url("/images/toggles/label-funding.png");
+      }
+    }
+    &.az{
+      span{
+        background-image:url("/images/toggles/label-az.png");
+      }
+    }
+  }
+}

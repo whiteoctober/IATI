@@ -17,17 +17,13 @@ section.data_file.slide-panel.clearfix
   .third.right
     .links.section.left
       - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'datafiles'})
-      a(href='#', data-dash=dashParams)
-        img(src='/images/sprites/save.png')
+      a.icn.favourite(href='#', data-dash=dashParams)
         | Save to my dashboard
-      a(href='')
-        img(src='/images/sprites/print.png')
+      a.icn.print(href='')
         | Print
-      a(href='')
-        img(src='/images/sprites/pdf.png')
+      a.icn.pdf(href='')
         | PDF
-      a(href='')
-        img(src='/images/sprites/csv.png')
+      a.icn.csv(href='')
         | CSV
   .clear
   .third.left
@@ -53,5 +49,7 @@ script
         $(this).empty().css({marginTop:0});
       });
     };
-    new Scroller($('section.slide-panel').get(0))
+    new Scroller($('section.slide-panel').get(0));
+    
+    $('[data-dash]').favourite();
   });
