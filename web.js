@@ -8,7 +8,8 @@ var express = require('express'),
     assetManager = require('connect-assetmanager'),
     assetHandler = require('connect-assetmanager-handlers'),
     helpers = require('./lib/helpers.js'),
-    dynamicHelpers = require('./lib/dynamicHelpers.js');
+    dynamicHelpers = require('./lib/dynamicHelpers.js'),
+    __logger = require('log4js').getLogger('web.js');
 
 //All the script files that should be served to the client
 var clientScripts = [
@@ -130,6 +131,7 @@ app.helpers(helpers);
 
 
 var beforeFilter = function(req, res, next) {
+  __logger.info(req.method + ' ' + req.originalUrl)
   //Get query, filtering unwanted values
   var keep = 'Region Country Sector SectorCategory Funder orderby ID'.split(' ');
   req.filter_query = _.only(req.query, keep);
