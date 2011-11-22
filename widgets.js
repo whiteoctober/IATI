@@ -134,7 +134,7 @@
     });
     
     
-    //Widget displaying a project description
+    //Widget displaying a project description for an activity
     app.get('/widgets/project_description', filters, function(req, res, next) {
       var params = {result: 'full'};
 
@@ -157,7 +157,7 @@
     });
     
     
-    //Widget displaying a list of participating organisations
+    //Widget displaying a list of participating organisations for an activity
     app.get('/widgets/participating_organisations', filters, function(req, res, next) {
       var params = {result: 'full'};
 
@@ -208,7 +208,7 @@
     });
     
     
-    //Widget displaying a bar chart of funding figures
+    //Widget displaying a bar chart of funding figures for an activity
     app.get('/widgets/funding_breakdown', filters, function(req, res, next) {
       var params = {result: 'full'};
 
