@@ -1,6 +1,6 @@
 .widget_content
   h3.title Top Donors
-  #chart(data-funders=funders)
+  #chart(data-funders=JSON.stringify(funders))
 
 script
   inlines.push(function(){

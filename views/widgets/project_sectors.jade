@@ -1,2 +1,32 @@
 .widget_content
   h3.title Sectors
+  - if (sectors.length > 0)
+    #chart(data-sectors=JSON.stringify(sectors))
+  - else
+    p "No sectors available."
+
+script
+  inlines.push(function(){
+    google.setOnLoadCallback(function() {
+      var chart = $("#chart");
+      if (chart.length > 0) {
+        var data = new google.visualization.DataTable();
+        var sectors = chart.data('sectors');
+        var others = 0;
+        $.map(sectors.slice(6), function(s) { others = others + s[1]; });
+        var byValue = function(a, b) { return a[1] - b[1]; };
+        sectors = sectors.slice(0, 6).concat([["Other", others]]).sort(byValue);
+        data.addColumn('string', 'Name');
+        data.addColumn('number', 'Amount');
+        data.addRows(sectors);
+
+        var options = {
+          width: $("body").width(), 
+          height: $("body").height() - $(".title").outerHeight(true), 
+          backgroundColor: 'none', 
+          chartArea: {left: 10, top: 10, width: '100%', height: '100%'}
+        };
+        (new google.visualization.PieChart(chart[0])).draw(data, options);
+      }
+    });
+  });

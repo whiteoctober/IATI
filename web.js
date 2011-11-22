@@ -290,7 +290,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
   if(req.query.view != 'embed') return next();
   
-  api.Request({ID:req.params.id, result:'full'})
+  api.Request({ID:req.params.id, result:'summary'})
     .on('success', function(data) {
       res.render('activity-embed', {
         activity: data['iati-activity'],
@@ -305,10 +305,17 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 
 
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
-  api.Request({ID:req.params.id, result:'full'})
+  api.Request({ID:req.params.id, result:'summary'})
     .on('success', function(data) {
+      var activity = data['iati-activity'];
+      var transactionTypes = activity['iati-ad:transaction-summary']['iati-ad:value-analysis'];
+      var commitments = _(transactionTypes).find(function(t) { return t['@code'] == 'C'; });
+      var disbursements = _(transactionTypes).find(function(t) { return t['@code'] == 'D'; });
+    
       res.render('activity', {
         activity: data['iati-activity'],
+        commitments: commitments ? commitments['@USD-value'] : 0,
+        disbursements: disbursements ? disbursements['@USD-value'] : 0,
         layout: !req.isXHR
       });
     })

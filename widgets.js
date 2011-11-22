@@ -27,7 +27,7 @@
           
           res.render('widgets/donors', {
             title: "Top Donors Widget",
-            funders: JSON.stringify(funders),
+            funders: funders,
             layout: 'widget'
           });
         })
@@ -50,7 +50,7 @@
       new api.Request(params)
         .on('success', function(data) {
           var max = 6;
-          _(data.Funder).each(function(f) {
+          _(data.Sector).each(function(f) {
             f.value = parseFloat(f.value); 
             f.name = f.name === null ? "Unknown" : f.name;
           });
@@ -62,7 +62,7 @@
           
           res.render('widgets/sectors', {
             title: "Top Sectors Widget",
-            sectors: JSON.stringify(sectors),
+            sectors: sectors,
             layout: 'widget'
           });
         })
@@ -143,7 +143,6 @@
         .on('success', function(data) {
           var activity = data['iati-activity'];
           var description = activity.description && activity.description['#text'];
-          console.log(description);
           
           res.render('widgets/project_description', {
             title: "Project Description Widget",
@@ -190,9 +189,15 @@
       new api.Request(params)
         .on('success', function(data) {
           var activity = data['iati-activity'];
+          var sectors = _(activity.sector).as_array() || [];
+          sectors = _(sectors).map(function(s) { 
+            var value = parseFloat(s['@iati-ad:project-value'] || 0);
+            return [s['#text'] || "Unknown", value > 0 ? value : 1]; 
+          });
           
           res.render('widgets/project_sectors', {
             title: "Project Sectors Widget",
+            sectors: sectors,
             layout: 'widget'
           });
         })
@@ -211,7 +216,7 @@
       new api.Request(params)
         .on('success', function(data) {
           var activity = data['iati-activity'];
-          
+
           res.render('widgets/funding_breakdown', {
             title: "Funding Breakdown Widget",
             layout: 'widget'
