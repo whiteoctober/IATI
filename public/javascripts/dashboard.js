@@ -108,6 +108,13 @@ var IATI = IATI || {};
     });
   };
   
+  var addedAnimation = function(){
+    $('.dashboard .saving').addClass('active');
+    setTimeout(function(){
+      $('.dashboard .saving').removeClass('active');
+    }, 2500);
+  };
+  
   //update the class based on if this is on the dashboard
   $.fn.favourite = function(){
     return this.each(function(){
@@ -121,10 +128,19 @@ var IATI = IATI || {};
   };
   
   
-  var subkeyChoiceTmpl = '<ol><li><form><input type="text" name="groupname"/><input type="submit" value="create"/></form></li></ol>';
+  // var subkeyChoiceTmpl = '<ol><li><form><input type="text" name="groupname"/><input type="submit" value="create"/></form></li></ol>';
+  
+  var subkeyChoiceTmpl = '<li><form class="dashChoice"><label><span class="l">Add to group:</span><select><option value="0">Choose a group</option></select></label><label><span class="l">Or create another group:</span><input type="text" name="groupname" class="name"></label><input type="submit" value="create" class="submit"></form></li>';
   
   $('[data-dash]').live('click', function(e){
     e.preventDefault();
+    
+    if($('form.dashChoice').size()){
+      $('form.dashChoice').slideUp(function(){
+        $(this).remove();
+      });
+      return;
+    }
     
     var $this = $(this);
     
@@ -140,16 +156,25 @@ var IATI = IATI || {};
       
       // add in the sub keys
       //find the sub keys
+      var select = content.find('select');
       _.each(IATI.dashboard.subkeysFor(_data.key), function(subkey){
-        var k = $('<li>').text(subkey);
-        k.click(function(){
-          _data.subkey = subkey;
-          IATI.dashboard.aadd(_data);
-          
-          $.iatiDialog('added');
-        });
-        content.prepend(k);
+        var k = $('<option>',{value:subkey}).text(subkey);
+        content.find('select').append(k);
       });
+      select.change(function(){
+        var v = $(this).val();
+        if(v){
+          _data.subkey = v;
+          IATI.dashboard.aadd(_data);
+          addedAnimation();
+          content.slideUp();
+        }
+      });
+      
+      if(select.find('option').size()==1){
+        content.find('label').first().hide();
+        content.find('.l').last().text('Create a group:');
+      }
       
       
       content.find('form').submit(function(e){
@@ -162,22 +187,18 @@ var IATI = IATI || {};
         _data.subkey = subkey;
         
         IATI.dashboard.aadd(_data);
-        
-        $.iatiDialog('added');
+        addedAnimation();
+        content.slideUp();
         
       });
       
-      $.iatiDialog("Add to group",content);
+      content.hide().appendTo($this.closest('li')).slideDown();
       
       
-    } else {
-      // add to the dashboard
-      $('.dashboard .saving').addClass('active');
-      setTimeout(function(){
-        $('.dashboard .saving').removeClass('active');
-      }, 2500);
-      
+    } else {    
       IATI.dashboard.aadd(_data);
+      addedAnimation();
+      
       
     }
     

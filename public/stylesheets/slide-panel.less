@@ -1,6 +1,21 @@
 // External for now so we can get all the css changes in before migrating completely to less
 @blue:#2d5ea9;
+@darkblue:#5278B3;
 @grey:#999;
+
+
+// http://lesselements.com/
+.bw-gradient(@color:#F5F5F5,@start:0,@stop:255){background:@color;background:-webkit-gradient(linear,
+left bottom,
+left top,
+color-stop(0,rgb(@start,@start,@start)),
+color-stop(1,rgb(@stop,@stop,@stop)));background:-ms-linear-gradient(bottom,
+rgb(@start,@start,@start) 0%,
+rgb(@start,@start,@start) 100%);background:-moz-linear-gradient(center bottom,
+rgb(@start,@start,@start) 0%,
+rgb(@stop,@stop,@stop) 100%);}
+.border-radius(@topright:0,@bottomright:0,@bottomleft:0,@topleft:0){-webkit-border-top-right-radius:@topright;-webkit-border-bottom-right-radius:@bottomright;-webkit-border-bottom-left-radius:@bottomleft;-webkit-border-top-left-radius:@topleft;-moz-border-radius-topright:@topright;-moz-border-radius-bottomright:@bottomright;-moz-border-radius-bottomleft:@bottomleft;-moz-border-radius-topleft:@topleft;border-top-right-radius:@topright;border-bottom-right-radius:@bottomright;border-bottom-left-radius:@bottomleft;border-top-left-radius:@topleft;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;}
+
 
 .thinned_text(@bg:#fff){
   text-shadow:@bg 0 0 1px;  
@@ -84,6 +99,10 @@ section.slide-panel{
     padding-left:40px;
     background-image:url("/images/sprites/save-large.png")
   }
+  &.favourite.added{
+    background-image:url("/images/sprites/save-active.png");
+    color:@darkblue;
+  }
   
   &.print{
     background-image:url("/images/sprites/print.png")
@@ -93,6 +112,33 @@ section.slide-panel{
   }
   &.cut{
     background-image:url("/images/sprites/cut.png")
+  }
+}
+
+form.dashChoice{
+  li{
+    line-height:1em;
+  }
+  input, select{
+    margin:.2em 0 .75em 0;
+  }
+  .l{
+    display:block;
+    color:#aaa;
+  }
+  input.name{
+    border:1px solid #B4B3B4;
+    border-right:none;
+    padding:3px;
+    width:8em;
+    .border-radius(0, 0, 3px, 3px);
+  }
+  input.submit{
+    border:1px solid #B4B3B4;
+    padding:3px;
+    color:#f5f5f5;
+    .bw-gradient(#B4B3B4,255*.66,255*.78);
+    .border-radius(3px, 3px, 0, 0);
   }
 }
 
