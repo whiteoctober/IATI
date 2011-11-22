@@ -25,11 +25,10 @@
       };
       
       // Converts jquery object to a randomly sorted array of DOM elements
-      items = items.toArray().sort(randomly);
+      items = items.map(function() { return $(this); }).toArray().sort(randomly);
       
       // Generates data for packing algoritm
-      var data = $.map(items, function(i) {
-        var item = $(i);
+      var data = $.map(items, function(item) {
         return { id: item.attr("id"), name: item.data("name"), value: item.data("scaled-value") };
       })
 
@@ -60,7 +59,7 @@
       // Set positions
       $.map(items, function(item, i) {
         var position = positions[i] || {radius: 10, x: 0, y: 0};
-        $(item).css({
+        item.css({
           position: 'absolute',
           left: position.x - position.radius,
           top: position.y - position.radius, 
@@ -76,7 +75,7 @@
           var angle = (rotation(positions[i]) + offset) % 1;
           var idx = parseInt(angle * options.bubbleClasses.length,10);
           var classname = options.bubbleClasses[idx];
-          $(item).addClass(classname);
+          item.addClass(classname);
         });
       }
       
@@ -86,7 +85,7 @@
           var angle = (rotation(positions[i]) + offset) % 1;
           var idx = parseInt(angle * options.palette.length,10);
           var colours = options.palette[idx];
-          $(item).children().css({
+          item.children().css({
             background: colours.colour,
             color: colours.text
           });
