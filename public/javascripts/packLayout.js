@@ -1,8 +1,10 @@
+// Packs a set of circles around each other, given the radius of each circle and a desired aspect ratio
 var packLayout = function(sizes, ratio) {
   var positions = [];
   var pairs = [];
   var centre = {x: 0, y: 0};
 
+  // Places a circle next to a pair of circles
   var place = function(node, pair) {
     var db = pair[0].r + node.r;
     var dx = pair[1].x - pair[0].x;
@@ -22,19 +24,25 @@ var packLayout = function(sizes, ratio) {
     return node;
   }
 
+  // Finds the distance between two points, with an optional parameter for scaling vertical/horizontal values
   var dist = function(a, b, r) {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow((r || 1) * (a.y - b.y), 2));
   };
 
+  // Tests if two circles collide
   var collides = function(a, b) {
     return a.r + b.r - dist(a, b) > 3;
   };
 
-  positions.push({x:0, y: 0, r: sizes[0]});
-  positions.push({x:0, y: sizes[0] + sizes[1], r: sizes[1]});
-  pairs.push([positions[0], positions[1]]);
-  pairs.push([positions[1], positions[0]]);
+  // Adds initial pair of circles
+  if (sizes.length > 0) positions.push({x:0, y: 0, r: sizes[0]});
+  if (sizes.length > 1) {
+    positions.push({x:0, y: sizes[0] + sizes[1], r: sizes[1]});
+    pairs.push([positions[0], positions[1]]);
+    pairs.push([positions[1], positions[0]]);
+  }
 
+  // Loops through existing pairs trying to place each circle
   var j = 0;
   while (positions.length < sizes.length) {
     for (var i = 0; i < pairs.length; i++) {
