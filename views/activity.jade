@@ -21,12 +21,16 @@ section.activity.slide-panel.clearfix
     table.headline
       tr
         th Total budget:
-        - budget = format_value(commitments)
-        td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}
+        - budget = format_value(total_budget)
+        td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}#{estimated_budget ? "*" : ""}
+      - if (estimated_budget)
+        tr
+          td(colspan='2').note *estimated from commitments
       tr
         th Allocated to date:
-        - spend = format_value(disbursements)
+        - spend = format_value(allocated)
         td #{spend.sign}$<strong>#{spend.value}</strong> #{spend.unit}
+
 
     .third.left
       .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_description', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
