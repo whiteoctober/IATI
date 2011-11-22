@@ -15,10 +15,10 @@ html
     script
       window.inlines = [];
       window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
-  body#body
-    #content
+  body
+    section#content
       #content_inner.clearfix!= body
-    #header
+    header
       .left_corner.corner
       .centre
       .right_corner.corner
@@ -34,7 +34,7 @@ html
           span.saving Saving
           span dashboard
         
-    #footer
+    footer
       .left_corner.corner
       .centre
       .right_corner.corner
