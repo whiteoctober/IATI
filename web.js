@@ -185,6 +185,27 @@ app.get('/', beforeFilter, function(req, res) {
   });
 });
 
+app.get('/arcnav', beforeFilter, function(req, res, next) {
+  if (req.query.view != 'embed') return next();
+  
+  var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
+  
+  new filterTitles.Request(filters).on('success', function(expanded){
+    
+    // just the values of the filters
+    var keys = _(expanded).chain().values().flatten().value();
+    
+    res.render('data-file-embed',{
+      keys:keys,
+      layout:false
+    });
+    
+  }).on('error', function(e){
+    next(e);
+    
+  }).end();
+});
+
 
 app.get('/activities', beforeFilter, function(req, res, next) {
   var page = parseInt(req.query.p || 1, 10);
@@ -249,7 +270,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 
 
 app.get('/data-file', beforeFilter, function(req, res, next) {
-  var params = { result: 'full' };
+  var params = { result: 'summary', groupby:'Funder' };
   
   _.extend(params, req.filter_query);
   
