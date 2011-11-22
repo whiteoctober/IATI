@@ -233,7 +233,6 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
   new filterTitles.Request(filters).on('success', function(expanded){
-    
     // just the values of the filters
     var keys = _(expanded).chain().values().flatten().value();
     
@@ -307,25 +306,26 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 
 
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
-  api.Request({ID:req.params.id, result:'summary'})
+  api.Request({ID:req.params.id, result: 'summary'})
     .on('success', function(data) {
       var activity = data['iati-activity'];
-      var transactionTypes = activity['iati-ad:transaction-summary']['iati-ad:value-analysis'];
+      var transactionTypes = _(activity['iati-ad:transaction-summary']['iati-ad:value-analysis']).as_array();
+      
       var total_budget = _(transactionTypes).find(function(t) { return t['@code'] == 'TB'; });
-      var estimated_budget = !total_budget || total_budget['@USD-value'] == 0;
+      var estimated_budget = !total_budget || parseFloat(total_budget['@USD-value']) == 0;
       if (estimated_budget) { 
         var total_budget = _(transactionTypes).find(function(t) { return t['@code'] == 'C'; });
       }
       var allocatedCodes = {'D': true, 'E': true, 'R': true};
       var allocated = _(transactionTypes).chain()
         .select(function(t) { return allocatedCodes[t['@code']]; })
-        .map(function(t) { return t['@USD-value'] || 0; })
+        .map(function(t) { return parseFloat(t['@USD-value']) || 0; })
         .sum()
         .value();
     
       res.render('activity', {
         activity: data['iati-activity'],
-        total_budget: total_budget['@USD-value'] || 0,
+        total_budget: parseFloat(total_budget['@USD-value']) || 0,
         estimated_budget: estimated_budget,
         allocated: allocated,
         layout: !req.isXHR
