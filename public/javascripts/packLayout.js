@@ -2,7 +2,10 @@
 var packLayout = function(sizes, ratio) {
   var positions = [];
   var pairs = [];
-  var centre = {x: 0, y: 0};
+  var origin = {x: 0, y: 0};
+  
+  // Sets a default aspect ratio 
+  ratio = ratio || 1;
 
   // Places a circle next to a pair of circles
   var place = function(node, pair) {
@@ -24,9 +27,16 @@ var packLayout = function(sizes, ratio) {
     return node;
   }
 
-  // Finds the distance between two points, with an optional parameter for scaling vertical/horizontal values
+  // Finds the distance between two points,
+  // scaling vertical/horizontal values according to the desired aspect ratio
   var dist = function(a, b, r) {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow((r || 1) * (a.y - b.y), 2));
+  };
+  
+  // Finds the distance between a pair of circles and the origin, 
+  // using the desired aspect ratio
+  var pairDist = function(pair) { 
+    return (dist(pair[0], origin, ratio) + dist(pair[1], origin, ratio)) / 2; 
   };
 
   // Tests if two circles collide
@@ -57,7 +67,8 @@ var packLayout = function(sizes, ratio) {
         break;
       }
     }
-    pairs = _(pairs).sortBy(function(pair) { return (dist(pair[0], centre, ratio) + dist(pair[1], centre, ratio)) / 2; });
+    
+    pairs.sort(function(a, b) { return pairDist(a) - pairDist(b); });
     if (j++ > 100) break;
   }
   return positions;
