@@ -1,4 +1,5 @@
 section.activity.slide-panel.clearfix
+  h1 Activity: #{activity.title} (#{activity})
   
   // the params for adding this activity to the dashboard
   - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'activities', subkey:false})
