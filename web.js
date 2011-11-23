@@ -114,6 +114,10 @@ var beforeFilter = function(req, res, next) {
   var keep = 'Region Country Sector SectorCategory Funder orderby ID'.split(' ');
   req.filter_query = _.only(req.query, keep);
   
+  // xhr is only used to allow ajax caching to not clash
+  // with page caching
+  delete req.query.xhr
+  
   req.queryString = req.originalUrl.split('?')[1] || '';
   req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
   
@@ -122,7 +126,7 @@ var beforeFilter = function(req, res, next) {
 
 //Routes
 
-app.get('/', beforeFilter, function(req, res) {
+app.get('/', beforeFilter, function(req, res, next) {
   var params = {
     result: 'values',
     groupby: 'Funder'
@@ -310,6 +314,7 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
   var filterName = req.params.filter_key;
   var params = {result: 'values', groupby: filterName};
   _.extend(params, req.filter_query);
+  delete params[filterName];
   
   new api.Request(params)
     .on('success', function(data) {
