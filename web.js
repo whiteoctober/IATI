@@ -169,7 +169,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
   new api.Request(params)
   .on('success', function(data) {
     var list = req.query.view == 'list';
-    var activities = _.as_array(data['iati-activity']);
+    var dataFile = accessors.dataFile(data);
     var total = data['@activity-count'] || 0;
     var pagination = (total <= app.settings.pageSize) ? false : {
       current: parseInt(req.query.p || 1, 10),
@@ -182,8 +182,8 @@ app.get('/activities', beforeFilter, function(req, res, next) {
       page: 'activities',
       filter_paths: req.filter_paths,
       query: req.query,
-      activities: activities,
-      activity_count: total,
+      activities: dataFile.activities(),
+      activity_count: dataFile.totalActivities(),
       current_page: req.query.p || 1,
       pagination: pagination,
       layout: !req.isXHR
