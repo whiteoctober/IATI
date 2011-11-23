@@ -4,11 +4,8 @@
   // puts them into the layout
   
   $.setArcNav = function(params, path){
-    
     path = path || '/activities';
     
-    if(!params) return $('.arcnav').empty();
-
     //change into a format that jQ likes to serialise
     var query = _.flatten(_.map(params, function(ids, filterkey){
       return _.map(_.flatten([ids]), function(id){
@@ -18,6 +15,16 @@
         };
       });
     }));
+    
+    // set the links for the sector filters 
+    var qs = $.param(query); 
+    _.each(['Sector', 'Country', 'Funder'], function(filterkey){
+      var href = '/filter/' + filterkey + (qs ? '?' + qs : '');
+      $('.filter.' + filterkey.toLowerCase()).attr('href', href);
+    });
+    
+    
+    if(!params) return $('.arcnav').empty();
 
     $.getJSON('/arcnav', params).done(function(expanded){
       
@@ -33,12 +40,9 @@
 
         _.each(_.flatten([ids]), function(id){
           
-          // value was found
-          if(!expanded[filterkey][id]) return;
-
           $('<li><a href="#"></a></li>')
 
-            .find('a').text(expanded[filterkey][id]).click(function(e){
+            .find('a').text(expanded[filterkey][id] || 'unknown').click(function(e){
               e.preventDefault();
               // the query without this one
               var link = _.filter(query, function(obj){

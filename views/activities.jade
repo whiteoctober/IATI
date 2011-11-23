@@ -54,10 +54,6 @@ script
           content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
         }
     });
-
-    $('a.area_filter').attr('href', "!{url_with('/filter/Region')}");
-    $('a.funder_filter').attr('href', "!{url_with('/filter/Funder')}");
-    $('a.sector_filter').attr('href', "!{url_with('/filter/SectorCategory')}");
     
     $('#dialog').hide().fadeIn();
     
