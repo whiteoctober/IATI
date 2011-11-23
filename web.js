@@ -22,6 +22,7 @@ var clientScripts = [
   'bubble.jquery.js', 
   'zoomer.js', 
   'scroller.js',
+  'arcnav.js',
   'plugins.js', 
   'script.js'
 ];
