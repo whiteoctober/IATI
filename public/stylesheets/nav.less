@@ -7,6 +7,40 @@
 }
 
 
+// arc navigation
+
+ul.arcnav{
+  position:absolute;
+  padding:0;
+  z-index: 15;
+  
+  li{
+    list-style:none
+  }
+  
+  a{
+    color:#c08;
+    font-size:1.25em;
+  }
+  
+
+  &.funder{
+    left:150px;
+    bottom:0;
+  }
+  &.area{
+    right:150px;
+    text-align:right;
+    bottom:0;
+  }
+  
+  &.sector{
+    left:60%;
+    top:0;
+  }
+}
+
+
 
 nav.main_navigation {
   position: absolute; left: 0; top: 0;

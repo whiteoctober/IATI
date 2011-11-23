@@ -1,16 +1,15 @@
 .widget_content
   h3.title Donor Breakdown
-  #chart(data-funders=JSON.stringify(funders))
+  #chart(data-donors=JSON.stringify(donors))
 
 script
   inlines.push(function(){
     google.setOnLoadCallback(function() {
       var chart = $("#chart");
       var data = new google.visualization.DataTable();
-      var funders = chart.data('funders');
       data.addColumn('string', 'Name');
       data.addColumn('number', 'Amount');
-      data.addRows(funders);
+      data.addRows($.map(chart.data('donors'), function(d) { return [[d.name, d.value]]; }));
 
       var options = {
         width: $("body").width(), 

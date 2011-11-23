@@ -15,16 +15,19 @@ html
     script
       window.inlines = [];
       window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
-  body#body
-    #content
+  body
+    section#content
       #content_inner.clearfix!= body
-    #header
+    header
       .left_corner.corner
       .centre
       .right_corner.corner
       a.sector_filter.filter.xhr(href=url_with('/filter/SectorCategory'))
         img.text(src='/images/sector_filter_text.png')
         img.button(src='/images/sector_filter.png')
+      
+      ul.arcnav.sector.sectorcategory
+
       nav.main_navigation
         a.home.xhr(href='/')
           span home
@@ -34,7 +37,7 @@ html
           span.saving Saving
           span dashboard
         
-    #footer
+    footer
       .left_corner.corner
       .centre
       .right_corner.corner
@@ -44,6 +47,10 @@ html
       a.area_filter.filter.xhr(href=url_with('/filter/Region'))
         img.button(src='/images/area_filter.png')
         img.text.right(src='/images/area_filter_text.png')
+        
+      ul.arcnav.funder
+      ul.arcnav.area.country.region
+      
     #popup.hidden
     #dimmer
     #embed.hidden

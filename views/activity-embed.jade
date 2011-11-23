@@ -1,4 +1,3 @@
-
 .activity_embed
 
   // TODO : make the colour deterministic
@@ -7,8 +6,8 @@
   )
     .outline
     .inner
-      a.xhr.content(href='/activity/' + activity['iati-identifier'], data-history='{"enter":"slideUp"}')
-        span.text= activity.title
+      a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
+        span.text= activity.title()
 
 
   p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.

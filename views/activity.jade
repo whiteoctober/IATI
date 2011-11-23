@@ -17,14 +17,14 @@ section.activity.slide-panel.clearfix
       li: a.icn.doc(href="#") document title
       
   div.main
-    h1= activity.title['#text']
+    h1 Activity: #{activity.title()} (#{"Funder"})
     
     table.headline
       tr
         th Total budget:
         - budget = format_value(total_budget)
-        td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}#{estimated_budget ? "*" : ""}
-      - if (estimated_budget)
+        td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}#{estimated ? "*" : ""}
+      - if (estimated)
         tr
           td(colspan='2').note *estimated from commitments
       tr
@@ -34,15 +34,15 @@ section.activity.slide-panel.clearfix
 
 
     .third.left
-      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_description', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 210}})
     .third.left
-      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/participating_organisations', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/participating_organisations', {ID: activity.id()}), links: true, padding: 0, width: 210}})
     .third.left
-      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_sectors', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_sectors', {ID: activity.id()}), links: true, padding: 0, width: 210}})
     .third.left
-      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_map', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 210}})
     .two_thirds.left
-      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/funding_breakdown', {ID: activity['iati-identifier']}), links: true, padding: 0, width: 210}})
+      .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/funding_breakdown', {ID: activity.id()}), links: true, padding: 0, width: 210}})
 
 
 script

@@ -4,7 +4,8 @@ var express = require('express'),
     filterTitles = require('./lib/filterTitles.js'),
     and = require('./lib/womitter.js').and,
     app = module.exports = express.createServer(),
-    _ = require('underscore'),
+    _ = require('./lib/underscore_mixins.js').init(require('underscore')),
+    accessors = require('./lib/accessors.js'),
     assetManager = require('connect-assetmanager'),
     assetHandler = require('connect-assetmanager-handlers'),
     helpers = require('./lib/helpers.js'),
@@ -22,6 +23,7 @@ var clientScripts = [
   'bubble.jquery.js', 
   'zoomer.js', 
   'scroller.js',
+  'arcnav.js',
   'plugins.js', 
   'script.js'
 ];
@@ -62,7 +64,7 @@ app.configure('development', function() {
 });
 
 
-app.configure('production', function() { 
+app.configure('production', function() {
   //Combination and minification of static files
   app.use(assetManager({
     'js':{
@@ -101,37 +103,13 @@ app.configure('production', function() {
 });
 
 
-_.mixin({
-  //Returns an array by wrapping non-arrays in an array
-  as_array: function(something) {
-    return something === undefined ? [] : (_.isArray(something) ? something : [something]);
-  },
-  
-  //Sums an array of values
-  sum: function(array) {
-    return _(array).reduce(function(a, b) { return a + b; }, 0);
-  },
-  
-  //Returns an object (shallow clone) with only the specified keys
-  only: function(obj, keptKeys){
-    var next = {};
-    _.each(obj, function(value, key){
-      if(_.include(keptKeys, key)){
-        next[key] = value;
-      }
-    });
-    return next;
-  }
-});
-
-
 // add helpers from the lib directory
 app.dynamicHelpers(dynamicHelpers);
 app.helpers(helpers);
 
 
 var beforeFilter = function(req, res, next) {
-  __logger.info(req.method + ' ' + req.originalUrl)
+  __logger.info(req.method + ' ' + req.originalUrl);
   //Get query, filtering unwanted values
   var keep = 'Region Country Sector SectorCategory Funder orderby ID'.split(' ');
   req.filter_query = _.only(req.query, keep);
@@ -139,50 +117,42 @@ var beforeFilter = function(req, res, next) {
   req.queryString = req.originalUrl.split('?')[1] || '';
   req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
   
-  //Sums all transactions for one or more activities with a particular code
-  req.transactionsTotal = function(activities, code) {
-    return _(activities).chain().as_array()
-      .map(function(a) { 
-        return _(a.transaction || []).chain()
-          .filter(function(t) {
-            return (t['transaction-type'] || {})['@code'] == code;
-          })
-          .map(function(t) { 
-            return parseFloat(t.value["@iati-ad:USD-value"] || 0); 
-          })
-          .sum().value();
-      })
-      .sum().value();
-  };
-      
-  //Sorts projects by start date
-  req.newProjects = function(activities, limit) {
-    return _(activities).chain()
-      .sortBy(function(a) {
-        var date = _(a['activity-date'] || []).find(function(t) {
-          return (t["@type"]) == "start-actual";
-        });
-        return date ? Date.parse(date["#text"]) : 0;
-      })
-      .map(function(a) {
-        return {
-          description: a.title || "No description available",
-          commitments: req.transactionsTotal(a, 'C')
-        };
-      })
-      .value().slice(0, limit);
-  };
-  
   next();
 };
 
 //Routes
 
 app.get('/', beforeFilter, function(req, res) {
-  res.render('index', {
-    filter_paths: req.filter_paths,
-    layout: !req.isXHR
-  });
+  var params = {
+    result: 'values',
+    groupby: 'Funder'
+  };
+  
+  new api.Request(params)
+  .on('success', function(data) {
+    res.render('index', {
+      filter_paths: req.filter_paths,
+      funders: _(data.Funder).as_array().length,
+      layout: !req.isXHR
+    });
+  })
+  .on('error', function(e) {
+    next(e);
+  })
+  .end();
+});
+
+app.get('/arcnav', beforeFilter, function(req, res, next) {
+  
+  var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
+  
+  new filterTitles.Request(filters).on('success', function(expanded){
+    res.send(expanded);
+    
+  }).on('error', function(e){
+    next(e);
+    
+  }).end();
 });
 
 
@@ -198,6 +168,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
   _.extend(params, req.filter_query);
   new api.Request(params)
   .on('success', function(data) {
+    var list = req.query.view == 'list';
     var activities = _.as_array(data['iati-activity']);
     var total = data['@activity-count'] || 0;
     var pagination = (total <= app.settings.pageSize) ? false : {
@@ -205,10 +176,8 @@ app.get('/activities', beforeFilter, function(req, res, next) {
       total: Math.ceil(total / app.settings.pageSize)
     };
     
-    var view = req.query.view == 'list' ? 'activities-list' : 'activities';
-    
     delete req.query.view;
-    res.render(view, {
+    res.render('activities' + (list ? '-list' : ''), {
       title: 'Activities',
       page: 'activities',
       filter_paths: req.filter_paths,
@@ -233,8 +202,12 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
   new filterTitles.Request(filters).on('success', function(expanded){
-    // just the values of the filters
-    var keys = _(expanded).chain().values().flatten().value();
+    
+    // get the names of the filters
+    // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
+    var keys = _.flatten(_.map(expanded, function(sectors,_k){
+      return _.values(sectors);
+    }));
     
     res.render('data-file-embed',{
       keys:keys,
@@ -249,7 +222,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 
 
 app.get('/data-file', beforeFilter, function(req, res, next) {
-  var params = { result: 'full' };
+  var params = { result: 'summary', groupby: 'All' };
   
   _.extend(params, req.filter_query);
   
@@ -261,20 +234,25 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   
   new and('success', requestDatafile, requestFilters)
   .on('success', function(data, filters) {
-    var keys = _(filters).chain().values().flatten().value();
     
-    var activities = _.as_array(data['iati-activity']);
+    // get the names of the filters
+    // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
+    var keys = _.flatten(_.map(filters, function(sectors,_k){
+      return _.values(sectors);
+    }));
     
+    var dataFile = accessors.dataFile(data);
+    var summaries = dataFile.transactionSummaries();
+
     res.render('data-file', {
       title: 'Data File',
       page: 'data-file',
       keys: keys,
       filter_paths: req.filter_paths,
       query: req.query,
-      activities: activities,
-      total_budget: req.transactionsTotal(activities, 'C'),
-      total_spend: req.transactionsTotal(activities, 'D') + req.transactionsTotal(activities, 'E'),
-      activity_count: data['@activity-count'] || 0,
+      total_budget: summaries['C'],
+      total_spend: summaries['D'] + summaries['E'] + summaries['R'],
+      total_activities: dataFile.totalActivities(),
       current_page: req.query.p || 1,
       layout: !req.isXHR
     });
@@ -289,12 +267,13 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 
 
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
-  if(req.query.view != 'embed') return next();
+  if (req.query.view != 'embed') return next();
   
-  api.Request({ID:req.params.id, result:'summary'})
+  api.Request({ID: req.params.id, result: 'summary'})
     .on('success', function(data) {
+      var activity = accessors.activity(data);
       res.render('activity-embed', {
-        activity: data['iati-activity'],
+        activity: activity,
         layout: false
       });
     })
@@ -306,28 +285,17 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 
 
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
-  api.Request({ID:req.params.id, result: 'summary'})
+  api.Request({ID: req.params.id, result: 'details'})
     .on('success', function(data) {
-      var activity = data['iati-activity'];
-      var transactionTypes = _(activity['iati-ad:transaction-summary']['iati-ad:value-analysis']).as_array();
+      var activity = accessors.activity(data);
+      var summaries = activity.transactionSummaries();
+      var estimated = summaries['TB'] == 0;
       
-      var total_budget = _(transactionTypes).find(function(t) { return t['@code'] == 'TB'; });
-      var estimated_budget = !total_budget || parseFloat(total_budget['@USD-value']) == 0;
-      if (estimated_budget) { 
-        var total_budget = _(transactionTypes).find(function(t) { return t['@code'] == 'C'; });
-      }
-      var allocatedCodes = {'D': true, 'E': true, 'R': true};
-      var allocated = _(transactionTypes).chain()
-        .select(function(t) { return allocatedCodes[t['@code']]; })
-        .map(function(t) { return parseFloat(t['@USD-value']) || 0; })
-        .sum()
-        .value();
-    
       res.render('activity', {
-        activity: data['iati-activity'],
-        total_budget: parseFloat(total_budget['@USD-value']) || 0,
-        estimated_budget: estimated_budget,
-        allocated: allocated,
+        activity: activity,
+        total_budget: summaries[estimated ? 'C' : 'TB'],
+        estimated: estimated,
+        allocated: summaries['D'] + summaries['E'] + summaries['R'],
         layout: !req.isXHR
       });
     })
@@ -339,16 +307,16 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 
 
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
-  var filter_key = req.params.filter_key;
-  var params = {result: 'values', groupby: filter_key};
+  var filterName = req.params.filter_key;
+  var params = {result: 'values', groupby: filterName};
   _.extend(params, req.filter_query);
   
   new api.Request(params)
     .on('success', function(data) {
       res.render('filter', {
-        choices: _.as_array(data[filter_key]),
-        key: filter_key,
-        title: 'Filter by ' + filter_key,
+        choices: accessors.filter(data, filterName),
+        key: filterName,
+        title: 'Filter by ' + filterName,
         page: 'filter',
         layout: !req.isXHR
       });
@@ -375,7 +343,7 @@ app.get('/list', beforeFilter, function(req, res) {
 
 
 var widgets = require('./widgets.js');
-widgets.init(app, beforeFilter, api, _);
+widgets.init(app, beforeFilter, api, _, accessors);
 
 
 //Only listen on $ node app.js
