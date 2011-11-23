@@ -131,7 +131,7 @@ app.helpers(helpers);
 
 
 var beforeFilter = function(req, res, next) {
-  __logger.info(req.method + ' ' + req.originalUrl)
+  __logger.info(req.method + ' ' + req.originalUrl);
   //Get query, filtering unwanted values
   var keep = 'Region Country Sector SectorCategory Funder orderby ID'.split(' ');
   req.filter_query = _.only(req.query, keep);
@@ -186,19 +186,11 @@ app.get('/', beforeFilter, function(req, res) {
 });
 
 app.get('/arcnav', beforeFilter, function(req, res, next) {
-  if (req.query.view != 'embed') return next();
   
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
   new filterTitles.Request(filters).on('success', function(expanded){
-    
-    // just the values of the filters
-    var keys = _(expanded).chain().values().flatten().value();
-    
-    res.render('data-file-embed',{
-      keys:keys,
-      layout:false
-    });
+    res.send(expanded);
     
   }).on('error', function(e){
     next(e);
@@ -254,8 +246,12 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
   new filterTitles.Request(filters).on('success', function(expanded){
-    // just the values of the filters
-    var keys = _(expanded).chain().values().flatten().value();
+    
+    // get the names of the filters
+    // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
+    var keys = _.flatten(_.map(expanded, function(sectors,_k){
+      return _.values(sectors);
+    }));
     
     res.render('data-file-embed',{
       keys:keys,
@@ -282,7 +278,12 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   
   new and('success', requestDatafile, requestFilters)
   .on('success', function(data, filters) {
-    var keys = _(filters).chain().values().flatten().value();
+    
+    // get the names of the filters
+    // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
+    var keys = _.flatten(_.map(filters, function(sectors,_k){
+      return _.values(sectors);
+    }));
     
     var activities = _.as_array(data['iati-activity']);
     
