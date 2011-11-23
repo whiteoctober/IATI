@@ -1,6 +1,9 @@
 .filter
   h2 Filter by #{key}
 
+- if(!query[key]) query[key] = []
+- delete query.xhr
+
 .zoomable
   ul.choices.clearfix
     each choice in choices.slice(0, 30)
@@ -10,9 +13,9 @@
       )
         .outline
         .inner
-          - var query = {};
-          - query[key] = choice.code
-          a.content.xhr(href=url_with('/activities', query))
+          - q = _.extend({}, query)
+          - q[key] = _.uniq(_.flatten([q[key], choice.code]))
+          a.content.xhr(href=url('/activities', q))
             p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
 
 script
