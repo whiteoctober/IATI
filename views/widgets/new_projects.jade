@@ -1,9 +1,9 @@
 .widget_content
   h3.title New projects:
   .scroller
-    each project in new_projects
+    each activity in activities
       .new_project
-        != project.description + "<br>Commitments: " + to_currency(project.commitments)
+        != activity.title() + "<br>Commitments: " + to_currency(activity.value())
 
 script
   inlines.push(function(){
