@@ -2,13 +2,14 @@
   
   // keys to strip out of the param string
   // (slightly late in the day to do this properly)
-  var strip = 'xhr p'.split(' ');
+  var strip = 'xhr p orderby'.split(' ');
   
   // Pulls the names of the current filters via xhr - then 
   // puts them into the layout
   
   $.setArcNav = function(params, path){
     path = path || document.location.pathname;
+    params = params || {};
     
     _.each(strip, function(s){
       delete params[s];
@@ -26,13 +27,13 @@
     
     // set the links for the sector filters 
     var qs = $.param(query); 
-    _.each(['Sector', 'Country', 'Funder'], function(filterkey){
+    _.each(['SectorCategory', 'Country', 'Funder'], function(filterkey){
       var href = '/filter/' + filterkey + (qs ? '?' + qs : '');
       $('.filter.' + filterkey.toLowerCase()).attr('href', href);
     });
     
     
-    if(!params) return $('.arcnav').empty();
+    if(!qs) return $('.arcnav').empty();
 
     $.getJSON('/arcnav', params).done(function(expanded){
       

@@ -1,0 +1,27 @@
+section.slide-panel.clearfix
+  aside
+    form.dashChoice(action='/search')
+      input.name(type='text', name='q', value=query.q)
+      input.submit(type='submit', value='search')
+      
+  div.main
+
+    h1 #{count} results for '#{query.q}'
+
+    table.full
+      each activity in activities
+        tr 
+          td.name 
+            a.xhr.content(href='/activity/' + activity.code, data-history='{"enter":"slideUp"}')
+              = activity.name
+          td
+           = to_currency(activity.value)
+
+  script
+    inlines.push(function(){
+      contentExit = function(){
+        return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+          $(this).empty().css({marginTop:0});
+        });
+      }
+    });

@@ -12,6 +12,20 @@
   text-shadow:@bg 0 0 1px;  
 }
 
+// http://lesselements.com/
+.bw-gradient(@color:#F5F5F5,@start:0,@stop:255){background:@color;background:-webkit-gradient(linear,
+left bottom,
+left top,
+color-stop(0,rgb(@start,@start,@start)),
+color-stop(1,rgb(@stop,@stop,@stop)));background:-ms-linear-gradient(bottom,
+rgb(@start,@start,@start) 0%,
+rgb(@start,@start,@start) 100%);background:-moz-linear-gradient(center bottom,
+rgb(@start,@start,@start) 0%,
+rgb(@stop,@stop,@stop) 100%);}
+.border-radius(@topright:0,@bottomright:0,@bottomleft:0,@topleft:0){-webkit-border-top-right-radius:@topright;-webkit-border-bottom-right-radius:@bottomright;-webkit-border-bottom-left-radius:@bottomleft;-webkit-border-top-left-radius:@topleft;-moz-border-radius-topright:@topright;-moz-border-radius-bottomright:@bottomright;-moz-border-radius-bottomleft:@bottomleft;-moz-border-radius-topleft:@topleft;border-top-right-radius:@topright;border-bottom-right-radius:@bottomright;border-bottom-left-radius:@bottomleft;border-top-left-radius:@topleft;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;}
+
+
+
 
 body .left { float: left; }
 body .right { float: right; }
@@ -233,6 +247,26 @@ footer .country.filter  .button {
     margin:0;
     font-size:2.25em;
     color: #334784;
+  }
+  form{
+    margin-top:1em;
+    font-size:2.5em;
+    input.q{
+      border:1px solid #B4B3B4;
+      border-right:none;
+      padding:.2em;
+      width:8em;
+      font-size:1em;
+      .border-radius(0, 0, 3px, 3px);
+    }
+    input.submit{
+      border:1px solid #B4B3B4;
+      padding:.2em;
+      font-size:1em;
+      color:#f5f5f5;
+      .bw-gradient(#B4B3B4,255*.66,255*.78);
+      .border-radius(3px, 3px, 0, 0);
+    }
   }
 }
 /*
