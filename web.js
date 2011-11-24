@@ -347,7 +347,7 @@ app.get('/list', beforeFilter, function(req, res) {
 });
 
 
-app.get('/search', beforeFilter, function(req, res) {
+app.get('/search', beforeFilter, function(req, res, next) {
   api.Request({search: req.query.q, result: 'values'})
   .on('success', function(data) {
     res.render('search', {
