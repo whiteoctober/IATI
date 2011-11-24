@@ -1,5 +1,7 @@
 .filter
   h2 Filter by #{key}
+    - if (!choices.length)
+      | : no matching filters
 
 - if(!query[key]) query[key] = []
 - delete query.xhr
@@ -35,10 +37,9 @@ script
       }
     });
     
-    
     var currentScale = 1;
     var zoom = $(".zoomable");
-    z = new Zoomer(zoom.get(0), zoom.find('li').toArray(),{
+    new Zoomer(zoom.get(0), zoom.find('li').toArray(),{
         finish:function(){
           
           // assign the variables that would be supplied by zynga
@@ -51,4 +52,7 @@ script
           content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
         }
     });
+    
+    $.setArcNav(!{JSON.stringify(query)})
+    
   });
