@@ -135,30 +135,30 @@ app.get('/', beforeFilter, function(req, res, next) {
   };
   
   new api.Request(params)
-  .on('success', function(data) {
-    res.render('index', {
-      filter_paths: req.filter_paths,
-      funders: _(data.Funder).as_array().length,
-      layout: !req.isXHR
-    });
-  })
-  .on('error', function(e) {
-    next(e);
-  })
-  .end();
+    .on('success', function(data) {
+      res.render('index', {
+        filter_paths: req.filter_paths,
+        funders: _(data.Funder).as_array().length,
+        layout: !req.isXHR
+      });
+    })
+    .on('error', function(e) {
+      next(e);
+    })
+    .end();
 });
 
-app.get('/arcnav', beforeFilter, function(req, res, next) {
-  
+app.get('/arcnav', beforeFilter, function(req, res, next) { 
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
-  new filterTitles.Request(filters).on('success', function(expanded){
-    res.send(expanded);
-    
-  }).on('error', function(e){
-    next(e);
-    
-  }).end();
+  new filterTitles.Request(filters)
+    .on('success', function(expanded){
+      res.send(expanded);
+    })
+    .on('error', function(e){
+      next(e);
+    })
+    .end();
 });
 
 
@@ -173,31 +173,31 @@ app.get('/activities', beforeFilter, function(req, res, next) {
 
   _.extend(params, req.filter_query);
   new api.Request(params)
-  .on('success', function(data) {
-    var dataFile = accessors.dataFile(data);
-    var total = dataFile.totalActivities();
-    var pagination = (total <= app.settings.pageSize) ? false : {
-      current: parseInt(req.query.p || 1, 10),
-      total: Math.ceil(total / app.settings.pageSize)
-    };
-    
-    delete req.query.view;
-    res.render('activities' + (list ? '-list' : ''), {
-      title: 'Activities',
-      page: 'activities',
-      filter_paths: req.filter_paths,
-      query: req.query,
-      activities: dataFile.activities(),
-      activity_count: total,
-      current_page: req.query.p || 1,
-      pagination: pagination,
-      layout: !req.isXHR
-    });
-  })
-  .on('error', function(e) {
-    next(e);
-  })
-  .end();
+    .on('success', function(data) {
+      var dataFile = accessors.dataFile(data);
+      var total = dataFile.totalActivities();
+      var pagination = (total <= app.settings.pageSize) ? false : {
+        current: parseInt(req.query.p || 1, 10),
+        total: Math.ceil(total / app.settings.pageSize)
+      };
+      
+      delete req.query.view;
+      res.render('activities' + (list ? '-list' : ''), {
+        title: 'Activities',
+        page: 'activities',
+        filter_paths: req.filter_paths,
+        query: req.query,
+        activities: dataFile.activities(),
+        activity_count: total,
+        current_page: req.query.p || 1,
+        pagination: pagination,
+        layout: !req.isXHR
+      });
+    })
+    .on('error', function(e) {
+      next(e);
+    })
+    .end();
 });
 
 
@@ -206,23 +206,23 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
-  new filterTitles.Request(filters).on('success', function(expanded){
-    
-    // get the names of the filters
-    // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
-    var keys = _.flatten(_.map(expanded, function(sectors,_k){
-      return _.values(sectors);
-    }));
-    
-    res.render('data-file-embed',{
-      keys:keys,
-      layout:false
-    });
-    
-  }).on('error', function(e){
-    next(e);
-    
-  }).end();
+  new filterTitles.Request(filters)
+    .on('success', function(expanded){
+      // get the names of the filters
+      // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
+      var keys = _.flatten(_.map(expanded, function(sectors,_k){
+        return _.values(sectors);
+      }));
+      
+      res.render('data-file-embed',{
+        keys:keys,
+        layout:false
+      });
+    })
+    .on('error', function(e){
+      next(e);
+    })
+    .end();
 });
 
 
@@ -238,33 +238,33 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   var requestFilters  = filterTitles.Request(filters);
   
   new and('success', requestDatafile, requestFilters)
-  .on('success', function(data, filters) {
-    
-    // get the names of the filters
-    // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
-    var keys = _.flatten(_.map(filters, function(sectors,_k){
-      return _.values(sectors);
-    }));
-    
-    var dataFile = accessors.dataFile(data);
-    var summaries = dataFile.transactionSummaries();
+    .on('success', function(data, filters) {
+      
+      // get the names of the filters
+      // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
+      var keys = _.flatten(_.map(filters, function(sectors,_k){
+        return _.values(sectors);
+      }));
+      
+      var dataFile = accessors.dataFile(data);
+      var summaries = dataFile.transactionSummaries();
 
-    res.render('data-file', {
-      title: 'Data File',
-      page: 'data-file',
-      keys: keys,
-      filter_paths: req.filter_paths,
-      query: req.query,
-      total_budget: summaries['C'],
-      total_spend: summaries['D'] + summaries['E'] + summaries['R'],
-      total_activities: dataFile.totalActivities(),
-      current_page: req.query.p || 1,
-      layout: !req.isXHR
+      res.render('data-file', {
+        title: 'Data File',
+        page: 'data-file',
+        keys: keys,
+        filter_paths: req.filter_paths,
+        query: req.query,
+        total_budget: summaries['C'],
+        total_spend: summaries['D'] + summaries['E'] + summaries['R'],
+        total_activities: dataFile.totalActivities(),
+        current_page: req.query.p || 1,
+        layout: !req.isXHR
+      });
+    })
+    .on('error', function(e) {
+      next(e);
     });
-  })
-  .on('error', function(e) {
-    next(e);
-  });
   
   requestDatafile.end();
   requestFilters.end();

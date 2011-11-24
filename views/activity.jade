@@ -98,6 +98,11 @@ script
       var iframe = $(this).data("iframe");
       if (iframe) { $(this).html(iframe); }
     });
+    $("iframe").each(function() { 
+      var wrapper = $("<div class='iframe_wrapper'>");
+      $(this).wrap(wrapper);
+      $(this).after("<div class='overlay'>");
+    })
   
     contentExit = function(){
       return $('#content_inner').deferredAnimate({marginTop:600}, function(){

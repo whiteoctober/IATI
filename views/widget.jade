@@ -6,7 +6,7 @@ html
   script
     window.inlines = [];
     window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
-  body
+  body.widget_layout
     != body
     
     each script in clientScripts

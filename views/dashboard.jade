@@ -3,22 +3,18 @@ section.slide-panel.dashboard
   
   h1.icn.favourite.large My dashboard
   
-  
   ol.groups(data-dashkey = 'activities')
   
   section(data-dashkey = 'widgets')
     h2 My widgets
-    
     ol.content
   
   section.datafiles(data-dashkey = 'datafiles')
     h2 My data files
-
     ol.content
-
 
 script
   inlines.push(function(){
     $('.dashboard').dashboardContent();
-    new Scroller($('section.slide-panel').get(0))
+    new Scroller($('section.slide-panel').get(0));
   })

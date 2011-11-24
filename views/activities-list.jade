@@ -35,16 +35,19 @@ section.slide-panel.clearfix
               = activity.funderName()
           td.value= to_currency(activity.value())
 
-  script
-    inlines.push(function(){
-      $("a", this).click(function() {
-        if ($(this).is(".page")) contentExit = false;
-        else {
-          contentExit = function(){
-            return $('#content_inner').deferredAnimate({marginTop:600}, function(){
-              $(this).empty().css({marginTop:0});
-            });
-          }
+script
+  inlines.push(function() {
+    $("a", this).click(function() {
+      if ($(this).is(".page")) contentExit = false;
+      else {
+        contentExit = function() {
+          return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+            $(this).empty().css({marginTop:0});
+          });
         }
-      });
+      }
     });
+    
+    $('.dashboard').dashboardContent();
+    new Scroller($('section.slide-panel').get(0));
+  });
