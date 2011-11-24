@@ -81,15 +81,15 @@ section.activity.slide-panel.clearfix
       | *** Total spend is disbursments plus reimbursments plus expenditure.
 
     .third.left
-      .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
     .third.left
-      .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/participating_organisations', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/participating_organisations', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
     .third.left
-      .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_sectors', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_sectors', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
     .third.left
-      .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
     .two_thirds.left
-      .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/funding_breakdown', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/funding_breakdown', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
 
 
 script

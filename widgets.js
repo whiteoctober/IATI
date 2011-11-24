@@ -191,12 +191,15 @@
     
     //Renders an embed dialog
     app.get('/embed', filters, function(req, res, next) {
-      var widget = req.query.widget;
+      var widget_url = req.query.widget_url;
+      var origin_url = req.query.origin_url;
 
-      delete req.query.widget;
+      delete req.query.widget_url;
+      delete req.query.origin_url;
       res.render('embed_dialog', {
         title: "Embed Widget",
-        frame_url: "/widgets/" + widget,
+        widget_url: widget_url,
+        origin_url: origin_url,
         layout: false
       });
     });

@@ -9,10 +9,10 @@
   nav.linkup
     ul
       li
-        a.icn.cut.embed(href=url_with('/embed', {widget: 'donors'}))
+        a.icn.cut.embed(href=url_with('/embed', {widget_url: widget_url, origin_url: url_with()}))
           span.onshow embed
       li.onshow
-        - dashParams = JSON.stringify({href:frame_url, type:'iframe', key:'widgets'})
+        - dashParams = JSON.stringify({href:widget_url, type:'iframe', key:'widgets'})
         a.icn.favourite(href="#", data-dash=dashParams)
           | save to dashboard
-iframe(src=frame_url, scrolling='no', style='padding: #{padding}; width: #{width}px; height: #{height}px; border: 0px;')
+iframe(src=widget_url, scrolling='no', style='padding: #{padding}; width: #{width}px; height: #{height}px; border: 0px;')

@@ -1,9 +1,9 @@
 .widget_wrapper
-  .widget!= partial("embed_widget", {title: title, frame_url: url_with(frame_url), padding: 0})
+  .widget!= partial("embed_widget", {title: title, widget_url: widget_url, padding: 0})
 .links
   h2 Add this to your website:
   p Copy and paste embed code
-  input.large(type='text', value="<h1>#{title}</h1>"+ partial("embed_widget", {title: title, frame_url: url_with(frame_url)}))
+  input.large(type='text', value="<h1>#{title}</h1>"+ partial("embed_widget", {title: title, widget_url: widget_url}))
   h2 Link to this:
   p Copy and paste
-  input.large(type='text', value=url_with("/data-file"))
+  input.large(type='text', value=origin_url)
