@@ -27,11 +27,11 @@ section.data_file.slide-panel.clearfix
         | CSV
   .clear
   .third.left
-    .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/new_projects'), links: true, padding: 0}}) 
+    .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/new_projects'), links: true, padding: 0}}))
   .third.left
-    .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/donors'), links: true, padding: 0}})
+    .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/donors'), links: true, padding: 0}}))
   .third.left
-    .widget!= partial('embed_widget', {locals: {frame_url: url_with('/widgets/sectors'), links: true, padding: 0}})
+    .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/sectors'), links: true, padding: 0}}))
   .third.left
     .widget
       h3 Aid type breakdown:
@@ -44,6 +44,11 @@ section.data_file.slide-panel.clearfix
 
 script
   inlines.push(function(){
+    $(".widget", this).each(function() {
+      var iframe = $(this).data("iframe");
+      if (iframe) { $(this).html(iframe); }
+    });
+  
     contentExit = function(){
       return $('#content_inner').deferredAnimate({marginTop:600}, function(){
         $(this).empty().css({marginTop:0});
