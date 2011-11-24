@@ -121,6 +121,8 @@ var beforeFilter = function(req, res, next) {
   req.queryString = req.originalUrl.split('?')[1] || '';
   req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
   
+  res.header('Cache-Control','public, max-age=3600'); // 1 hour
+  
   next();
 };
 
