@@ -1,10 +1,18 @@
 (function($,_){
   
+  // keys to strip out of the param string
+  // (slightly late in the day to do this properly)
+  var strip = 'xhr p'.split(' ');
+  
   // Pulls the names of the current filters via xhr - then 
   // puts them into the layout
   
   $.setArcNav = function(params, path){
-    path = path || '/activities';
+    path = path || document.location.pathname;
+    
+    _.each(strip, function(s){
+      delete params[s];
+    });
     
     //change into a format that jQ likes to serialise
     var query = _.flatten(_.map(params, function(ids, filterkey){
