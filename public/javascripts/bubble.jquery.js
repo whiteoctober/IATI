@@ -7,7 +7,7 @@
     var values = $.map(this, function(i) { return $(i).data("value") || 1; });
     var max = Math.max.apply(Math, values);
     var min = Math.min.apply(Math, values);
-    var scale = (bounds.max - bounds.min) / (max == min ? 1 : max - min);
+    var scale = (bounds.max - bounds.min) / (max == min ? max : max - min);
     return this.each(function(i) { $(this).data("scaled-value", parseInt(values[i] * scale + bounds.min)); });
   };
   
