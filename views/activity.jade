@@ -80,20 +80,20 @@ section.activity.slide-panel.clearfix
       br
       | *** Total spend is disbursments plus reimbursments plus expenditure.
 
-    .third.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
-    .third.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/participating_organisations', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
-    .third.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_sectors', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
-    .third.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
-    .two_thirds.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/funding_breakdown', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
+    .half.left
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
+    .half.left
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/participating_organisations', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
+    .half.left
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_sectors', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
+    .half.left
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
+    .half.left
+      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/funding_breakdown', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
 
 
 script
-  inlines.push(function(){
+  inlines.push(function() {
     $(".widget", this).each(function() {
       var iframe = $(this).data("iframe");
       if (iframe) { $(this).html(iframe); }
@@ -104,8 +104,8 @@ script
       $(this).after("<div class='overlay'>");
     })
   
-    contentExit = function(){
-      return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+    contentExit = function() {
+      return $('#content_inner').deferredAnimate({marginTop:600}, function() {
         $(this).empty().css({marginTop:0});
       });
     };

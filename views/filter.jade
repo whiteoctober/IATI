@@ -9,27 +9,28 @@ nav.sorting
 
 .filter.zoomable
   h2 Filter by #{key}
-    - if (!choices.length)
-      | : no matching filters
 
   - if(!query[key]) query[key] = []
   - delete query.xhr
   - current_codes = _.flatten([query[key]])
-  ul.choices.clearfix
-    each choice in choices
-      - if (choice.code)
-        - selected = _.include(current_codes, choice.code)
-        li.choice.bubble.hidden(
-          id='choice-' + choice.code, class = selected ? 'selected' : '',
-          data-name=choice.name, data-value=choice.value, data-colour=''
-        )
-          .outline
-          .inner
-            - q = _.extend({}, query)
-            //- - q[key] = selected ? _.without(current_codes, choice.code) : current_codes.concat(choice.code)
-            - q[key] = _.uniq(current_codes.concat(choice.code))
-            a.content.xhr(href=url('/activities', q))
-              p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
+  - if (choices.length > 0)
+    ul.choices.clearfix
+      each choice in choices
+        - if (choice.code)
+          - selected = _.include(current_codes, choice.code)
+          li.choice.bubble.hidden(
+            id='choice-' + choice.code, class = selected ? 'selected' : '',
+            data-name=choice.name, data-value=choice.value, data-colour=''
+          )
+            .outline
+            .inner
+              - q = _.extend({}, query)
+              //- - q[key] = selected ? _.without(current_codes, choice.code) : current_codes.concat(choice.code)
+              - q[key] = _.uniq(current_codes.concat(choice.code))
+              a.content.xhr(href=url('/activities', q))
+                p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
+  - else
+    h3 Sorry, you cannot filter any further by #{type}.
 
 script
   inlines.push(function() {

@@ -228,17 +228,22 @@
         maxy = (currentScale*elementHeight) - windowHeight;
       }
       
-      if(this.x > maxx - this.xoff){
+      if (maxx < 0){ 
+        this.x = 0;
+      } else if(this.x > maxx - this.xoff){
         this.x = maxx - this.xoff;
       } else if(this.x < -this.xoff){
         this.x = -this.xoff;
       }
-
-      if(this.y > maxy - this.yoff){
+      
+      if (maxy < 0) { 
+        this.y = 0;
+      } else if(this.y > maxy - this.yoff){
         this.y = maxy - this.yoff;
       } else if(this.y < - this.yoff){
         this.y =  -this.yoff;
       }
+      
     };
   };
   

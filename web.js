@@ -312,7 +312,16 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 
 
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
-  var filterName = req.params.filter_key;
+  var filterName = req.params.filter_key
+    .replace(/[a-z][A-Z]/g, function(match) {return match[0] + " " + match[1]; });
+  var filterTypes = {
+    "Sector Category": "sector",
+    "Sector": "sector",
+    "Funder": "funder",
+    "Country": "country",
+    "Region": "region"
+  };
+  
   var params = {result: 'values', groupby: filterName};
   _.extend(params, req.filter_query);
   delete params[filterName];
@@ -322,6 +331,7 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
       res.render('filter', {
         choices: accessors.filter(data, filterName),
         key: filterName,
+        type: filterTypes[filterName],
         title: 'Filter by ' + filterName,
         page: 'filter',
         layout: !req.isXHR
