@@ -1,3 +1,12 @@
+nav.sorting
+  | Order By:
+  a(href=url_with(false,{orderby:'value'}), 
+    class="xhr funding" + (query.orderby == 'value' ? ' active' : ''))
+    span Funding Size 
+  a(href=url_with(false,{orderby:'name'}), 
+    class="xhr az" + (query.orderby == 'name' ? ' active' : ''))
+    span A-Z
+
 .filter
   h2 Filter by #{key}
     - if (!choices.length)
@@ -6,19 +15,24 @@
 - if(!query[key]) query[key] = []
 - delete query.xhr
 
+- current_codes = _.flatten([query[key]])
+
 .zoomable
   ul.choices.clearfix
-    each choice in choices.slice(0, 30)
-      li.choice.bubble.hidden(
-        id='choice-' + choice.code, 
-        data-name=choice.name, data-value=choice.value, data-colour=''
-      )
-        .outline
-        .inner
-          - q = _.extend({}, query)
-          - q[key] = _.uniq(_.flatten([q[key], choice.code]))
-          a.content.xhr(href=url('/activities', q))
-            p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
+    each choice in choices
+      - if (choice.code)
+        - selected = _.include(current_codes, choice.code)
+        li.choice.bubble.hidden(
+          id='choice-' + choice.code, class = selected ? 'selected' : '',
+          data-name=choice.name, data-value=choice.value, data-colour=''
+        )
+          .outline
+          .inner
+            - q = _.extend({}, query)
+            //- - q[key] = selected ? _.without(current_codes, choice.code) : current_codes.concat(choice.code)
+            - q[key] = _.uniq(current_codes.concat(choice.code))
+            a.content.xhr(href=url('/activities', q))
+              p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
 
 script
   inlines.push(function() {
@@ -26,6 +40,25 @@ script
     var container = wrapper.children(".choices");
     var activities = container.children(".choice");
     var content = activities.find(".content");
+    
+    // hack to hide any elements that are 
+    // out of view of the window.
+    // grossly inefficient, needs fixed
+    var hideOffscreen = function(){
+      var y = (zoomer.y / zoomer.scale);
+      var hscale = zoomer.scale;
+      var wh = $(window).height();
+      
+      $('.choice').each(function(){
+        var $this = $(this);
+        var top = $this.offset().top;
+        var height = $this.height() * hscale;
+        
+        // window + .5 each way
+        var show = top < (wh*1.5) && top > -(wh/2) -height;
+        $this.css('visibility', show ? 'visible' : 'hidden')
+      });
+    }
     
     Math.seedrandom($('.choices').map(function() { return $(this).attr("id"); }).toArray().join(""));
     $('.choices').bubbleLayout({
@@ -39,7 +72,7 @@ script
     
     var currentScale = 1;
     var zoom = $(".zoomable");
-    new Zoomer(zoom.get(0), zoom.find('li').toArray(),{
+    var zoomer = new Zoomer(zoom.get(0), zoom.find('li').toArray(),{
         finish:function(){
           
           // assign the variables that would be supplied by zynga
@@ -47,12 +80,16 @@ script
           var zoomed = zoom - currentScale;
           currentScale = zoom;
           
+          hideOffscreen();
+          
           var min = Math.round(9 / zoom);
           var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
           content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
         }
     });
     
+    
     $.setArcNav(!{JSON.stringify(query)})
     
   });
+  
