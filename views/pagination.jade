@@ -4,7 +4,7 @@
 ol.pagination
 
   - if(start != 1)
-      a.xhr(href=url_with(false,{p:1}))
+      a.page.xhr(href=url_with(false,{p:1}))
         = 1
       li.more &hellip;
 
@@ -14,10 +14,10 @@ ol.pagination
         span.current
           = page
       else
-        a.xhr(href=url_with(false,{p:page}))
+        a.page.xhr(href=url_with(false,{p:page}))
           = page
 
   - if(end != total)
     li.more &hellip;
-    a.xhr(href=url_with(false,{p:total}))
+    a.page.xhr(href=url_with(false,{p:total}))
       = total

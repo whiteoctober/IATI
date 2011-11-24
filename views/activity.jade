@@ -8,14 +8,17 @@ section.activity.slide-panel.clearfix
       li: a.icn.pdf(href="#") PDF
       li: a.icn.csv(href="#") CSV
       
+    - documents = activity.documents()
     h3 Related documents
-    ul.related
-      li: a.icn.doc(href="#") document title
-      li: a.icn.doc(href="#") document title
-      li: a.icn.doc(href="#") document title
+    - if (documents.length > 0)
+      ul.related
+        each document in activity.documents()
+          li: a.icn.doc(href=document.url)= document.title
+    - else
+      p No related documents found.
       
   div.main
-    h1 Activity: #{activity.title()} (#{activity.funder() || "Unknown"})
+    h1 Activity: #{activity.title()} (#{activity.funderName() || "Unknown"})
     
     table.headline
       tr

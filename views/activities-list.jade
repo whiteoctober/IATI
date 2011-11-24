@@ -18,23 +18,33 @@ section.slide-panel.clearfix
       li: a.icn.csv(href="#") CSV
 
   div.main
-  
-    h1 Results viewed as a list
+    h1.left Results viewed as a list
+    
+    h3.right #{activity_count} records found
+      - if (pagination)
+        != partial('pagination', pagination)
   
     table.full
       each activity in activities
         tr 
           td.name 
-            a.xhr.content(href='/activity/' + activity.code, data-history='{"enter":"slideUp"}')
-              = activity.name
-          td
-           = to_currency(activity.value)
+            a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
+              = activity.title()
+          td.funder
+            a.xhr.content(href='/activities?Funder=' + activity.funderIds(), data-history='{"enter":"slideUp"}')
+              = activity.funderName()
+          td.value= to_currency(activity.value())
 
   script
     inlines.push(function(){
-      contentExit = function(){
-        return $('#content_inner').deferredAnimate({marginTop:600}, function(){
-          $(this).empty().css({marginTop:0});
-        });
-      }
+      $("a", this).click(function() {
+        if ($(this).is(".page")) contentExit = false;
+        else {
+          contentExit = function(){
+            return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+              $(this).empty().css({marginTop:0});
+            });
+          }
+        }
+      });
     });

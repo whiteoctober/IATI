@@ -161,20 +161,19 @@ app.get('/arcnav', beforeFilter, function(req, res, next) {
 
 
 app.get('/activities', beforeFilter, function(req, res, next) {
+  var list = req.query.view == 'list';
   var page = parseInt(req.query.p || 1, 10);
-  var start = ((page - 1) * app.settings.pageSize) + 1;
   var params = {
-    result: 'values',
+    result: list ? 'details' : 'values',
     pagesize: app.settings.pageSize, 
-    start: start
+    start: ((page - 1) * app.settings.pageSize) + 1
   };
 
   _.extend(params, req.filter_query);
   new api.Request(params)
   .on('success', function(data) {
-    var list = req.query.view == 'list';
     var dataFile = accessors.dataFile(data);
-    var total = data['@activity-count'] || 0;
+    var total = dataFile.totalActivities();
     var pagination = (total <= app.settings.pageSize) ? false : {
       current: parseInt(req.query.p || 1, 10),
       total: Math.ceil(total / app.settings.pageSize)
@@ -187,7 +186,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
       filter_paths: req.filter_paths,
       query: req.query,
       activities: dataFile.activities(),
-      activity_count: dataFile.totalActivities(),
+      activity_count: total,
       current_page: req.query.p || 1,
       pagination: pagination,
       layout: !req.isXHR
