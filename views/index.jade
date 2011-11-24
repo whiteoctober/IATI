@@ -11,5 +11,9 @@
     | or 
     strong Area
 
+  form(action='/search')
+    input.q(type='text', name='q')
+    input.submit(type='submit', value='search')
+
 script
   inlines.push(function(){$.setArcNav()})

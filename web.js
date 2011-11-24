@@ -347,6 +347,23 @@ app.get('/list', beforeFilter, function(req, res) {
 });
 
 
+app.get('/search', beforeFilter, function(req, res) {
+  api.Request({search: req.query.q, result: 'values'})
+  .on('success', function(data) {
+    res.render('search', {
+      activities:_.as_array(data['iati-activity']),
+      count:data['@activity-count'],
+      layout: !req.isXHR
+    });
+  })
+  .on('error', function(e) {
+    next(e);
+  })
+  .end();
+  
+});
+
+
 var widgets = require('./widgets.js');
 widgets.init(app, beforeFilter, api, _, accessors);
 
