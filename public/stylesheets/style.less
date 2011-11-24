@@ -161,7 +161,7 @@ footer .right_corner {
 }
 footer .funder.filter {
   display: block; position: relative;  float: left;
-  width: 184px; margin: 20px 5px 0;
+  width: 184px; margin: 21px 5px 0;
 }
 footer .funder.filter  .button {
   position: absolute; left: 40px; bottom: 35px; z-index: 15;
@@ -169,7 +169,7 @@ footer .funder.filter  .button {
 }
 footer .country.filter {
   display: block; position: relative; float: right;
-  width: 184px; margin: 16px 5px 0;
+  width: 184px; margin: -6px 5px 0;
 }
 footer .country.filter  .button {
   position: absolute; right: 40px; bottom: 35px; z-index: 15;
@@ -226,7 +226,7 @@ footer .country.filter  .button {
   margin-top: 70px; 
   .thinned_text(#fff);
   h1 {
-    background: url('/images/home_logo.png') no-repeat scroll top center;
+    background: url('/images/aid_view_alpha_logo.png') no-repeat scroll top center;
     height: 117px;
     margin-bottom:.7em;
     span{
@@ -377,8 +377,8 @@ ol.pagination a, ol.pagination span, ol.pagination .more {
   display: inline-block;
   background-color: #1E99D6;
   margin: 0.2em;
-  padding: 0.1em 0;
-  width: 1.5em;
+  padding: 0.1em 0.1em;
+  min-width: 1.5em;
   text-align :center;
   color: #fff;
   text-decoration: none;
@@ -404,6 +404,7 @@ div.filter{
   background-repeat:no-repeat;
   background-position:center center;
   height:467px;
+  cursor: pointer;
   
   .thinned_text;
   h2{
