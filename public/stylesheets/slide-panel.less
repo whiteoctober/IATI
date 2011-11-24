@@ -85,8 +85,7 @@ section.slide-panel{
   background-position:center left;
   
   &.doc{
-    //todo
-    background-image:url("/images/sprites/pdf.png")
+    background-image:url("/images/sprites/doc.png")
   }
   &.pdf{
     background-image:url("/images/sprites/pdf.png")
@@ -143,10 +142,11 @@ form.dashChoice{
 
 // main blue table at the top of the activity page
 table.headline{
-  font-size:1.3em;
+  font-size:1.2em;
   color: #2d5ea9;
   text-shadow:#fff 0 0 1px;
   vertical-align: baseline;
+  margin: 0 1em;
   
   th, td{
     font-weight:normal;
@@ -155,18 +155,22 @@ table.headline{
   }
   
   td{
-    padding:.25em 1em;
+    padding: 0 1em;
   }
   
-  strong{
-    font-size:1.6em;
-    font-weight:normal;
+  strong {
+    font-size: 1.5em;
+    font-weight: normal;
   }
   
   .note {
-    padding: 0;
-    font-size: 0.8em;
+
   }
+}
+
+.note {
+  margin: 1em 1.5em;
+  font-size: 1em;
 }
 
 

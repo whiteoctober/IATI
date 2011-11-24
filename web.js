@@ -164,7 +164,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
   var list = req.query.view == 'list';
   var page = parseInt(req.query.p || 1, 10);
   var params = {
-    result: list ? 'details' : 'values',
+    result: list ? 'list' : 'values',
     pagesize: app.settings.pageSize, 
     start: ((page - 1) * app.settings.pageSize) + 1
   };
@@ -292,13 +292,13 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
     .on('success', function(data) {
       var activity = accessors.activity(data);
       var summaries = activity.transactionSummaries();
-      var estimated = summaries['TB'] == 0;
       
       res.render('activity', {
         activity: activity,
-        total_budget: summaries[estimated ? 'C' : 'TB'],
-        estimated: estimated,
-        allocated: summaries['D'] + summaries['E'] + summaries['R'],
+        budget: summaries['TB'],
+        commitments: summaries['C'],
+        spend: summaries['D'] + summaries['E'] + summaries['R'],
+        repayments: summaries['LR'] + summaries['IR'],
         layout: !req.isXHR
       });
     })

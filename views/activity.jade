@@ -11,28 +11,74 @@ section.activity.slide-panel.clearfix
     - documents = activity.documents()
     h3 Related documents
     - if (documents.length > 0)
-      ul.related
-        each document in activity.documents()
+      ul.documents
+        each document in documents
           li: a.icn.doc(href=document.url)= document.title
     - else
       p No related documents found.
       
+    - classifications = activity.classifications()
+    h3 Classifications
+    - if (classifications.length > 0)
+      ul.classifications
+        each classification in classifications
+          li <strong>#{classification.name}</strong> #{classification.value}
+    - else
+      p No classifications found.
+    
+    - relatedActivities = activity.relatedActivities()
+    h3 Related activities
+    - if (relatedActivities.length > 0)
+      ul.related_activities
+        each relatedActivity in relatedActivities
+          li: a.icn.doc(href="/activity/" + relatedActivity.id)= relatedActivity.title
+    - else
+      p No related activities found.
+      
   div.main
     h1 Activity: #{activity.title()} (#{activity.funderName() || "Unknown"})
     
-    table.headline
-      tr
-        th Total budget:
-        - budget = format_value(total_budget)
-        td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}#{estimated ? "*" : ""}
-      - if (estimated)
+    .half.left
+      table.headline
         tr
-          td(colspan='2').note *estimated from commitments
-      tr
-        th Allocated to date:
-        - spend = format_value(allocated)
-        td #{spend.sign}$<strong>#{spend.value}</strong> #{spend.unit}
-
+          th Total budget*:
+          - budget = format_value(budget)
+          td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}
+        tr
+          th Total commitments**:
+          - commitments = format_value(commitments)
+          td #{commitments.sign}$<strong>#{commitments.value}</strong> #{commitments.unit}
+        tr
+          th Total spend***:
+          - spend = format_value(spend)
+          td #{spend.sign}$<strong>#{spend.value}</strong> #{spend.unit}
+        tr
+          th Loan & interest repayments:
+          - repayments = format_value(repayments)
+          td #{repayments.sign}$<strong>#{repayments.value}</strong> #{repayments.unit}
+    
+    .half.left
+      table.headline
+        - dates = activity.dates()
+        tr
+          th Start date:
+          - start = format_activity_dates(dates.start)
+          td <strong>#{start.date}</strong> (#{start.type})
+        tr
+          th End date:
+          - end = format_activity_dates(dates.end)
+          td <strong>#{end.date}</strong> (#{end.type})
+        //tr
+        //  th Recipent countries/<br>regions:
+        //  td 123
+        
+    .clearLeft
+    .note
+      | * IATI supports forward looking budget data. Not all donors yet supply this.
+      br
+      | ** Commitments are written agreements to provide funding for this work.
+      br
+      | *** Total spend is disbursments plus reimbursments plus expenditure.
 
     .third.left
       .widget(data-iframe=partial('embed_widget', {locals: {frame_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 210}}))
