@@ -55,6 +55,8 @@ This app can be deployed to [heroku](http://heroku.com)
     # to rename for a nicer url
     heroku apps:rename my-iati-app
 
+**NOTE** currently the compiled js are given a url based on the app startup time, this is the only inhibitor to the app being assigned to multiple dynos (also, for browser caching effectiveness across restarts)
+
 
 ## API Request Caching
 
