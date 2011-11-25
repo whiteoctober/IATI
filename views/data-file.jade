@@ -1,0 +1,70 @@
+section.data_file.slide-panel.clearfix
+  h1.title Data file: #{keys.join(' + ')}
+  .third.left
+    .summary.section
+      table.full
+        tr
+          - budget = format_value(total_budget)
+          td Total budget:
+          td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}
+        tr
+          - spend = format_value(total_spend)
+          td Total spend to date:
+          td #{spend.sign}$<strong>#{spend.value}</strong> #{spend.unit}
+        tr
+          td Total activities:
+          td <strong>#{total_activities}</strong>
+  .third.right
+    .links.section.left
+      - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'datafiles'})
+      a.icn.favourite(href='#', data-dash=dashParams)
+        | Save to my dashboard
+      a.icn.print(href='')
+        | Print
+      a.icn.pdf(href='')
+        | PDF
+      a.icn.csv(href='')
+        | CSV
+  .clear
+  .third.left
+    .widget
+      != partial('embed_widget', {locals: {widget_url: url_with('/widgets/new_projects'), links: true, padding: 0}})
+  .third.left
+    .widget
+      != partial('embed_widget', {locals: {widget_url: url_with('/widgets/donors'), links: true, padding: 0}})
+  .third.left
+    .widget
+      != partial('embed_widget', {locals: {widget_url: url_with('/widgets/sectors'), links: true, padding: 0}})
+  .third.left
+    .widget
+      h3 Latest Transactions
+      p Coming soon
+  .third.left
+    .widget
+      h3 Funding breakdown
+      img(src='/images/mockups/funding_breakdown.png')
+
+script
+  inlines.push(function(){
+  
+    // change the links into iframes
+    $('a.iframe', this).each(function(){
+      $this = $(this);
+      $this.after($('<iframe>',{
+        src:$this.attr('href'),
+        style:$this.data('style'),
+        scrolling:'no'
+      })).hide();
+    })
+  
+    contentExit = function(){
+      return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+        $(this).empty().css({marginTop:0});
+      });
+    };
+    new Scroller($('section.slide-panel').get(0));
+    
+    $('[data-dash]').favourite();
+    
+    $.setArcNav(!{JSON.stringify(query)})
+  });

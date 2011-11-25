@@ -1,0 +1,22 @@
+.widget_content
+  h3.title Donor Breakdown
+  #chart(data-donors=JSON.stringify(donors))
+
+script
+  inlines.push(function(){
+    google.setOnLoadCallback(function() {
+      var chart = $("#chart");
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Name');
+      data.addColumn('number', 'Amount');
+      data.addRows($.map(chart.data('donors'), function(d) { return [[d.name, d.value]]; }));
+
+      var options = {
+        width: $("body").width(), 
+        height: $("body").height() - $(".title").outerHeight(true), 
+        backgroundColor: 'none', 
+        chartArea: {left: 10, top: 10, width: '100%', height: '100%'}
+      };
+     (new google.visualization.PieChart(chart[0])).draw(data, options);
+    });
+  });

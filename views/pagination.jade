@@ -1,0 +1,23 @@
+- var start = Math.max(1, Math.min(current*1 - 2, total - 2));
+- var end   = Math.min(total, Math.max(current*1 + 2, 3));
+
+ol.pagination
+
+  - if(start != 1)
+      a.page.xhr(href=url_with(false,{p:1}))
+        = 1
+      li.more &hellip;
+
+  - for(var page = start; page <= end; page++)
+    li
+      if current==page
+        span.current
+          = page
+      else
+        a.page.xhr(href=url_with(false,{p:page}))
+          = page
+
+  - if(end != total)
+    li.more &hellip;
+    a.page.xhr(href=url_with(false,{p:total}))
+      = total

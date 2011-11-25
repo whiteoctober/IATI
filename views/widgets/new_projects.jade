@@ -1,0 +1,11 @@
+.widget_content
+  h3.title New projects:
+  .scroller
+    each activity in activities
+      .new_project
+        != activity.title() + "<br>Commitments: " + to_currency(activity.value())
+
+script
+  inlines.push(function(){
+    $(".scroller").height($("body").height() - $(".title").outerHeight(true));
+  });

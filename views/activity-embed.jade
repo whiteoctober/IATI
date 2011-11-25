@@ -1,0 +1,7 @@
+td.name 
+  a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
+    = activity.title()
+td.funder
+  a.xhr.content(href='/activities?Funder=' + activity.funderIds(), data-history='{"enter":"slideUp"}')
+    = activity.funderName()
+td.value= to_currency(activity.value())

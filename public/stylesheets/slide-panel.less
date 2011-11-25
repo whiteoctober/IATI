@@ -1,0 +1,207 @@
+// External for now so we can get all the css changes in before migrating completely to less
+@blue:#2d5ea9;
+@darkblue:#5278B3;
+@grey:#999;
+
+
+// http://lesselements.com/
+.bw-gradient(@color:#F5F5F5,@start:0,@stop:255){background:@color;background:-webkit-gradient(linear,
+left bottom,
+left top,
+color-stop(0,rgb(@start,@start,@start)),
+color-stop(1,rgb(@stop,@stop,@stop)));background:-ms-linear-gradient(bottom,
+rgb(@start,@start,@start) 0%,
+rgb(@start,@start,@start) 100%);background:-moz-linear-gradient(center bottom,
+rgb(@start,@start,@start) 0%,
+rgb(@stop,@stop,@stop) 100%);}
+.border-radius(@topright:0,@bottomright:0,@bottomleft:0,@topleft:0){-webkit-border-top-right-radius:@topright;-webkit-border-bottom-right-radius:@bottomright;-webkit-border-bottom-left-radius:@bottomleft;-webkit-border-top-left-radius:@topleft;-moz-border-radius-topright:@topright;-moz-border-radius-bottomright:@bottomright;-moz-border-radius-bottomleft:@bottomleft;-moz-border-radius-topleft:@topleft;border-top-right-radius:@topright;border-bottom-right-radius:@bottomright;border-bottom-left-radius:@bottomleft;border-top-left-radius:@topleft;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;}
+
+
+.thinned_text(@bg:#fff){
+  text-shadow:@bg 0 0 1px;  
+}
+section.slide-panel{
+  margin: 30px auto 0;
+  min-width: 68em;
+  max-width: 85em;
+  padding: 3em;
+  background: white;
+  border-radius: 4em; 
+  -moz-border-radius: 4em;
+  box-shadow: 0px 0px 6px #ccc; 
+  -moz-box-shadow: 0px 0px 6px #ccc;
+  min-height: 30em;
+
+  h1{
+    color: @blue;
+    .thinned_text;
+    
+    font-size:2.3em;
+    font-weight: normal;
+  }
+  
+  
+  
+  aside{
+    float:right;
+    width:20%;
+    margin-left:1em;
+    
+    ul{
+      padding:0;
+    }
+    
+    li{
+      list-style:none;
+    }
+    
+    a{
+      color:#999;
+      font-size:1.2em;
+      
+      text-shadow:#fff 0 0 1px;
+    }
+    
+    h3{
+      margin-top:1.5em;
+    }
+    
+  }
+  
+  // when there is an aside, the rest of 
+  // the content can go in this
+  .main{
+    width:75%;
+  }
+  
+}
+
+.icn{
+  padding-left:25px;
+  margin-bottom: 1em;
+  display:block;
+  
+  background-repeat:no-repeat;
+  background-position:center left;
+  
+  &.doc{
+    background-image:url("/images/sprites/doc.png");
+  }
+  &.pdf{
+    background-image:url("/images/sprites/pdf.png");
+    opacity: 0.6;
+    cursor: default;
+  }
+  &.favourite{
+    background-image:url("/images/sprites/save.png");
+  }
+  &.favourite.large{
+    padding-left:40px;
+    background-image:url("/images/sprites/save-large.png")
+  }
+  &.favourite.added{
+    background-image:url("/images/sprites/save-active.png");
+    color:@darkblue;
+  }
+  
+  &.print{
+    background-image:url("/images/sprites/print.png");
+    opacity: 0.6;
+    cursor: default;
+  }
+  &.csv{
+    background-image:url("/images/sprites/csv.png");
+    opacity: 0.6;
+    cursor: default;
+  }
+  &.cut{
+    background-image:url("/images/sprites/cut.png")
+  }
+}
+
+form.dashChoice{
+  li{
+    line-height:1em;
+  }
+  input, select{
+    margin:.2em 0 .75em 0;
+  }
+  .l{
+    display:block;
+    color:#aaa;
+  }
+  input.name{
+    border:1px solid #B4B3B4;
+    border-right:none;
+    padding:3px;
+    width:8em;
+    .border-radius(0, 0, 3px, 3px);
+  }
+  input.submit{
+    border:1px solid #B4B3B4;
+    padding:3px;
+    color:#f5f5f5;
+    .bw-gradient(#B4B3B4,255*.66,255*.78);
+    .border-radius(3px, 3px, 0, 0);
+  }
+}
+
+// main blue table at the top of the activity page
+table.headline{
+  font-size:1.2em;
+  color: #2d5ea9;
+  text-shadow:#fff 0 0 1px;
+  vertical-align: baseline;
+  margin: 0 1em;
+  
+  th, td{
+    font-weight:normal;
+    text-align:left;
+    vertical-align: baseline;
+  }
+  
+  td{
+    padding: 0 1em;
+  }
+  
+  strong {
+    font-size: 1.5em;
+    font-weight: normal;
+  }
+  
+  .note {
+
+  }
+}
+
+.note {
+  margin: 1em 1.5em;
+  font-size: 1em;
+}
+
+
+table.full{
+  font-size:1.2em;
+  .thinned_text;
+  color:@grey;
+  margin-bottom:1em;
+  
+  tr{
+    border-bottom:1px solid #ddd
+  }
+  td{
+    padding:.5em 0;
+  }
+  a{
+    color: @blue;
+  }
+}
+
+td.name { width: 75%; }
+td.funder { width: 25%; }
+
+.activity {
+  .widget {
+    width: 260px;
+  }
+}

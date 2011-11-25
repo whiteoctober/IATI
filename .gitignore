@@ -1,0 +1,6 @@
+.vagrant
+.DS_Store
+node_modules
+.livereload
+.rvmrc
+public/stylesheets/*.css

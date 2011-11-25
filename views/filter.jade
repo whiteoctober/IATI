@@ -1,0 +1,115 @@
+nav.sorting
+  | Order By:
+  a(href=url_with(false,{orderby:'value'}), 
+    class="xhr funding" + (query.orderby == 'value' ? ' active' : ''))
+    span Funding Size 
+  a(href=url_with(false,{orderby:'name'}), 
+    class="xhr az" + (query.orderby == 'name' ? ' active' : ''))
+    span A-Z
+
+.filter.zoomable
+  h2 Filter by #{name}
+
+  - if(!query[key]) query[key] = []
+  - delete query.xhr
+  - current_codes = _.flatten([query[key]])
+  - if (choices.length > 0)
+    ul.choices.clearfix
+      each choice in choices
+        - if (choice.code && choice.name)
+          - selected = _.include(current_codes, choice.code)
+          li.choice.bubble.hidden(
+            id='choice-' + choice.code, class = selected ? 'selected' : '',
+            data-name=choice.name, data-value=choice.value, data-colour=''
+          )
+            .outline
+            .inner
+              - q = _.extend({}, query)
+              //- - q[key] = selected ? _.without(current_codes, choice.code) : current_codes.concat(choice.code)
+              - q[key] = _.uniq(current_codes.concat(choice.code))
+              a.content.xhr(href=url('/activities', q))
+                - v = format_value(choice.value, true)
+                p.text.hidden #{title_case(choice.name)}\n #{choice.count} activit#{choice.count == 1 ? "y" : "ies"}\n $#{v.value}#{v.unit}
+  - else
+    h3 Sorry, you cannot filter any further by #{type}.
+
+script
+  inlines.push(function() {
+    var wrapper = $(".zoomable");
+    var container = wrapper.children(".choices");
+    var choices = container.children(".choice");
+    var content = choices.find(".content");
+    
+    var font = {min: 8, max: 25};
+    Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
+    container.bubbleLayout({
+      bubbleClasses: bubbleClasses, 
+      layout: 'list', font: font, 
+      diameter: {min: 130, max: 250},
+      afterFit: function() {
+        var notEmpty = function() { return $(this).text() !== ""; }
+        var textLines = $(this).children().filter(notEmpty).toArray();
+        $(textLines.slice(-2)).addClass("small");
+      }
+    });
+    
+    
+    // hack to hide any elements that are 
+    // out of view of the window.
+    // grossly inefficient, needs fixed
+    var hideOffscreen = function(){
+      var y = (zoomer.y / zoomer.scale);
+      var hscale = zoomer.scale;
+      var wh = $(window).height();
+      
+      choices.each(function(){
+        var $this = $(this);
+        var top = $this.offset().top;
+        var height = $this.height() * hscale;
+        
+        // window + .5 each way
+        var show = top < (wh*1.5) && top > -(wh/2) -height;
+        if (show && $this.hasClass("undisplayed")) {
+          $this.removeClass("undisplayed");
+          $this.find(".content").fitText('circular', {font: font, afterFit: function() {
+            var notEmpty = function() { return $(this).text() !== ""; }
+            var textLines = $(this).children().filter(notEmpty).toArray();
+            $(textLines.slice(-2)).addClass("small");
+          }});
+        }
+        $this.css('visibility', show ? 'visible' : 'hidden')
+      });
+    }
+
+    var currentScale = 1;
+    var zoom = $(".zoomable");
+    var zoomer = new Zoomer(zoom.get(0), zoom.find('li').toArray(),{
+        finish:function(){
+          
+          // assign the variables that would be supplied by zynga
+          var zoom = this.scale;
+          var zoomed = zoom - currentScale;
+          currentScale = zoom;
+          
+          hideOffscreen();
+          
+          var min = Math.round(font.min / zoom);
+          var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
+          content.filter(filter).fitText('circular', {font: {min: min, max: font.max}});
+        }
+    });
+    
+    if("ontouchstart" in window){
+      choices.addClass("undisplayed");
+      hideOffscreen()
+    } else {
+      content.fitText('circular', {font: font, afterFit: function() {
+        var notEmpty = function() { return $(this).text() !== ""; }
+        var textLines = $(this).children().filter(notEmpty).toArray();
+        $(textLines.slice(-2)).addClass("small");
+      }});
+    }
+    
+    $.setArcNav(!{JSON.stringify(query)})
+  });
+  

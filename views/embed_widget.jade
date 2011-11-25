@@ -1,0 +1,20 @@
+- if (typeof(width) === 'undefined') width = 240;
+- if (typeof(height) === 'undefined') height = 200;
+- if (typeof(padding) === 'undefined') padding = "9px 12px";
+
+- if (typeof(name) !== 'undefined')
+  h1= name
+
+
+a.iframe(href=widget_url, data-style="#{padding}; width: #{width}px; height: #{height}px; border: 0px;")
+
+- if (typeof(links) !== 'undefined' && links)
+  nav.linkup
+    ul
+      li
+        a.icn.cut.embed(href=url_with('/embed', {widget_url: widget_url, origin_url: url_with()}))
+          span.onshow embed
+      li.onshow
+        - dashParams = JSON.stringify({href:widget_url, type:'iframe', key:'widgets'})
+        a.icn.favourite(href='#', data-dash=dashParams)
+          | save to dashboard

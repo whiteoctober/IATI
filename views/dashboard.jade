@@ -1,0 +1,21 @@
+section.slide-panel.dashboard
+  a.dev#clear(href='#', data-confirm='Remove all content from your dashboard') Clear All
+  
+  h1.icn.favourite.large My dashboard
+  
+  ol.groups(data-dashkey = 'activities')
+    li.info: h3 Activities will be listed here when you press 'add to dashboard'.
+  
+  section(data-dashkey = 'widgets')
+    h2 My widgets
+    ol.content
+  
+  section.datafiles(data-dashkey = 'datafiles')
+    h2 My data files
+    ol.content
+
+script
+  inlines.push(function(){
+    $('.dashboard').dashboardContent();
+    new Scroller($('section.slide-panel').get(0));
+  })

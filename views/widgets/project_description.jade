@@ -1,0 +1,8 @@
+.widget_content
+  h3.title Project description
+  p.scroller!= activity.description() || "No description available."
+
+script
+  inlines.push(function(){
+    $(".scroller").height($("body").height() - $(".title").outerHeight(true));
+  });

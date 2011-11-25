@@ -1,0 +1,66 @@
+!!! 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/boilerplate.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    meta.viewport(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
+    meta(name="apple-mobile-web-app-status-bar-style", content="pink")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    //iPad landscape
+    link(rel="apple-touch-startup-image", href="/images/icons/splash_1024x748.png",  media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)")
+    //iPad portrait
+    link(rel="apple-touch-startup-image", href="/images/icons/splash_748x1024.png",  media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)")
+    link(rel="apple-touch-icon", sizes="72x72", href="/images/icons/icon72x72.png")
+    script
+      window.inlines = [];
+      window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
+    
+    -if(settings.trackingAccount)
+      script
+        window._gaq = [['_setAccount', '#{settings.trackingAccount}']];
+  body
+    section#content
+      #content_inner.clearfix!= body
+    header
+      .left_corner.corner
+      .centre
+      .right_corner.corner
+      a.sectorcategory.filter.xhr(href=url_with('/filter/SectorCategory'))
+        img.text(src='/images/sector_filter_text.png')
+        img.button(src='/images/sector_filter.png')
+      
+      ul.arcnav.sector.sectorcategory
+
+      nav.main_navigation
+        a.home.xhr(href='/')
+          span home
+        a.back(href='javascript:history.back()')
+          span back
+        a.dashboard.xhr(href='/dashboard', data-history='{"enter":"slideUp"}')  
+          span.saving Saving
+          span dashboard
+        
+    footer
+      .left_corner.corner
+      .centre
+      .right_corner.corner
+      a.funder.filter.xhr(href=url_with('/filter/Funder'))
+        img.button(src='/images/funder_filter.png')
+        img.text.left(src='/images/funder_filter_text.png')
+      a.country.filter.xhr(href=url_with('/filter/Region'))
+        img.button(src='/images/country_filter.png')
+        img.text.right(src='/images/country_filter_text.png')
+        
+      ul.arcnav.funder
+      ul.arcnav.area.country.region
+      
+    #popup.hidden
+    #dimmer
+    #embed.hidden
+
+    each script in clientScripts
+      script(src='/javascripts/'+script)
+    script(src="https://www.google.com/jsapi")
+    script
+      google.load('visualization', '1.0', {'packages':['corechart']});

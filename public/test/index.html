@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IATI Aid View</title>
+    <link rel="stylesheet" href="/stylesheets/boilerplate.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="jasmine/jasmine.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    
+    <script src="jasmine/jasmine.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jasmine/jasmine-html.js" type="text/javascript" charset="utf-8"></script>
+    
+    <!-- dependencies -->
+    <script src="/javascripts/lib/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/javascripts/lib/underscore.js" type="text/javascript" charset="utf-8"></script>
+    
+    <!-- code -->
+    <script src="/javascripts/dashboard.js" type="text/javascript" charset="utf-8"></script>
+    
+    <!-- specs -->
+    <script src="dashboard.spec.js" type="text/javascript" charset="utf-8"></script>
+    
+    
+</head><body>
+    <h1>IATI</h1>
+    
+    <script type="text/javascript" charset="utf-8">
+        jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+        jasmine.getEnv().execute();
+    </script>
+</body>
