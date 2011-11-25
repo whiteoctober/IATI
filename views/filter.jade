@@ -29,7 +29,7 @@ nav.sorting
               - q[key] = _.uniq(current_codes.concat(choice.code))
               a.content.xhr(href=url('/activities', q))
                 - v = format_value(choice.value, true)
-                p.text.hidden #{choice.name}\n $#{v.value}#{v.unit}\n #{choice.count} activities
+                p.text.hidden #{title_case(choice.name)}\n #{choice.count} activit#{choice.count == 1 ? "y" : "ies"}\n $#{v.value}#{v.unit}
   - else
     h3 Sorry, you cannot filter any further by #{type}.
 
@@ -59,9 +59,12 @@ script
       });
     }
     
+    var font = {min: 8, max: 25};
     Math.seedrandom($('.choices').map(function() { return $(this).attr("id"); }).toArray().join(""));
     $('.choices').bubbleLayout({
-      bubbleClasses: bubbleClasses, layout: 'list', font: {min: 9, max: 25}, diameter: {min: 130, max: 250},
+      bubbleClasses: bubbleClasses, 
+      layout: 'list', font: font, 
+      diameter: {min: 130, max: 250},
       afterFit: function() {
         var notEmpty = function() { return $(this).text() !== ""; }
         var textLines = $(this).children().filter(notEmpty).toArray();
@@ -81,9 +84,9 @@ script
           
           hideOffscreen();
           
-          var min = Math.round(9 / zoom);
+          var min = Math.round(font.min / zoom);
           var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
-          content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
+          content.filter(filter).fitText('circular', {font: {min: min, max: font.max}});
         }
     });
     

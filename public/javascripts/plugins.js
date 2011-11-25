@@ -84,7 +84,16 @@
       var item = $(items[index]);
       
       if (item.is(":visible")) {
-        var originalText = item.data("text") ? item.data("text") : item.text().replace(/\r\t +/, " ").replace(/ \n/, "\n");
+        if (item.data("text")) var originalText = item.data("text"); 
+        else {
+          var originalText = item.text()
+            .replace(/\r\t +/, " ")
+            .replace(/ \n/, "\n")
+            .replace(/\s*\/\s*/g, " / ")
+            .replace(/\s*\\\s*/g, " / ")
+            .replace(/\.\s*/g, ". ")
+            .replace(/,\s*/g, ", ");
+        }
         item.data("text", originalText);
         item.empty();
         var total = {width: item.width(), height: item.height()};

@@ -43,11 +43,12 @@ script
     var activities = container.children(".activity");
     var content = activities.find(".content");
 
+    var font = {min: 8, max: 25};
     Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
     container.bubbleLayout({
       bubbleClasses: bubbleClasses,
       layout: 'pack', 
-      font: {min: 9, max: 25}, 
+      font: font, 
       diameter: {min: 100, max: 200}
     });
     
@@ -60,9 +61,9 @@ script
           var zoomed = zoom - currentScale;
           currentScale = zoom;
           
-          var min = Math.round(9 / zoom);
+          var min = Math.round(font.min / zoom);
           var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
-          content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
+          content.filter(filter).fitText('circular', {font: {min: min, max: font.max}});
         }
     });
     
