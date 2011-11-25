@@ -28,7 +28,8 @@ nav.sorting
               //- - q[key] = selected ? _.without(current_codes, choice.code) : current_codes.concat(choice.code)
               - q[key] = _.uniq(current_codes.concat(choice.code))
               a.content.xhr(href=url('/activities', q))
-                p.text.hidden= choice.name + " \n $123b \n " + choice.count + " projects"
+                - v = format_value(choice.value, true)
+                p.text.hidden #{choice.name}\n $#{v.value}#{v.unit}\n #{choice.count} activities
   - else
     h3 Sorry, you cannot filter any further by #{type}.
 
