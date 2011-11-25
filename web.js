@@ -51,6 +51,9 @@ app.configure(function() {
   
   //Custom app settings
   app.set('pageSize', 20);
+  
+  // what we think of as a large query
+  app.set('largeQuery', 300);
 });
 
 
@@ -193,6 +196,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
         activity_count: total,
         current_page: req.query.p || 1,
         pagination: pagination,
+        largeQuery: total > app.settings.largeQuery,
         layout: !req.isXHR
       });
     })
