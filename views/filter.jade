@@ -37,31 +37,12 @@ script
   inlines.push(function() {
     var wrapper = $(".zoomable");
     var container = wrapper.children(".choices");
-    var activities = container.children(".choice");
-    var content = activities.find(".content");
-    
-    // hack to hide any elements that are 
-    // out of view of the window.
-    // grossly inefficient, needs fixed
-    var hideOffscreen = function(){
-      var y = (zoomer.y / zoomer.scale);
-      var hscale = zoomer.scale;
-      var wh = $(window).height();
-      
-      $('.choice').each(function(){
-        var $this = $(this);
-        var top = $this.offset().top;
-        var height = $this.height() * hscale;
-        
-        // window + .5 each way
-        var show = top < (wh*1.5) && top > -(wh/2) -height;
-        $this.css('visibility', show ? 'visible' : 'hidden')
-      });
-    }
+    var choices = container.children(".choice");
+    var content = choices.find(".content");
     
     var font = {min: 8, max: 25};
-    Math.seedrandom($('.choices').map(function() { return $(this).attr("id"); }).toArray().join(""));
-    $('.choices').bubbleLayout({
+    Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
+    container.bubbleLayout({
       bubbleClasses: bubbleClasses, 
       layout: 'list', font: font, 
       diameter: {min: 130, max: 250},
@@ -72,6 +53,35 @@ script
       }
     });
     
+    choices.addClass("undisplayed");
+    
+    // hack to hide any elements that are 
+    // out of view of the window.
+    // grossly inefficient, needs fixed
+    var hideOffscreen = function(){
+      var y = (zoomer.y / zoomer.scale);
+      var hscale = zoomer.scale;
+      var wh = $(window).height();
+      
+      choices.each(function(){
+        var $this = $(this);
+        var top = $this.offset().top;
+        var height = $this.height() * hscale;
+        
+        // window + .5 each way
+        var show = top < (wh*1.5) && top > -(wh/2) -height;
+        if (show && $this.hasClass("undisplayed")) {
+          $this.removeClass("undisplayed");
+          $this.find(".content").fitText('circular', {font: font, afterFit: function() {
+            var notEmpty = function() { return $(this).text() !== ""; }
+            var textLines = $(this).children().filter(notEmpty).toArray();
+            $(textLines.slice(-2)).addClass("small");
+          }});
+        }
+        $this.css('visibility', show ? 'visible' : 'hidden')
+      });
+    }
+
     var currentScale = 1;
     var zoom = $(".zoomable");
     var zoomer = new Zoomer(zoom.get(0), zoom.find('li').toArray(),{
@@ -88,10 +98,9 @@ script
           var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
           content.filter(filter).fitText('circular', {font: {min: min, max: font.max}});
         }
-    });
-    
-    
+    });   
+
+    hideOffscreen();
     $.setArcNav(!{JSON.stringify(query)})
-    
   });
   

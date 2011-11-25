@@ -48,6 +48,12 @@ script
       diameter: {min: 100, max: 200}
     });
     
+    content.fitText('circular', {font: font, afterFit: function() {
+      var notEmpty = function() { return $(this).text() !== ""; }
+      var textLines = $(this).children().filter(notEmpty).toArray();
+      $(textLines.slice(-2)).addClass("small");
+    }});
+    
     var currentScale = 1;
     new Zoomer(wrapper.get(0), wrapper.find('li').toArray(),{
         finish:function(){

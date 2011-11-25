@@ -153,6 +153,5 @@
     layouts[options.layout](items, container, options);
     
     items.removeClass("hidden");
-    items.find(".content").fitText('circular', {font: options.font, delay: 0, afterEach: options.afterFit});
   };
 })(jQuery);
