@@ -49,6 +49,10 @@
 
         _.each(_.flatten([ids]), function(id){
           
+          if(nav.is(':empty')){
+            nav.append('<li>Selected:</li>');
+          }
+          
           $('<li><a href="#"></a></li>')
 
             .find('a').text(expanded[filterkey][id] || 'unknown').click(function(e){

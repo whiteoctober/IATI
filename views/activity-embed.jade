@@ -1,18 +1,7 @@
-.activity_embed
-
-  // TODO : make the colour deterministic
-  div(
-    class = 'bubble c' + (Math.floor(Math.random()*13)+1)
-  )
-    .outline
-    .inner
-      a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
-        span.text= activity.title()
-
-
-  p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
-  
-script
-  inlines.push(function(){
-    $('.bubble a',this).fitText('circular', {font: {min: 10, max: 25}});
-  })
+td.name 
+  a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
+    = activity.title()
+td.funder
+  a.xhr.content(href='/activities?Funder=' + activity.funderIds(), data-history='{"enter":"slideUp"}')
+    = activity.funderName()
+td.value= to_currency(activity.value())

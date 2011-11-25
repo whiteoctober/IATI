@@ -276,7 +276,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 app.get('/activity/:id', beforeFilter, function(req, res, next) {
   if (req.query.view != 'embed') return next();
   
-  api.Request({ID: req.params.id, result: 'summary'})
+  api.Request({ID: req.params.id , result: 'list'})
     .on('success', function(data) {
       var activity = accessors.activity(data);
       res.render('activity-embed', {
