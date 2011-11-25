@@ -53,7 +53,6 @@ script
       }
     });
     
-    choices.addClass("undisplayed");
     
     // hack to hide any elements that are 
     // out of view of the window.
@@ -98,9 +97,19 @@ script
           var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
           content.filter(filter).fitText('circular', {font: {min: min, max: font.max}});
         }
-    });   
-
-    hideOffscreen();
+    });
+    
+    if("ontouchstart" in window){
+      choices.addClass("undisplayed");
+      hideOffscreen()
+    } else {
+      content.fitText('circular', {font: font, afterFit: function() {
+        var notEmpty = function() { return $(this).text() !== ""; }
+        var textLines = $(this).children().filter(notEmpty).toArray();
+        $(textLines.slice(-2)).addClass("small");
+      }});
+    }
+    
     $.setArcNav(!{JSON.stringify(query)})
   });
   
