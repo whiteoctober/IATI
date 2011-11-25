@@ -56,7 +56,11 @@ This app can be deployed to [heroku](http://heroku.com)
     heroku apps:rename my-iati-app
 
 
-## Memcached
+## API Request Caching
+
+Requests to the api can be cached, which is **very** recommended (even in development)
+
+### Memcached
 
 Responses from the api can be cached using memcached by setting the env variable MEMCACHE_SERVERS:
 
@@ -65,3 +69,17 @@ Responses from the api can be cached using memcached by setting the env variable
 This won't work on heroku as yet (because the memcached is user/pass protected) - though can help with local development.
 
 (note, to clear memcached: `echo "flush_all" | nc localhost 11211` )
+
+### Redis
+
+Redis can also be used to cache requests, to enable the redis add-on on heroku (and caching on the app):
+
+    heroku addons:add redistogo
+
+And to use redis locally
+
+    REDISTOGO_URL=redis://user:pass@url:port/ node web.js
+
+(interestingly, you can use the redistogo url from your heroku app, run `heroku config` to find it)
+
+…Just now - there isn't a good option for cache expiry,  but removing and adding the add-on should do the trick.
