@@ -1,4 +1,4 @@
-- if (pagination)
+- if (pagination && !largeQuery)
   nav.sorting
     | Order By:
     a(href=url_with(false,{orderby:'value'}), 
@@ -12,7 +12,7 @@ h3.inner #{activity_count} records found
   - if (pagination)
     != partial('pagination', pagination)
 
-- if (activity_count > 750 && pagination.current == 1)
+- if (largeQuery && pagination.current == 1)
   div#dialog(style="display:none")
     h2 <strong>#{activity_count}</strong> projects found
     p Refine search by selecting another sector, sub-sector, funder or area
@@ -31,7 +31,8 @@ h3.inner #{activity_count} records found
             p.text.hidden= activity.title().replace("\n", "")
 
 nav.foot
-  a.xhr.datafile(href=url_with('/data-file'), data-history='{"enter":"slideUp"}'): span data file
+  - if(!largeQuery)
+    a.xhr.datafile(href=url_with('/data-file'), data-history='{"enter":"slideUp"}'): span data file
   a.xhr.map(href='#map'): span view on map
   a.xhr.list(href=url_with(false, {view:'list'}), data-history='{"enter":"slideUp"}'): span view as list
 

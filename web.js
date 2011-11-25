@@ -51,6 +51,9 @@ app.configure(function() {
   
   //Custom app settings
   app.set('pageSize', 20);
+  
+  // what we think of as a large query
+  app.set('largeQuery', 300);
 });
 
 
@@ -193,6 +196,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
         activity_count: total,
         current_page: req.query.p || 1,
         pagination: pagination,
+        largeQuery: total > app.settings.largeQuery,
         layout: !req.isXHR
       });
     })
@@ -363,7 +367,7 @@ app.get('/list', beforeFilter, function(req, res) {
 
 
 app.get('/search', beforeFilter, function(req, res, next) {
-  api.Request({search: req.query.q, result: 'values'})
+  api.Request({search: req.query.q, result: 'values', pagesize:50})
   .on('success', function(data) {
     res.render('search', {
       activities:_.as_array(data['iati-activity']),

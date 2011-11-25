@@ -44,8 +44,10 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
   
   $('.dashboard #clear').live('click', function(e){
     e.preventDefault();
-    IATI.dashboard.clear();
-    window.location.reload();
+    if(confirm($(this).data('confirm'))){
+      IATI.dashboard.clear();
+      window.location.reload();
+    }
   });
   
   // If this is a function that returns a deferred promise, then it will
