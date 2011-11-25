@@ -7,3 +7,16 @@
   h2 Link to this:
   p Copy and paste
   input.large(type='text', value=hostname + origin_url)
+  
+script
+  inlines.push(function(){
+    // change the links into iframes
+    $('a.iframe',this).each(function(){
+      $this = $(this);
+      $this.after($('<iframe>',{
+        src:$this.attr('href'),
+        style:$this.data('style'),
+        scrolling:'no'
+      })).hide();
+    })
+  })
