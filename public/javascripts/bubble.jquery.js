@@ -8,7 +8,9 @@
     var max = Math.max.apply(Math, values);
     var min = Math.min.apply(Math, values);
     var scale = (bounds.max - bounds.min) / (max == min ? max : max - min);
-    return this.each(function(i) { $(this).data("scaled-value", parseInt(values[i] * scale + bounds.min)); });
+    console.log(scale);
+    console.log(bounds);
+    return this.each(function(i) { $(this).data("scaled-value", parseInt((values[i] - min) * scale + bounds.min)); });
   };
   
   var layouts = {
