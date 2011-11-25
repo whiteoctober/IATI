@@ -288,10 +288,11 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 });
 
 
-app.get('/activity/:id', beforeFilter, function(req, res, next) {
+app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
   if (req.query.view != 'embed') return next();
+  var id = req.params[0];
   
-  api.Request({ID: req.params.id , result: 'list'})
+  api.Request({ID: id , result: 'list'})
     .on('success', function(data) {
       var activity = accessors.activity(data);
       res.render('activity-embed', {
@@ -306,8 +307,10 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 });
 
 
-app.get('/activity/:id', beforeFilter, function(req, res, next) {
-  api.Request({ID: req.params.id, result: 'details'})
+app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
+  var id = req.params[0];
+  
+  api.Request({ID: id, result: 'details'})
     .on('success', function(data) {
       var activity = accessors.activity(data);
       var summaries = activity.transactionSummaries();
