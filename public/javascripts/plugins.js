@@ -90,7 +90,7 @@
             .replace(/\r\t +/, " ")
             .replace(/ \n/, "\n")
             .replace(/\s*\/\s*/g, " / ")
-            .replace(/\s*\\\s*/g, " / ")
+            .replace(/\s*\\\s*/g, " \\ ")
             .replace(/\.\s*/g, ". ")
             .replace(/,\s*/g, ", ");
         }

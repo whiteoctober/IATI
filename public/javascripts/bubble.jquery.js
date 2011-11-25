@@ -16,7 +16,7 @@
     pack: function(items, container, options) {
       var randomly = function(a,b) { return Math.random() * 2 - 1; };
       var isLeafNode = function(d) { return !d.children; };
-      var area = {x: container.parent().width(), y: container.parent().height() - 150};
+      var area = {x: container.parent().width(), y: $("body").height() - 220};
       
       // Calculates the angle of a point from the center of the available area
       var rotation = function(position) {
@@ -35,7 +35,7 @@
       // Gets bubble positions using the pack layout algorithm and computes the padding around them
       var positions = [];
       var padding = {left: area.x, top: area.y, right: 0, bottom: 0};
-      var aspectRatio = Math.pow(container.parent().width() / container.parent().height(), 2);
+      var aspectRatio = Math.pow(area.x / area.y, 2);
       $.map(packLayout($.map(data, function(i) { return i.value; }), aspectRatio), function(position) {
         position.x = parseInt(position.x, 10);
         position.y = parseInt(position.y, 10);
@@ -49,6 +49,8 @@
       var actualArea = { x: padding.right - padding.left, y: padding.bottom - padding.top };
 
       // Scales values according to the desired area
+      console.log(area.x / actualArea.x);
+      console.log(area.y);
       var scale = Math.min(area.x / actualArea.x, area.y / actualArea.y);
       $.map(positions, function(position) {
         position.x = (area.x - actualArea.x * scale) / 2 + scale * (position.x - padding.left);

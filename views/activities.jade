@@ -20,11 +20,7 @@ h3.inner #{activity_count} records found
 .zoomable
   ul.activities.clearfix
     each activity in activities
-      li.activity.bubble.hidden(
-        id='activity-' + activity.code, 
-        data-name=activity.title(),
-        data-value=activity.value()
-      )
+      li.activity.bubble.hidden(data-name=activity.title(), data-value=activity.value())
         .outline
         .inner
           a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
