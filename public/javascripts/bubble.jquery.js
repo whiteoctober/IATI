@@ -8,8 +8,6 @@
     var max = Math.max.apply(Math, values);
     var min = Math.min.apply(Math, values);
     var scale = (bounds.max - bounds.min) / (max == min ? max : max - min);
-    console.log(scale);
-    console.log(bounds);
     return this.each(function(i) { $(this).data("scaled-value", parseInt((values[i] - min) * scale + bounds.min)); });
   };
   
@@ -51,8 +49,6 @@
       var actualArea = { x: padding.right - padding.left, y: padding.bottom - padding.top };
 
       // Scales values according to the desired area
-      console.log(area.x / actualArea.x);
-      console.log(area.y);
       var scale = Math.min(area.x / actualArea.x, area.y / actualArea.y);
       $.map(positions, function(position) {
         position.x = (area.x - actualArea.x * scale) / 2 + scale * (position.x - padding.left);
