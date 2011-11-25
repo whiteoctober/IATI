@@ -1,6 +1,6 @@
 .landing_message
   h1
-    span Aid View Alpha
+    span AidView Alpha
   h2
     |  Global Aid Activities from
     strong= funders
@@ -13,6 +13,8 @@
   form(action='/search')
     input.q(type='text', name='q')
     input.submit(type='submit', value='search')
+    
+  h4: a.xhr(href='/about', data-history='{"enter":"slideUp"}') About this project
 
 script
   inlines.push(function(){$.setArcNav()})

@@ -153,6 +153,13 @@ app.get('/', beforeFilter, function(req, res, next) {
     .end();
 });
 
+app.get('/about', beforeFilter, function(req, res, next) {  
+  res.render('about', {
+    filter_paths: req.filter_paths,
+    layout: !req.isXHR
+  });
+});
+
 app.get('/arcnav', beforeFilter, function(req, res, next) { 
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
