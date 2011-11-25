@@ -1,7 +1,6 @@
 .widget_content
   h3.title Project description
-  .scroller
-    p!= activity.description() || "No description available."
+  p.scroller!= activity.description() || "No description available."
 
 script
   inlines.push(function(){
