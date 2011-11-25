@@ -13,7 +13,7 @@ section.activity.slide-panel.clearfix
     - if (documents.length > 0)
       ul.documents
         each document in documents
-          li: a.icn.doc(href=document.url)= document.title
+          li: a.icn.doc(target='_blank', href=document.url)= document.title
     - else
       p No related documents found.
       
