@@ -16,7 +16,7 @@ nav.sorting
   - if (choices.length > 0)
     ul.choices.clearfix
       each choice in choices
-        - if (choice.code)
+        - if (choice.code && choice.name)
           - selected = _.include(current_codes, choice.code)
           li.choice.bubble.hidden(
             id='choice-' + choice.code, class = selected ? 'selected' : '',
