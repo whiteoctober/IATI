@@ -4,7 +4,7 @@
 (function($){
   // Assigns a linearly scaled value based on an initial value
   $.fn.scaleValues = function(bounds) {
-    var values = $.map(this, function(i) { return $(i).data("value") || 1; });
+    var values = $.map(this, function(i) { return Math.sqrt($(i).data("value") || 1); });
     var max = Math.max.apply(Math, values);
     var min = Math.min.apply(Math, values);
     var scale = (bounds.max - bounds.min) / (max == min ? max : max - min);
