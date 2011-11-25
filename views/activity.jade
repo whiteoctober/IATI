@@ -63,11 +63,11 @@ section.activity.slide-panel.clearfix
         tr
           th Start date:
           - start = format_activity_dates(dates.start)
-          td <strong>#{start.date}</strong> (#{start.type})
+          td <strong>#{start.date}</strong> #{start.type ? "("+start.type+")" : ""}
         tr
           th End date:
           - end = format_activity_dates(dates.end)
-          td <strong>#{end.date}</strong> (#{end.type})
+          td <strong>#{end.date}</strong> #{end.type ? "("+end.type+")" : ""}
         //tr
         //  th Recipent countries/<br>regions:
         //  td 123
