@@ -54,6 +54,10 @@ app.configure(function() {
   
   // what we think of as a large query
   app.set('largeQuery', 300);
+  
+  if(process.env.GA_ACCOUNT)
+    app.set('trackingAccount', process.env.GA_ACCOUNT);
+  
 });
 
 
@@ -151,6 +155,13 @@ app.get('/', beforeFilter, function(req, res, next) {
       next(e);
     })
     .end();
+});
+
+app.get('/about', beforeFilter, function(req, res, next) {  
+  res.render('about', {
+    filter_paths: req.filter_paths,
+    layout: !req.isXHR
+  });
 });
 
 app.get('/arcnav', beforeFilter, function(req, res, next) { 
@@ -277,10 +288,11 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 });
 
 
-app.get('/activity/:id', beforeFilter, function(req, res, next) {
+app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
   if (req.query.view != 'embed') return next();
+  var id = req.params[0];
   
-  api.Request({ID: req.params.id , result: 'list'})
+  api.Request({ID: id , result: 'list'})
     .on('success', function(data) {
       var activity = accessors.activity(data);
       res.render('activity-embed', {
@@ -295,8 +307,10 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 });
 
 
-app.get('/activity/:id', beforeFilter, function(req, res, next) {
-  api.Request({ID: req.params.id, result: 'details'})
+app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
+  var id = req.params[0];
+  
+  api.Request({ID: id, result: 'details'})
     .on('success', function(data) {
       var activity = accessors.activity(data);
       var summaries = activity.transactionSummaries();

@@ -13,7 +13,7 @@ section.activity.slide-panel.clearfix
     - if (documents.length > 0)
       ul.documents
         each document in documents
-          li: a.icn.doc(href=document.url)= document.title
+          li: a.icn.doc(target='_blank', href=document.url)= document.title
     - else
       p No related documents found.
       
@@ -36,7 +36,7 @@ section.activity.slide-panel.clearfix
       p No related activities found.
       
   div.main
-    h1 Activity: #{activity.title()} (#{activity.funderName() || "Unknown"})
+    h1 Activity: #{activity.title()} (#{activity.funderName() || "Unknown Funder"})
     
     .half.left
       table.headline
@@ -63,11 +63,11 @@ section.activity.slide-panel.clearfix
         tr
           th Start date:
           - start = format_activity_dates(dates.start)
-          td <strong>#{start.date}</strong> (#{start.type})
+          td <strong>#{start.date}</strong> #{start.type ? "("+start.type+")" : ""}
         tr
           th End date:
           - end = format_activity_dates(dates.end)
-          td <strong>#{end.date}</strong> (#{end.type})
+          td <strong>#{end.date}</strong> #{end.type ? "("+end.type+")" : ""}
         //tr
         //  th Recipent countries/<br>regions:
         //  td 123
@@ -81,17 +81,21 @@ section.activity.slide-panel.clearfix
       | *** Total spend is disbursments plus reimbursments plus expenditure.
 
     .half.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
+      .widget
+        != partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/participating_organisations', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
+      .widget
+        !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/participating_organisations', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_sectors', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
+      .widget
+        !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_sectors', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
+      .widget
+        !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
       .widget
         h3 Funding Breakdown
-        p Coming soon
+        img(src='/images/mockups/funding_breakdown.png')
     .half.left
       .widget
         h3 Contact Details
@@ -103,14 +107,20 @@ section.activity.slide-panel.clearfix
     .half.left
       .widget
         h3 Aid flows
-        p Coming soon
+        img(src='/images/mockups/aid_flows.png')
 
 script
   inlines.push(function() {
-    $(".widget", this).each(function() {
-      var iframe = $(this).data("iframe");
-      if (iframe) { $(this).html(iframe); }
+    // change the links into iframes
+    $('a.iframe', this).each(function(){
+      $this = $(this);
+      $this.after($('<iframe>',{
+        src:$this.attr('href'),
+        style:$this.data('style'),
+        scrolling:'no'
+      })).hide();
     });
+  
     $("iframe").each(function() { 
       var wrapper = $("<div class='iframe_wrapper'>");
       $(this).wrap(wrapper);

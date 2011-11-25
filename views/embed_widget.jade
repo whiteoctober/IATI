@@ -5,7 +5,9 @@
 - if (typeof(name) !== 'undefined')
   h1= name
 
-iframe(src=widget_url, scrolling='no', style='padding: #{padding}; width: #{width}px; height: #{height}px; border: 0px;')
+
+a.iframe(href=widget_url, data-style="#{padding}; width: #{width}px; height: #{height}px; border: 0px;")
+
 - if (typeof(links) !== 'undefined' && links)
   nav.linkup
     ul
@@ -14,5 +16,5 @@ iframe(src=widget_url, scrolling='no', style='padding: #{padding}; width: #{widt
           span.onshow embed
       li.onshow
         - dashParams = JSON.stringify({href:widget_url, type:'iframe', key:'widgets'})
-        a.icn.favourite(href="#", data-dash=dashParams)
+        a.icn.favourite(href='#', data-dash=dashParams)
           | save to dashboard

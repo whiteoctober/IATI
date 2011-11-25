@@ -4,11 +4,11 @@
 (function($){
   // Assigns a linearly scaled value based on an initial value
   $.fn.scaleValues = function(bounds) {
-    var values = $.map(this, function(i) { return $(i).data("value") || 1; });
+    var values = $.map(this, function(i) { return Math.sqrt($(i).data("value") || 1); });
     var max = Math.max.apply(Math, values);
     var min = Math.min.apply(Math, values);
     var scale = (bounds.max - bounds.min) / (max == min ? max : max - min);
-    return this.each(function(i) { $(this).data("scaled-value", parseInt(values[i] * scale + bounds.min)); });
+    return this.each(function(i) { $(this).data("scaled-value", parseInt((values[i] - min) * scale + bounds.min)); });
   };
   
   var layouts = {
@@ -16,7 +16,7 @@
     pack: function(items, container, options) {
       var randomly = function(a,b) { return Math.random() * 2 - 1; };
       var isLeafNode = function(d) { return !d.children; };
-      var area = {x: container.parent().width(), y: container.parent().height() - 150};
+      var area = {x: container.parent().width(), y: $("body").height() - 220};
       
       // Calculates the angle of a point from the center of the available area
       var rotation = function(position) {
@@ -35,7 +35,7 @@
       // Gets bubble positions using the pack layout algorithm and computes the padding around them
       var positions = [];
       var padding = {left: area.x, top: area.y, right: 0, bottom: 0};
-      var aspectRatio = Math.pow(container.parent().width() / container.parent().height(), 2);
+      var aspectRatio = Math.pow(area.x / area.y, 2);
       $.map(packLayout($.map(data, function(i) { return i.value; }), aspectRatio), function(position) {
         position.x = parseInt(position.x, 10);
         position.y = parseInt(position.y, 10);
@@ -151,6 +151,5 @@
     layouts[options.layout](items, container, options);
     
     items.removeClass("hidden");
-    items.find(".content").fitText('circular', {font: options.font, delay: 0, afterEach: options.afterFit});
   };
 })(jQuery);

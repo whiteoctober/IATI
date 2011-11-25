@@ -8,7 +8,7 @@
       class="xhr az" + (query.orderby == 'name' ? ' active' : ''))
       span A-Z
 
-h3.inner #{activity_count} records found
+h3.inner #{activity_count} activities found
   - if (pagination)
     != partial('pagination', pagination)
 
@@ -20,11 +20,7 @@ h3.inner #{activity_count} records found
 .zoomable
   ul.activities.clearfix
     each activity in activities
-      li.activity.bubble.hidden(
-        id='activity-' + activity.code, 
-        data-name=activity.title(),
-        data-value=activity.value()
-      )
+      li.activity.bubble.hidden(data-name=activity.title(), data-value=activity.value())
         .outline
         .inner
           a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
@@ -43,13 +39,20 @@ script
     var activities = container.children(".activity");
     var content = activities.find(".content");
 
+    var font = {min: 8, max: 25};
     Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
     container.bubbleLayout({
       bubbleClasses: bubbleClasses,
       layout: 'pack', 
-      font: {min: 9, max: 25}, 
+      font: font, 
       diameter: {min: 100, max: 200}
     });
+    
+    content.fitText('circular', {font: font, afterFit: function() {
+      var notEmpty = function() { return $(this).text() !== ""; }
+      var textLines = $(this).children().filter(notEmpty).toArray();
+      $(textLines.slice(-2)).addClass("small");
+    }});
     
     var currentScale = 1;
     new Zoomer(wrapper.get(0), wrapper.find('li').toArray(),{
@@ -60,9 +63,9 @@ script
           var zoomed = zoom - currentScale;
           currentScale = zoom;
           
-          var min = Math.round(9 / zoom);
+          var min = Math.round(font.min / zoom);
           var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
-          content.filter(filter).fitText('circular', {font: {min: min, max: 25}});
+          content.filter(filter).fitText('circular', {font: {min: min, max: font.max}});
         }
     });
     

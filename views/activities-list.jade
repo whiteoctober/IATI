@@ -21,7 +21,7 @@ section.slide-panel.clearfix
   div.main
     h1.left Results viewed as a list
     
-    h3.right #{activity_count} records found
+    h3.right #{activity_count} activities found
       - if (pagination)
         != partial('pagination', pagination)
   
@@ -40,7 +40,7 @@ nav.foot
   - if(!largeQuery)
     a.xhr.datafile(href=url_with('/data-file'), data-history='{"enter":"slideUp"}'): span data file
   a.xhr.map(href='#map'): span view on map
-  a.xhr.list(href=url_with(false, {view:'bubble'}), data-history='{"enter":"slideUp"}'): span view as list
+  a.xhr.bubbles(href=url_with(false, {view:'bubble'}), data-history='{"enter":"slideUp"}'): span view as list
 
 script
   inlines.push(function() {

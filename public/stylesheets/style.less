@@ -49,7 +49,7 @@ input {
   color: #222;
 }
 a, a:active, a:visited {
-  color: #828281;
+  color: #2D5EA9;
   text-decoration: none;
 }
 h1, h2, h3 {
@@ -68,8 +68,15 @@ h3 {
   color: #2d5ea9;
   font-size: 15px;
 }
+h4 {
+  color: #2d5ea9; 
+  font-size: 15px;
+}
 th, td {
   padding: 0px;
+}
+small {
+  font-size: 0.9em;
 }
 
 h3.inner {
@@ -84,11 +91,13 @@ h3.inner {
 
 body {
   background: #E4E6E6 url(/images/background.jpg);
+  /* 
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+  */
 }
 #content {
 /*  width: 100%; height: 100%; min-height: 500px; min-width: 600px;*/
@@ -96,7 +105,7 @@ body {
 }
 #content_inner {
   position: relative;
-  padding: 120px 35px;
+  padding: 110px 35px;
 }
 header, footer {
    transform-origin: 0 0;
@@ -250,21 +259,24 @@ footer .country.filter  .button {
     font-size:2.25em;
     color: #334784;
   }
+  h4 {
+    font-size: 1.6em;
+  }
   form{
-    margin-top:1em;
+    margin-top:0.7em;
     font-size:2.5em;
     input.q{
       border:1px solid #B4B3B4;
       border-right:none;
       padding:.2em;
-      width:8em;
-      font-size:1em;
+      width:12em;
+      font-size:0.6em;
       .border-radius(0, 0, 3px, 3px);
     }
     input.submit{
       border:1px solid #B4B3B4;
-      padding:.2em;
-      font-size:1em;
+      padding:.2em .4em;
+      font-size:0.6em;
       color:#f5f5f5;
       .bw-gradient(#B4B3B4,255*.66,255*.78);
       .border-radius(3px, 3px, 0, 0);
@@ -393,7 +405,7 @@ ol.pagination li .current{
 
 .filter {
   h2 {
-    margin: 2em 0.5em 0;
+    margin: 2em 0.5em 1em;
   }
   h3 {
     margin: 0 1em;
@@ -485,7 +497,7 @@ ol.pagination li .current{
   top:0;
   left: 20px;
   right: 20px;
-  padding:150px 0;
+  padding:110px 0;
 /*  background-color:rgba(1,1,255,0.3)*/
 }
 

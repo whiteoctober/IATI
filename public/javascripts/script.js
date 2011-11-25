@@ -30,13 +30,18 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
           return;
         }
         embed.removeClass("hidden");
+        // console.log(this);
+        runInlines.apply(this);
       });
       dimmed = true; 
     });
     e.preventDefault();
   });
   
-  $('#dialog').live('touchstart click', function() {
+  $('#dialog').live('touchstart click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
     $(this).fadeOut(function() {
       $(this).remove();
     });
@@ -76,6 +81,9 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
         else {
           runInlines.apply(this);
         }
+        
+        if(window._gaq) window._gaq.push(['_trackPageview']);
+        
       });
     };
     
@@ -116,4 +124,16 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
   });
   
   $(runInlines);
+  
+  
+  
+  // analytics
+  if(window._gaq){
+     window._gaq.push(['_trackPageview']);
+     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  }
+
+  
 })();
