@@ -312,7 +312,8 @@ app.get('/activity/:id', beforeFilter, function(req, res, next) {
 
 
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
-  var filterName = req.params.filter_key
+  var filterKey = req.params.filter_key; // eg SectorCategory (to use in requests)
+  var filterName = filterKey // eg Sector Catgory (to use in titles)
     .replace(/[a-z][A-Z]/g, function(match) {return match[0] + " " + match[1]; });
   var filterTypes = {
     "Sector Category": "sector",
@@ -322,15 +323,16 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
     "Region": "region"
   };
   
-  var params = {result: 'values', groupby: filterName};
+  var params = {result: 'values', groupby: filterKey};
   _.extend(params, req.filter_query);
-  delete params[filterName];
+  delete params[filterKey];
   
   new api.Request(params)
     .on('success', function(data) {
       res.render('filter', {
-        choices: accessors.filter(data, filterName),
-        key: filterName,
+        choices: accessors.filter(data, filterKey),
+        key: filterKey,
+        name: filterName,
         type: filterTypes[filterName],
         title: 'Filter by ' + filterName,
         page: 'filter',
