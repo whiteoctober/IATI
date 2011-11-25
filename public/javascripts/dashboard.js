@@ -69,6 +69,12 @@ var IATI = IATI || {};
   $.fn.dashboardContent = function(){
     var $this = this;
     
+    if(_.any(data, function(d){
+      return d.key == 'activities'
+    })){
+      $('.groups .info').hide();
+    }
+    
     _.each(data, function(d){
       var target = $('[data-dashkey='+d.key+']',$this);
       
