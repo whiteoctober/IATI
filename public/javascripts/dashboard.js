@@ -63,7 +63,7 @@ var IATI = IATI || {};
   };
   
   
-  var subSectionTmpl = '<li class="sub"><h2></h2><ol class="content"></ol></li>';
+  var subSectionTmpl = '<li class="sub"><h2></h2><table class="content full"></table></li>';
   
   // jQuery helper to put the content in the dashboard page
   $.fn.dashboardContent = function(){
@@ -93,7 +93,7 @@ var IATI = IATI || {};
       var section = target.find('.content');
       
       if(d.type == 'embed'){
-        $('<li class="embeded">').appendTo(section).load(d.href,runInlines);
+        $('<tr class="embeded">').appendTo(section).load(d.href,runInlines);
         
       } else {
         //presume iframe
