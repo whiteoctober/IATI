@@ -89,8 +89,21 @@ section.activity.slide-panel.clearfix
     .half.left
       .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
     .half.left
-      .widget(data-iframe=partial('embed_widget', {locals: {widget_url: url_with('/widgets/funding_breakdown', {ID: activity.id()}), links: true, padding: 0, width: 260}}))
-
+      .widget
+        h3 Funding Breakdown
+        p Coming soon
+    .half.left
+      .widget
+        h3 Contact Details
+        p Coming soon
+    .half.left
+      .widget
+        h3 Results
+        p Coming soon
+    .half.left
+      .widget
+        h3 Aid flows
+        p Coming soon
 
 script
   inlines.push(function() {

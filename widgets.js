@@ -188,6 +188,26 @@
         .end();
     });
     
+    //Widget displaying contact details for an activity
+    app.get('/widgets/contact_details', filters, function(req, res, next) {
+      var params = {result: 'details'};
+
+      _.extend(params, req.filter_query);
+      new api.Request(params)
+        .on('success', function(data) {
+          var activity = accessors.activity(data);
+
+          res.render('widgets/contact_details', {
+            title: "Contact Details Widget",
+            layout: 'widget'
+          });
+        })
+        .on('error', function(e) {
+          next(e);
+        })
+        .end();
+    });
+    
     
     //Renders an embed dialog
     app.get('/embed', filters, function(req, res, next) {
