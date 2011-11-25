@@ -47,7 +47,7 @@ app.configure(function() {
     enable: ['less'] })
   );
   
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(__dirname + '/public', { maxAge: 1000*60*60 }));
   
   //Custom app settings
   app.set('pageSize', 20);
