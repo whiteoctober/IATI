@@ -100,6 +100,8 @@ app.configure('production', function() {
     title: 'Aid View',
     clientScripts: clientScripts_combined
   });
+  
+  app.set('cacheHeader', 'public, max-age=3600'); // 1 hour
 });
 
 
@@ -121,7 +123,7 @@ var beforeFilter = function(req, res, next) {
   req.queryString = req.originalUrl.split('?')[1] || '';
   req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
   
-  res.header('Cache-Control','public, max-age=3600'); // 1 hour
+  res.header('Cache-Control',app.settings.cacheHeader || 'no-cache');
   
   next();
 };
