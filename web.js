@@ -54,6 +54,10 @@ app.configure(function() {
   
   // what we think of as a large query
   app.set('largeQuery', 300);
+  
+  if(process.env.GA_ACCOUNT)
+    app.set('trackingAccount', process.env.GA_ACCOUNT);
+  
 });
 
 

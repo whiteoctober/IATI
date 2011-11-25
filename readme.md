@@ -85,3 +85,10 @@ And to use redis locally
 (interestingly, you can use the redistogo url from your heroku app, run `heroku config` to find it)
 
 …Just now - there isn't a good option for cache expiry,  but removing and adding the add-on should do the trick.
+
+
+### Analytics
+
+Google analytics can be enabled by setting the GA_ACCOUNT variable
+
+    GA_ACCOUNT=UA-12345678-1

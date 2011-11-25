@@ -15,6 +15,10 @@ html
     script
       window.inlines = [];
       window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
+    
+    -if(settings.trackingAccount)
+      script
+        window._gaq = [['_setAccount', '#{settings.trackingAccount}']];
   body
     section#content
       #content_inner.clearfix!= body
