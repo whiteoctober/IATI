@@ -363,7 +363,7 @@ app.get('/list', beforeFilter, function(req, res) {
 
 
 app.get('/search', beforeFilter, function(req, res, next) {
-  api.Request({search: req.query.q, result: 'values'})
+  api.Request({search: req.query.q, result: 'values', pagesize:50})
   .on('success', function(data) {
     res.render('search', {
       activities:_.as_array(data['iati-activity']),
