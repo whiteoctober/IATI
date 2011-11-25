@@ -10,33 +10,43 @@
 // arc navigation
 
 ul.arcnav{
+  
   position:absolute;
   padding:0;
-  z-index: 15;
+  z-index: 20;
+  height:80px;
+  .thinned_text;
   
   li{
-    list-style:none
+    color:@blue;
+    font-size:1.2em;
+    list-style:none;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
   }
   
   a{
-    color:#c08;
-    font-size:1.25em;
+    color:#08f;
   }
   
 
   &.funder{
     left:150px;
+    width:25%;
     bottom:0;
   }
   &.area{
-    right:150px;
-    text-align:right;
+    right:130px;
+    width:20%;
     bottom:0;
   }
   
   &.sector{
-    left:60%;
-    top:0;
+    left:250px;
+    width:20%;
+    top:20px;
+    height:60px;
   }
 }
 
@@ -89,6 +99,7 @@ nav.main_navigation {
 nav.foot{
   position: fixed;
   bottom: 0;
+  left:0;
   z-index: 10;
   width: 100%;
   text-align: center;
