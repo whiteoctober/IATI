@@ -17,7 +17,6 @@ script
         $.map(sectors.slice(6), function(s) { others = others + s.value; });
         var byValue = function(a, b) { return a.value - b.value; };
         sectors = sectors.slice(0, 6).concat([{name: "Other", value: others}]).sort(byValue);
-        console.log(sectors);
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Amount');
         data.addRows($.map(sectors, function(s) { return [[s.name, s.value]]; }));
