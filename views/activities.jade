@@ -8,7 +8,7 @@
       class="xhr az" + (query.orderby == 'name' ? ' active' : ''))
       span A-Z
 
-h3.inner #{activity_count} records found
+h3.inner #{activity_count} activities found
   - if (pagination)
     != partial('pagination', pagination)
 
