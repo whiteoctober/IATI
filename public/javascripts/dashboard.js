@@ -145,6 +145,9 @@ var IATI = IATI || {};
       $('form.dashChoice').slideUp(function(){
         $(this).remove();
       });
+      
+      //update the ui based on if it was added
+      $(this).favourite();
       return;
     }
     
