@@ -15,6 +15,11 @@
     input.submit(type='submit', value='search')
     
   h4: a.xhr(href='/about', data-history='{"enter":"slideUp"}') About this project
+  
+
+// this message will be hidden for all but IE<9
+.built_for
+  p This site is not currenty supported on IE 8 or below
 
 script
   inlines.push(function(){$.setArcNav()})
