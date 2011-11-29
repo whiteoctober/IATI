@@ -2,7 +2,7 @@
   nav.sorting
     | Arrange By:
     a(href=url_with(false,{orderby:'value'}), 
-      class="xhr funding" + (query.orderby != 'name' ? ' active' : ''),
+      class="xhr funding" + (query.orderby == 'value' ? ' active' : ''),
       data-history='{"enter":"slideUp"}')
       span Funding Size 
     a(href=url_with(false,{orderby:'name'}), 
@@ -49,7 +49,8 @@ script
       else {
         contentExit = function() {
           return $('#content_inner').deferredAnimate({marginTop:600}, function(){
-            $(this).empty().css({marginTop:0});
+            $('section.slide-panel', this).remove();
+            $(this).css({marginTop:0});
           });
         }
       }
