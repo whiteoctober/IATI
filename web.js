@@ -217,6 +217,31 @@ app.get('/activities', beforeFilter, function(req, res, next) {
     .end();
 });
 
+app.get('/activities-map', beforeFilter, function(req, res, next) {
+  var params = {
+    groupby: 'Country',
+    result: 'values'
+  };
+
+  _.extend(params, req.filter_query);
+  new api.Request(params)
+    .on('success', function(data) {
+      var dataFile = accessors.dataFile(data);
+      delete req.query.view;
+      res.render('activities-map', {
+        title: 'Activities Map',
+        filter_paths: req.filter_paths,
+        query: req.query,
+        countries: accessors.filter(data, 'Country'),
+        layout: !req.isXHR
+      });
+    })
+    .on('error', function(e) {
+      next(e);
+    })
+    .end();
+});
+
 
 app.get('/data-file', beforeFilter, function(req, res, next) {
   if (req.query.view != 'embed') return next();
@@ -332,8 +357,8 @@ app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
 
 
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
-  var filterKey = req.params.filter_key; // eg SectorCategory (to use in requests)
-  var filterName = filterKey // eg Sector Catgory (to use in titles)
+  var filterKey = req.params.filter_key; // e.g. SectorCategory (to use in requests)
+  var filterName = filterKey // e.g. Sector Catgory (to use in titles)
     .replace(/[a-z][A-Z]/g, function(match) {return match[0] + " " + match[1]; });
   var filterTypes = {
     "Sector Category": "sector",

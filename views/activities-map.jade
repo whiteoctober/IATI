@@ -1,0 +1,41 @@
+section.activities-map.slide-panel.clearfix
+  h1 Results on a map
+  - _(countries).each(function(c) { 
+    - c.name = title_case(c.name || ""); 
+    - c.url = url_with("/activities", {Country: c.code});
+  - });
+  - if (countries.length > 0)
+    .map(data-countries=JSON.stringify(countries))
+  - else
+    p No location information available.
+
+script
+  var googleLoaded;
+  
+  inlines.push(function(){
+    var map = $(".map");
+    if (map.length > 0) {
+      var loadMap = function() {
+        googleLoaded = true;
+        var countries = map.data("countries");
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', '', 'Country');
+        data.addColumn('number', 'Activities', 'a');
+        data.addRows(countries.length);
+        $.map(countries, function(country, i) {
+          data.setValue(i, 0, country.name);
+          data.setValue(i, 1, parseFloat(country.count));
+        });
+
+        var geochart = new google.visualization.GeoChart(map[0]);
+        geochart.draw(data, {width: 800, height: 500});
+        var lastKey = false;
+        google.visualization.events.addListener(geochart, 'select', function() { 
+          if (geochart.getSelection().length > 0) lastKey = geochart.getSelection()[0].row;
+          else window.History.pushState(window.location.href, "", countries[lastKey].url);
+        })
+      }
+      
+      googleLoaded ? loadMap() : google.setOnLoadCallback(loadMap);
+    }
+  });
