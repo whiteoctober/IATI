@@ -10,9 +10,10 @@ section.activities-map.slide-panel.clearfix
     p No location information available.
 
 script
-  var googleLoaded;
-  
   inlines.push(function(){
+    
+    var googleLoaded = !! window.google && window.google.visualization;
+    
     var map = $(".map");
     if (map.length > 0) {
       var loadMap = function() {
