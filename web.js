@@ -16,6 +16,7 @@ var express = require('express'),
 var clientScripts = [
   'lib/jquery.js', 
   'lib/jquery.history.js',
+  'lib/jquery.tinysort.js',
   'lib/seedrandom.js',
   'lib/underscore.js',
   'dashboard.js',
