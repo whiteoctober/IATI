@@ -1,9 +1,11 @@
 nav.sorting
   | Order By:
-  a(href=url_with(false,{orderby:'value'}), 
+  a.sort(href=url_with(false,{orderby:'value'}),
+    data-sort-options='{"data":"value", "order":"desc"}',
     class="xhr funding" + (query.orderby == 'value' ? ' active' : ''))
     span Funding Size 
-  a(href=url_with(false,{orderby:'name'}), 
+  a.sort(href=url_with(false,{orderby:'name'}), 
+    data-sort-options='{"data":"name"}',
     class="xhr az" + (query.orderby == 'name' ? ' active' : ''))
     span A-Z
 
@@ -35,6 +37,7 @@ nav.sorting
 
 script
   inlines.push(function() {
+    
     var wrapper = $(".zoomable");
     var container = wrapper.children(".choices");
     var choices = container.children(".choice");
@@ -99,7 +102,8 @@ script
         }
     });
     
-    if("ontouchstart" in window){
+    var hasTouch = "ontouchstart" in window;
+    if(hasTouch){
       choices.addClass("undisplayed");
       hideOffscreen()
     } else {
@@ -109,6 +113,20 @@ script
         $(textLines.slice(-2)).addClass("small");
       }});
     }
+    
+    
+    
+    // intercept the sorting 
+    $('.sort', this).bind('click touchstart',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      $this = $(this);
+      $('ul.choices>li').tsort($this.data('sort-options'));
+      $this.addClass('active').siblings().removeClass('active');
+      if(hasTouch){
+        hideOffscreen();
+      }
+    }).last().click();
     
     $.setArcNav(!{JSON.stringify(query)})
   });
