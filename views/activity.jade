@@ -68,9 +68,11 @@ section.activity.slide-panel.clearfix
           th End date:
           - end = format_activity_dates(dates.end)
           td <strong>#{end.date}</strong> #{end.type ? "("+end.type+")" : ""}
-        //tr
-        //  th Recipent countries/<br>regions:
-        //  td 123
+        
+        - each rcpt in activity.recipients()
+          tr
+            th Recipent #{rcpt.type}:
+            td <strong> #{rcpt.name}</strong>
         
     .clearLeft
     .note
