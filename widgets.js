@@ -1,4 +1,12 @@
 (function(exports) {
+  
+  // default to site layout when view=full and allow no layout on
+  // ajax requests
+  var widgetLayout = function(req){
+    return req.xhr ? false : (req.query.view == 'full' ? true : 'widget');
+  }
+  
+  
   //Initialises up widget pages and routes
   exports.init = function(app, filters, api, _, accessors) {
   
@@ -83,6 +91,7 @@
     //Widget displaying a map with the location of an activity
     app.get('/widgets/project_map', filters, function(req, res, next) {
       var params = {result: 'geo'};
+      
 
       _.extend(params, req.filter_query);
       new api.Request(params)
@@ -92,7 +101,7 @@
           res.render('widgets/project_map', {
             title: "Geographical Location Widget",
             locations: activity.locations(),
-            layout: 'widget'
+            layout: widgetLayout(req)
           });
         })
         .on('error', function(e) {
@@ -105,7 +114,7 @@
     //Widget displaying a project description for an activity
     app.get('/widgets/project_description', filters, function(req, res, next) {
       var params = {result: 'details'};
-
+      
       _.extend(params, req.filter_query);
       new api.Request(params)
         .on('success', function(data) {
@@ -114,7 +123,7 @@
           res.render('widgets/project_description', {
             title: "Project Description Widget",
             activity: activity,
-            layout: 'widget'
+            layout: widgetLayout(req)
           });
         })
         .on('error', function(e) {
@@ -136,7 +145,7 @@
           res.render('widgets/participating_organisations', {
             title: "Participating Organisations Widget",
             activity: activity,
-            layout: 'widget'
+            layout: widgetLayout(req)
           });
         })
         .on('error', function(e) {
@@ -158,7 +167,7 @@
           res.render('widgets/project_sectors', {
             title: "Project Sectors Widget",
             activity: activity,
-            layout: 'widget'
+            layout: widgetLayout(req)
           });
         })
         .on('error', function(e) {
