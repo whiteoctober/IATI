@@ -7,12 +7,17 @@
     |  Funders
   h3
     | Filter by 
-    strong Sector, Funder, Area, 
-    | or search
+    strong
+      a.xhr(href="/filter/SectorCategory") Sector, 
+      a.xhr(href="/filter/Funder") Funder, 
+      a.xhr(href="/filter/Country") Area, 
+    | or
+    strong
+      a.search(href="#search") search
 
-  form(action='/search')
-    input.q(type='text', name='q')
-    input.submit(type='submit', value='search')
+  form.jshide(action='/search', id="search")
+   input.q(type='text', name='q')
+   input.submit(type='submit', value='search')
     
   h4: a.xhr(href='/about', data-history='{"enter":"slideUp"}') About this project
   
@@ -22,4 +27,10 @@
   p This site is not currenty supported on IE 8 or below
 
 script
-  inlines.push(function(){$.setArcNav()})
+  inlines.push(function(){
+    $.setArcNav()
+    $('a.search', this).click(function(e){
+      e.preventDefault();
+      $('#search').slideDown();
+    })
+  })
