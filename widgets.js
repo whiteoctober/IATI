@@ -26,7 +26,7 @@
           res.render('widgets/donors', {
             title: "Top Donors Widget",
             donors: dataFile.funders(),
-            layout: 'widget'
+            layout: widgetLayout(req)
           });
         })
         .on('error', function(e) {
@@ -52,7 +52,7 @@
           res.render('widgets/sectors', {
             title: "Top Sectors Widget",
             sectors: dataFile.sectors(),
-            layout: 'widget'
+            layout: widgetLayout(req)
           });
         })
         .on('error', function(e) {
@@ -78,7 +78,7 @@
           res.render('widgets/new_projects', {
             title: "New Projects Widget",
             activities: dataFile.activities(),
-            layout: 'widget'
+            layout: widgetLayout(req)
           });
         })
         .on('error', function(e) {
@@ -188,7 +188,7 @@
 
           res.render('widgets/funding_breakdown', {
             title: "Funding Breakdown Widget",
-            layout: 'widget'
+            layout: 'widget' // NOTE - this will have to be changed to link in app
           });
         })
         .on('error', function(e) {
@@ -208,7 +208,7 @@
 
           res.render('widgets/contact_details', {
             title: "Contact Details Widget",
-            layout: 'widget'
+            layout: 'widget' // NOTE - this will have to be changed to link in app
           });
         })
         .on('error', function(e) {

@@ -28,13 +28,13 @@ section.data_file.slide-panel.clearfix
         | CSV
   .clear
   .third.left
-    .widget
+    .widget(data-href=url_with('/widgets/new_projects', {view:'full'}))
       != partial('embed_widget', {locals: {widget_url: url_with('/widgets/new_projects'), links: true, padding: 0}})
   .third.left
-    .widget
+    .widget(data-href=url_with('/widgets/donors', {view:'full'}))
       != partial('embed_widget', {locals: {widget_url: url_with('/widgets/donors'), links: true, padding: 0}})
   .third.left
-    .widget
+    .widget(data-href=url_with('/widgets/sectors', {view:'full'}))
       != partial('embed_widget', {locals: {widget_url: url_with('/widgets/sectors'), links: true, padding: 0}})
   .third.left
     .widget
@@ -56,6 +56,22 @@ script
         style:$this.data('style'),
         scrolling:'no'
       })).hide();
+    })
+    
+    $("iframe").each(function() { 
+      var wrapper = $("<div class='iframe_wrapper'>");
+      $(this).wrap(wrapper);
+      $(this).after('<div class="overlay">');
+    })
+    
+    // when the widget has a displayable url - then provide a link to that
+    $('.widget[data-href]', this).each(function(){
+      var $this = $(this);
+      var link = $('<a>',{
+          'class':'overlay xhr no-contentExit',
+          'href':$this.data('href')});
+      
+      $this.find('.overlay').replaceWith(link);
     })
   
     contentExit = function(){
