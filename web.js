@@ -227,13 +227,15 @@ app.get('/activities-map', beforeFilter, function(req, res, next) {
   _.extend(params, req.filter_query);
   new api.Request(params)
     .on('success', function(data) {
-      var dataFile = accessors.dataFile(data);
+      var dataFile = accessors.dataFile(data, params.groupby);
+      var total = dataFile.totalActivities();
       delete req.query.view;
       res.render('activities-map', {
         title: 'Activities Map',
         filter_paths: req.filter_paths,
         query: req.query,
         countries: accessors.filter(data, 'Country'),
+        largeQuery: total > app.settings.largeQuery,
         layout: !req.isXHR
       });
     })
@@ -250,7 +252,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
   new filterTitles.Request(filters)
-    .on('success', function(expanded){
+    .on('success', function(expanded) {
       // get the names of the filters
       // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
       var keys = _.flatten(_.map(expanded, function(sectors,_k){
@@ -289,7 +291,8 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
         return _.values(sectors);
       }));
       
-      var dataFile = accessors.dataFile(data);
+      var dataFile = accessors.dataFile(data, params.groupby);
+      var total = dataFile.totalActivities();
       var summaries = dataFile.transactionSummaries();
 
       res.render('data-file', {
@@ -300,8 +303,9 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
         query: req.query,
         total_budget: summaries['C'],
         total_spend: summaries['D'] + summaries['E'] + summaries['R'],
-        total_activities: dataFile.totalActivities(),
+        total_activities: total,
         current_page: req.query.p || 1,
+        largeQuery: total > app.settings.largeQuery,
         layout: !req.isXHR
       });
     })

@@ -45,6 +45,8 @@ section.data_file.slide-panel.clearfix
       h3 Funding breakdown
       img(src='/images/mockups/funding_breakdown.png')
 
+nav.foot!= partial('activities-nav', {dataFile: !largeQuery})
+
 script
   inlines.push(function(){
   

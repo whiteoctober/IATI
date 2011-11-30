@@ -26,11 +26,7 @@ h3.inner #{activity_count} activities found
           a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
             p.text.hidden= activity.title().replace("\n", "")
 
-nav.foot
-  - if(!largeQuery)
-    a.xhr.datafile(href=url_with('/data-file'), data-history='{"enter":"slideUp"}'): span data file
-  a.xhr.map(href=url_with('/activities-map'), data-history='{"enter":"slideUp"}'): span view on map
-  a.xhr.list(href=url_with(false, {view:'list'}), data-history='{"enter":"slideUp"}'): span view as list
+nav.foot!= partial('activities-nav', {dataFile: !largeQuery})
 
 script
   inlines.push(function() {

@@ -36,11 +36,7 @@ section.slide-panel.clearfix
               = activity.funderName()
           td.value= to_currency(activity.value())
 
-nav.foot
-  - if(!largeQuery)
-    a.xhr.datafile(href=url_with('/data-file'), data-history='{"enter":"slideUp"}'): span data file
-  a.xhr.map(href='#map'): span view on map
-  a.xhr.bubbles(href=url_with(false, {view:'bubble'}), data-history='{"enter":"slideUp"}'): span view as list
+nav.foot!= partial('activities-nav', {dataFile: !largeQuery})
 
 script
   inlines.push(function() {

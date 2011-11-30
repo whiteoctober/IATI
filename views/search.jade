@@ -17,11 +17,13 @@ section.slide-panel.clearfix
           td
            = to_currency(activity.value)
 
-  script
-    inlines.push(function(){
-      contentExit = function(){
-        return $('#content_inner').deferredAnimate({marginTop:600}, function(){
-          $(this).empty().css({marginTop:0});
-        });
-      }
-    });
+script
+  inlines.push(function(){
+    contentExit = function(){
+      return $('#content_inner').deferredAnimate({marginTop:600}, function(){
+        $(this).empty().css({marginTop:0});
+      });
+    }
+    
+    new Scroller($('section.slide-panel').get(0))
+  });

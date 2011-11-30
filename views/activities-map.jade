@@ -8,6 +8,8 @@ section.activities-map.slide-panel.clearfix
     .map(data-countries=JSON.stringify(countries))
   - else
     p No location information available.
+    
+nav.foot!= partial('activities-nav', {dataFile: !largeQuery})
 
 script
   inlines.push(function(){
