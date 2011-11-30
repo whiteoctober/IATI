@@ -4,7 +4,7 @@
 
 script
   inlines.push(function(){
-    google.setOnLoadCallback(function() {
+    var displayChart = function() {
       var chart = $("#chart");
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'Name');
@@ -12,11 +12,13 @@ script
       data.addRows($.map(chart.data('donors'), function(d) { return [[d.name, d.value]]; }));
 
       var options = {
-        width: $("body").width(), 
+        //- width: $("body").width(), 
         height: $("body").height() - $(".title").outerHeight(true), 
         backgroundColor: 'none', 
         chartArea: {left: 10, top: 10, width: '100%', height: '100%'}
       };
      (new google.visualization.PieChart(chart[0])).draw(data, options);
-    });
+    };
+    
+    google.load('visualization', '1.0', {callback:displayChart, packages:['corechart']});
   });
