@@ -124,7 +124,8 @@ var IATI = IATI || {};
       var section = target.find('.content');
       
       if(d.type == 'embed'){
-        $('<li class="embedded">').appendTo(section).load(d.href,runInlines);
+        var tmpl = d.subkey ? '<tr class="embedded">' : '<li class="embedded">';
+        $(tmpl).appendTo(section).load(d.href,runInlines);
         
       } else {
         //presume iframe
