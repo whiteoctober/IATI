@@ -6,9 +6,22 @@
   text-shadow:@bg 0 0 1px;  
 }
 
+.opacity(@opacity: 0.5) {
+  -moz-opacity: @opacity;
+  -khtml-opacity: @opacity;
+  -webkit-opacity: @opacity;
+  opacity: @opacity;
+}
+
+nav.disabled, nav a.disabled {
+  .opacity(0.3);
+}
+nav.disabled a, nav a.disabled{
+  cursor: default;
+}
+
 
 // arc navigation
-
 ul.arcnav{
   
   position:absolute;
