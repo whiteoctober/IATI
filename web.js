@@ -411,11 +411,27 @@ app.get('/list', beforeFilter, function(req, res) {
 
 
 app.get('/search', beforeFilter, function(req, res, next) {
-  api.Request({search: req.query.q, result: 'values', pagesize:50})
+  var page = parseInt(req.query.p || 1, 10);
+  var params = {
+    search: req.query.q, 
+    result: 'values', 
+    pagesize: app.settings.pageSize, 
+    start: ((page - 1) * app.settings.pageSize) + 1
+  };
+  
+  api.Request(params)
   .on('success', function(data) {
+    var dataFile = accessors.dataFile(data);
+    var total = dataFile.totalActivities();
+    var pagination = (total <= app.settings.pageSize) ? false : {
+      current: parseInt(req.query.p || 1, 10),
+      total: Math.ceil(total / app.settings.pageSize)
+    };
+  
     res.render('search', {
-      activities:_.as_array(data['iati-activity']),
-      count:data['@activity-count'],
+      activities: dataFile.activities(),
+      activity_count: total,
+      pagination: pagination,
       layout: !req.isXHR
     });
   })
@@ -423,7 +439,6 @@ app.get('/search', beforeFilter, function(req, res, next) {
     next(e);
   })
   .end();
-  
 });
 
 
