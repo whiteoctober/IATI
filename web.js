@@ -16,6 +16,7 @@ var express = require('express'),
 var clientScripts = [
   'lib/jquery.js', 
   'lib/jquery.history.js',
+  'lib/jquery.tinysort.js',
   'lib/seedrandom.js',
   'lib/underscore.js',
   'dashboard.js',
@@ -217,6 +218,33 @@ app.get('/activities', beforeFilter, function(req, res, next) {
     .end();
 });
 
+app.get('/activities-map', beforeFilter, function(req, res, next) {
+  var params = {
+    groupby: 'Country',
+    result: 'values'
+  };
+
+  _.extend(params, req.filter_query);
+  new api.Request(params)
+    .on('success', function(data) {
+      var dataFile = accessors.dataFile(data, params.groupby);
+      var total = dataFile.totalActivities();
+      delete req.query.view;
+      res.render('activities-map', {
+        title: 'Activities Map',
+        filter_paths: req.filter_paths,
+        query: req.query,
+        countries: accessors.filter(data, 'Country'),
+        largeQuery: total > app.settings.largeQuery,
+        layout: !req.isXHR
+      });
+    })
+    .on('error', function(e) {
+      next(e);
+    })
+    .end();
+});
+
 
 app.get('/data-file', beforeFilter, function(req, res, next) {
   if (req.query.view != 'embed') return next();
@@ -224,7 +252,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
   new filterTitles.Request(filters)
-    .on('success', function(expanded){
+    .on('success', function(expanded) {
       // get the names of the filters
       // {Sector:{ID:'NAME1'}, Funder:{ID:'Other Name'}} => ['NAME1', 'Other Name']
       var keys = _.flatten(_.map(expanded, function(sectors,_k){
@@ -263,7 +291,8 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
         return _.values(sectors);
       }));
       
-      var dataFile = accessors.dataFile(data);
+      var dataFile = accessors.dataFile(data, params.groupby);
+      var total = dataFile.totalActivities();
       var summaries = dataFile.transactionSummaries();
 
       res.render('data-file', {
@@ -274,8 +303,9 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
         query: req.query,
         total_budget: summaries['C'],
         total_spend: summaries['D'] + summaries['E'] + summaries['R'],
-        total_activities: dataFile.totalActivities(),
+        total_activities: total,
         current_page: req.query.p || 1,
+        largeQuery: total > app.settings.largeQuery,
         layout: !req.isXHR
       });
     })
@@ -332,8 +362,8 @@ app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
 
 
 app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
-  var filterKey = req.params.filter_key; // eg SectorCategory (to use in requests)
-  var filterName = filterKey // eg Sector Catgory (to use in titles)
+  var filterKey = req.params.filter_key; // e.g. SectorCategory (to use in requests)
+  var filterName = filterKey // e.g. Sector Catgory (to use in titles)
     .replace(/[a-z][A-Z]/g, function(match) {return match[0] + " " + match[1]; });
   var filterTypes = {
     "Sector Category": "sector",
@@ -381,11 +411,27 @@ app.get('/list', beforeFilter, function(req, res) {
 
 
 app.get('/search', beforeFilter, function(req, res, next) {
-  api.Request({search: req.query.q, result: 'values', pagesize:50})
+  var page = parseInt(req.query.p || 1, 10);
+  var params = {
+    search: req.query.q, 
+    result: 'values', 
+    pagesize: app.settings.pageSize, 
+    start: ((page - 1) * app.settings.pageSize) + 1
+  };
+  
+  api.Request(params)
   .on('success', function(data) {
+    var dataFile = accessors.dataFile(data);
+    var total = dataFile.totalActivities();
+    var pagination = (total <= app.settings.pageSize) ? false : {
+      current: parseInt(req.query.p || 1, 10),
+      total: Math.ceil(total / app.settings.pageSize)
+    };
+  
     res.render('search', {
-      activities:_.as_array(data['iati-activity']),
-      count:data['@activity-count'],
+      activities: dataFile.activities(),
+      activity_count: total,
+      pagination: pagination,
       layout: !req.isXHR
     });
   })
@@ -393,7 +439,6 @@ app.get('/search', beforeFilter, function(req, res, next) {
     next(e);
   })
   .end();
-  
 });
 
 

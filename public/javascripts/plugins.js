@@ -1,5 +1,13 @@
 (function($) {
   
+  // stop all the links from working within a section
+  $.fn.disable = function(){
+    return $(this).bind('click touch', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+    }).css('cursor', 'default');
+  };
+  
   // This fires an animation,  but returns a 
   // deferred object rather than the jQuery object
   $.fn.deferredAnimate = function( prop, speed, easing, callback ){

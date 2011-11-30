@@ -2,7 +2,7 @@
   
   // keys to strip out of the param string
   // (slightly late in the day to do this properly)
-  var strip = 'xhr p orderby'.split(' ');
+  var strip = 'xhr p orderby ID title'.split(' ');
   
   // Pulls the names of the current filters via xhr - then 
   // puts them into the layout

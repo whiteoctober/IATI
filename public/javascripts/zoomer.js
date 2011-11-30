@@ -30,6 +30,7 @@
     this.y = 0;
     this.xoff = this.oxoff = 0;
     this.yoff = this.oyoff = 0;
+    this.touches = 0;
     this.touchRemoved = false;
     this.starts = [];
     
@@ -108,6 +109,7 @@
   
   
   Zoomer.prototype.onTouchStart = function(e) {
+    this.touches = e.touches.length;
     if(e.touches.length == 1) this.go3d(true);
     
     this.start = {
@@ -142,12 +144,15 @@
   };
   
   Zoomer.prototype.onTouchEnd = function(e) {
+    this.touches = e.touches.length;
     this.touchRemoved = true;
     
-    this.render();
+    var zoomedIn = this.scale < 1.3;
+    
+    this.render(zoomedIn);
     
     if(!e.touches.length){
-      this.go3d(false);
+      this.go3d(zoomedIn);
       if(this.finish){
         this.finish.apply(this);
       }

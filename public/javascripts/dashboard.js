@@ -85,10 +85,35 @@ var IATI = IATI || {};
         });
         
         if(!newTarget.size()){
+          
+          var params = _(data).chain()
+            .filter(function(item){
+              return item.key == d.key && item.subkey == d.subkey;
+            })
+            .map(function(item){
+              var id = item.href.match(/\/activity\/([^\?]+)/)[1];
+              return id ? {
+                name:'ID',
+                value:id
+              } : false;
+            })
+            .compact().value();
+          
+          params.push({
+            name:'title',
+            value:d.subkey
+          });
+          
+          
+          var link = $('<a>',{
+            'class':'xhr',
+            'href':'/data-file?' + $.param(params)
+          }).text(d.subkey);
+          
           // create a new sub section
           newTarget = $(subSectionTmpl)
             .data('subkey', d.subkey)
-            .find('h2').text(d.subkey).end()
+            .find('h2').append(link).end()
             .prependTo(target);
         }
         
@@ -99,7 +124,8 @@ var IATI = IATI || {};
       var section = target.find('.content');
       
       if(d.type == 'embed'){
-        $('<tr class="embeded">').appendTo(section).load(d.href,runInlines);
+        var tmpl = d.subkey ? '<tr class="embedded">' : '<li class="embedded">';
+        $(tmpl).appendTo(section).load(d.href,runInlines);
         
       } else {
         //presume iframe
@@ -145,6 +171,9 @@ var IATI = IATI || {};
       $('form.dashChoice').slideUp(function(){
         $(this).remove();
       });
+      
+      //update the ui based on if it was added
+      $(this).favourite();
       return;
     }
     

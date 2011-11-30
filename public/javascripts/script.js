@@ -119,6 +119,9 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
   //Connects AJAX links to page state system
   $('a.xhr').live('click', function() {
     var $this = $(this);
+    if($this.hasClass('no-contentExit')){
+      contentExit = false;
+    }
     window.History.pushState($this.data('history'), "", $this.attr('href'));
     return false;
   });

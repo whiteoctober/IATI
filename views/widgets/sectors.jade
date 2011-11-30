@@ -7,7 +7,7 @@
 
 script
   inlines.push(function(){
-    google.setOnLoadCallback(function() {
+    var displayChart = function() {
       var chart = $("#chart");
       if (chart.length > 0) {
         var data = new google.visualization.DataTable();
@@ -21,12 +21,15 @@ script
         data.addRows($.map(sectors, function(s) { return [[s.name, s.value]]; }));
 
         var options = {
-          width: $("body").width(), 
+          //- width: $("body").width(), 
           height: $("body").height() - $(".title").outerHeight(true), 
           backgroundColor: 'none', 
           chartArea: {left: 60, top: 10, width: '100%', height: '100%'}
         };
         (new google.visualization.BarChart(chart[0])).draw(data, options);
       }
-    });
+    };
+    
+    
+    google.load('visualization', '1.0', {callback:displayChart, packages:['corechart']});
   });

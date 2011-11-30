@@ -4,6 +4,9 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/boilerplate.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    //if lt IE 9
+      link(rel='stylesheet', href='/stylesheets/ie.css')
+    meta(http-equiv="X-UA-Compatible", content="IE=Edge;chrome=1")
     meta.viewport(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
     meta(name="apple-mobile-web-app-status-bar-style", content="pink")
     meta(name="apple-mobile-web-app-capable", content="yes")
@@ -15,7 +18,7 @@ html
     script
       window.inlines = [];
       window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
-    
+      document.getElementsByTagName('html')[0].className = 'js';
     -if(settings.trackingAccount)
       script
         window._gaq = [['_setAccount', '#{settings.trackingAccount}']];
@@ -48,7 +51,7 @@ html
       a.funder.filter.xhr(href=url_with('/filter/Funder'))
         img.button(src='/images/funder_filter.png')
         img.text.left(src='/images/funder_filter_text.png')
-      a.country.filter.xhr(href=url_with('/filter/Region'))
+      a.country.filter.xhr(href=url_with('/filter/Country'))
         img.button(src='/images/country_filter.png')
         img.text.right(src='/images/country_filter_text.png')
         
@@ -58,9 +61,9 @@ html
     #popup.hidden
     #dimmer
     #embed.hidden
-
+    
+    script(src="https://www.google.com/jsapi")
     each script in clientScripts
       script(src='/javascripts/'+script)
-    script(src="https://www.google.com/jsapi")
     script
-      google.load('visualization', '1.0', {'packages':['corechart']});
+      google.load('visualization', '1.0', {'packages':['corechart', 'geochart']});

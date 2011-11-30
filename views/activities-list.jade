@@ -2,7 +2,7 @@
   nav.sorting
     | Arrange By:
     a(href=url_with(false,{orderby:'value'}), 
-      class="xhr funding" + (query.orderby != 'name' ? ' active' : ''),
+      class="xhr funding" + (query.orderby == 'value' ? ' active' : ''),
       data-history='{"enter":"slideUp"}')
       span Funding Size 
     a(href=url_with(false,{orderby:'name'}), 
@@ -36,11 +36,7 @@ section.slide-panel.clearfix
               = activity.funderName()
           td.value= to_currency(activity.value())
 
-nav.foot
-  - if(!largeQuery)
-    a.xhr.datafile(href=url_with('/data-file'), data-history='{"enter":"slideUp"}'): span data file
-  a.xhr.map(href='#map'): span view on map
-  a.xhr.bubbles(href=url_with(false, {view:'bubble'}), data-history='{"enter":"slideUp"}'): span view as list
+nav.foot!= partial('activities-nav', {dataFile: !largeQuery})
 
 script
   inlines.push(function() {
@@ -49,7 +45,8 @@ script
       else {
         contentExit = function() {
           return $('#content_inner').deferredAnimate({marginTop:600}, function(){
-            $(this).empty().css({marginTop:0});
+            $('section.slide-panel', this).remove();
+            $(this).css({marginTop:0});
           });
         }
       }

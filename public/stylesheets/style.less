@@ -25,8 +25,6 @@ rgb(@stop,@stop,@stop) 100%);}
 .border-radius(@topright:0,@bottomright:0,@bottomleft:0,@topleft:0){-webkit-border-top-right-radius:@topright;-webkit-border-bottom-right-radius:@bottomright;-webkit-border-bottom-left-radius:@bottomleft;-webkit-border-top-left-radius:@topleft;-moz-border-radius-topright:@topright;-moz-border-radius-bottomright:@bottomright;-moz-border-radius-bottomleft:@bottomleft;-moz-border-radius-topleft:@topleft;border-top-right-radius:@topright;border-bottom-right-radius:@bottomright;border-bottom-left-radius:@bottomleft;border-top-left-radius:@topleft;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;}
 
 
-
-
 body .left { float: left; }
 body .right { float: right; }
 body .hidden { display: none; }
@@ -39,6 +37,10 @@ body .full { width: 100%; }
 body .block { display: block; }
 
 html, body { height: 100%; margin: 0; padding: 0; }
+
+html.js .jshide{
+  display:none;
+}
 
 body {
   font: 12px Arial, sans-serif;
@@ -232,10 +234,15 @@ footer .country.filter  .button {
   width: 350px;
   font-size: 16px;
 }
+// by default - hide the built for (displayed in IE<8)
+.built_for{
+  display:none;
+}
 .landing_message {
   text-align:center;
   margin-top: 70px; 
   .thinned_text(#fff);
+  
   h1 {
     background: url('/images/aid_view_alpha_logo.png') no-repeat scroll top center;
     height: 117px;
@@ -255,15 +262,16 @@ footer .country.filter  .button {
     }
   }
   h3{
-    margin:0;
+    margin-bottom: 0.2em;
     font-size:2.25em;
     color: #334784;
   }
   h4 {
+    margin: 1em 0;
     font-size: 1.6em;
   }
   form{
-    margin-top:0.7em;
+    margin:0;
     font-size:2.5em;
     input.q{
       border:1px solid #B4B3B4;

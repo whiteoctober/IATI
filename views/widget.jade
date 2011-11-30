@@ -9,9 +9,9 @@ html
   body.widget_layout
     != body
     
+    script(src="https://www.google.com/jsapi")
     each script in clientScripts
       script(src='/javascripts/'+script)
-    script(src="https://www.google.com/jsapi")
     script
       google.load('visualization', '1.0', {'packages':['corechart']});
     script

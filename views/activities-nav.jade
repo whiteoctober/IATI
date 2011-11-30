@@ -1,0 +1,14 @@
+
+- var dataFileClass = dataFile ? '' : 'disabled'
+
+a.xhr.datafile(href=url_with('/data-file', {view:''}), data-history='{"enter":"slideUp"}', class=dataFileClass)
+  span data file
+
+a.xhr.map(href=url_with('/activities-map', {view:''}), data-history='{"enter":"slideUp"}')
+  span view on map
+  
+a.xhr.bubbles(href=url_with('/activities', {view:'bubble'}), data-history='{"enter":"slideUp"}')
+  span view as list
+  
+a.xhr.list(href=url_with('/activities', {view:'list'}), data-history='{"enter":"slideUp"}')
+  span view as list
