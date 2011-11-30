@@ -1,10 +1,11 @@
-- if (pagination && !largeQuery)
-  nav.sorting
+- if (pagination)
+  - var disabled = !!largeQuery
+  nav.sorting(class = disabled ? 'disabled' : '')
     | Order By:
-    a(href=url_with(false,{orderby:'value'}), 
+    a(href= disabled ? '#disabled1' : url_with(false,{orderby:'value'}), 
       class="xhr funding" + (query.orderby == 'value' ? ' active' : ''))
       span Funding Size 
-    a(href=url_with(false,{orderby:'name'}), 
+    a(href= disabled ? '#disabled2' : url_with(false,{orderby:'name'}), 
       class="xhr az" + (query.orderby == 'name' ? ' active' : ''))
       span A-Z
 
@@ -30,6 +31,8 @@ nav.foot!= partial('activities-nav', {dataFile: !largeQuery})
 
 script
   inlines.push(function() {
+    $('.disabled', this).disable();
+    
     var wrapper = $(".zoomable");
     var container = wrapper.children(".activities");
     var activities = container.children(".activity");
