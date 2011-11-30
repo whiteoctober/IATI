@@ -83,16 +83,16 @@ section.activity.slide-panel.clearfix
       | *** Total spend is disbursments plus reimbursments plus expenditure.
 
     .half.left
-      .widget
+      .widget(data-href=url_with('/widgets/project_description', {ID: activity.id(), view:'full'}))
         != partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_description', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget
+      .widget(data-href=url_with('/widgets/project_sectors', {ID: activity.id(), view:'full'}))
         !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_sectors', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget
+      .widget(data-href=url_with('/widgets/participating_organisations', {ID: activity.id(), view:'full'}))
         !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/participating_organisations', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget
+      .widget(data-href=url_with('/widgets/project_map', {ID: activity.id(), view:'full'}))
         !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
       .widget
@@ -126,7 +126,17 @@ script
     $("iframe").each(function() { 
       var wrapper = $("<div class='iframe_wrapper'>");
       $(this).wrap(wrapper);
-      $(this).after("<div class='overlay'>");
+      $(this).after('<div class="overlay">');
+    })
+    
+    // when the widget has a displayable url - then provide a link to that
+    $('.widget[data-href]', this).each(function(){
+      var $this = $(this);
+      var link = $('<a>',{
+          'class':'overlay xhr no-contentExit',
+          'href':$this.data('href')});
+      
+      $this.find('.overlay').replaceWith(link);
     })
   
     contentExit = function() {
