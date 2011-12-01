@@ -38,23 +38,21 @@ script
     var activities = container.children(".activity");
     var content = activities.find(".content");
 
-    var font = {min: 8, max: 25};
+    var fontMin = 8;
+    var font = {min: fontMin, max: 25};
     Math.seedrandom(container.map(function() { return $(this).attr("id"); }).toArray().join(""));
     container.bubbleLayout({
       bubbleClasses: bubbleClasses,
       layout: 'pack', 
       font: font, 
       diameter: {min: 100, max: 200}
-    });
+    });    
     
-    content.fitText('circular', {font: font, afterFit: function() {
-      var notEmpty = function() { return $(this).text() !== ""; }
-      var textLines = $(this).children().filter(notEmpty).toArray();
-      $(textLines.slice(-2)).addClass("small");
-    }});
+    //Stores queue of bubbles to have text fitted
+    var textFittingQueue = content.toArray();
     
     var currentScale = 1;
-    new Zoomer(wrapper.get(0), wrapper.find('li').toArray(),{
+    var zoomer = new Zoomer(wrapper.get(0), wrapper.find('li').toArray(),{
         finish:function(){
           
           // assign the variables that would be supplied by zynga
@@ -62,11 +60,21 @@ script
           var zoomed = zoom - currentScale;
           currentScale = zoom;
           
-          var min = Math.round(font.min / zoom);
-          var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) < min; };
-          content.filter(filter).fitText('circular', {font: {min: min, max: font.max}});
+          font.min = Math.round(fontMin / zoom);
+          var filter = zoomed > 0 ? ".truncated" : function() { return parseInt($(this).css("font-size"), 10) <= font.min; };
+          textFittingQueue = textFittingQueue.concat(content.filter(filter).toArray());
         }
     });
+    
+    //Fits text for visible elements when not scrolling
+    var fitText = function() {
+      if (textFittingQueue.length > 0 && zoomer.touches == 0) {
+        var elem = $(textFittingQueue.shift());
+        elem.fitText('circular', {font: font});
+      }
+      setTimeout(fitText, 20);
+    }
+    fitText();
     
     $('#dialog').hide().fadeIn();
     

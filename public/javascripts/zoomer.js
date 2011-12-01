@@ -147,7 +147,7 @@
     this.touches = e.touches.length;
     this.touchRemoved = true;
     
-    var zoomedIn = this.scale < 1.3;
+    var zoomedIn = this.scale < 1.2;
     
     this.render(zoomedIn);
     
