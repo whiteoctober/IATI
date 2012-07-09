@@ -29,7 +29,7 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a.sectorcategory.filter.xhr(href=url_with('/filter/SectorCategory'))
+      a.sectorcategory.filter.xhr(href=url_with('/filter/SectorCategory'), rel="nofollow")
         img.text(src='/images/sector_filter_text.png')
         img.button(src='/images/sector_filter.png')
       
@@ -48,10 +48,10 @@ html
       .left_corner.corner
       .centre
       .right_corner.corner
-      a.funder.filter.xhr(href=url_with('/filter/Funder'))
+      a.funder.filter.xhr(href=url_with('/filter/Funder'), rel="nofollow")
         img.button(src='/images/funder_filter.png')
         img.text.left(src='/images/funder_filter_text.png')
-      a.country.filter.xhr(href=url_with('/filter/Country'))
+      a.country.filter.xhr(href=url_with('/filter/Country'), rel="nofollow")
         img.button(src='/images/country_filter.png')
         img.text.right(src='/images/country_filter_text.png')
         
