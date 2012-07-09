@@ -86,6 +86,10 @@ And to use redis locally
 
 …Just now - there isn't a good option for cache expiry,  but removing and adding the add-on should do the trick.
 
+There is a script that will expire the redis cache, this can be run on heroku using:
+
+    heroku run node clearcache.js --app aidview
+
 
 ### Analytics
 
