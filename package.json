@@ -1,6 +1,6 @@
 {
   "name": "iati",
-  "version" : "0.2.1",
+  "version" : "0.2.1-1",
   "description": "IATI Aid View",
   "author": "White October <info@whiteoctober.co.uk>",
   "dependencies": {
