@@ -14,23 +14,23 @@ var express = require('express'),
 
 //All the script files that should be served to the client
 var clientScripts = [
-  'lib/jquery.js', 
+  'lib/jquery.js',
   'lib/jquery.history.js',
   'lib/jquery.tinysort.js',
   'lib/seedrandom.js',
   'lib/underscore.js',
   'dashboard.js',
   'packLayout.js',
-  'bubble.jquery.js', 
-  'zoomer.js', 
+  'bubble.jquery.js',
+  'zoomer.js',
   'scroller.js',
   'arcnav.js',
-  'plugins.js', 
+  'plugins.js',
   'script.js'
 ];
 
 //Set the cache to the time at which the app was started.
-//Ideally this would be a hash of the script files or 
+//Ideally this would be a hash of the script files or
 //the most recent modification date
 var cacheKey = (new Date()).getTime();
 var clientScripts_combined = ['../static/js/' + cacheKey + '/client.js'];
@@ -44,11 +44,11 @@ app.configure(function() {
   app.use(app.router);
   
   app.use(connect.compiler({
-    src: __dirname + '/public', 
+    src: __dirname + '/public',
     enable: ['less'] })
   );
   
-  app.use(express.static(__dirname + '/public', { maxAge: 1000*60*60 }));
+  app.use(express.static(__dirname + '/public', {maxAge: 1000*60*60 }));
   
   //Custom app settings
   app.set('pageSize', 20);
@@ -63,7 +63,7 @@ app.configure(function() {
 
 
 app.configure('development', function() {
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   
   app.set('view options', {
     title: '[DEV] Aid View',
@@ -91,7 +91,7 @@ app.configure('production', function() {
     , 'css': {
       'route': /\/static\/css\/[0-9]+\/.*\.css/,
       'path': './public/stylesheets/',
-      'dataType': 'css', 
+      'dataType': 'css',
       'files': ['style.css'],
       'preManipulate': {
         '^': [
@@ -102,7 +102,7 @@ app.configure('production', function() {
     }*/
   }));
   
-  app.use(express.errorHandler()); 
+  app.use(express.errorHandler());
   
   app.set('view options', {
     title: 'Aid View',
@@ -126,7 +126,7 @@ var beforeFilter = function(req, res, next) {
   
   // xhr is only used to allow ajax caching to not clash
   // with page caching
-  delete req.query.xhr
+  delete req.query.xhr;
   
   req.queryString = req.originalUrl.split('?')[1] || '';
   req.isXHR = req.headers['x-requested-with'] == 'XMLHttpRequest';
@@ -158,14 +158,14 @@ app.get('/', beforeFilter, function(req, res, next) {
     .end();
 });
 
-app.get('/about', beforeFilter, function(req, res, next) {  
+app.get('/about', beforeFilter, function(req, res, next) {
   res.render('about', {
     filter_paths: req.filter_paths,
     layout: !req.isXHR
   });
 });
 
-app.get('/arcnav', beforeFilter, function(req, res, next) { 
+app.get('/arcnav', beforeFilter, function(req, res, next) {
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
   new filterTitles.Request(filters)
@@ -184,7 +184,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
   var page = parseInt(req.query.p || 1, 10);
   var params = {
     result: list ? 'list' : 'values',
-    pagesize: app.settings.pageSize, 
+    pagesize: app.settings.pageSize,
     start: ((page - 1) * app.settings.pageSize) + 1
   };
 
@@ -415,9 +415,9 @@ app.get('/list', beforeFilter, function(req, res) {
 app.get('/search', beforeFilter, function(req, res, next) {
   var page = parseInt(req.query.p || 1, 10);
   var params = {
-    search: req.query.q, 
-    result: 'values', 
-    pagesize: app.settings.pageSize, 
+    search: req.query.q,
+    result: 'values',
+    pagesize: app.settings.pageSize,
     start: ((page - 1) * app.settings.pageSize) + 1
   };
   
