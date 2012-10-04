@@ -16,3 +16,22 @@ a, img, .landing_message{
   display:none;
 }
 */
+
+@media screen {
+  * html {
+    overflow-y: hidden;
+  }
+  * html body {
+    height: 100%;
+    overflow: auto;
+  }
+}
+
+.bubble{
+  .outline{
+    filter: ~'alpha(opacity = 60)';
+  }
+  .outline, .inner{
+    behavior: url(/stylesheets/pie.htc);
+  }
+}
