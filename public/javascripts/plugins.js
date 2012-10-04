@@ -137,7 +137,7 @@
             var width = total.width - margins.left - margins.right;
             
             //Finds how much text will fit in the line
-            var lineEnd = length = 0;
+            var length, lineEnd = length = 0;
             var effectiveWidth = width * (1 - fontTolerance);
             for (var j = 0; length < effectiveWidth && j <= text.length + 1; j++) {
               if (text[j-1] == "\n") { lineEnd = j; break; }
@@ -198,6 +198,51 @@
     //Fits text to elements in a staggered way
     fitTextTo(items);
   };
+
+
+
+  // alternative fitText
+  $.fn.fitText2 = function(){
+    // return this;
+    return this.each(function(){
+      var $this = $(this);
+
+      var rad = $this.height() / 2;
+      var steps = 20;
+      var h = 2*rad/steps;
+
+      var left = $.map(Array(steps), function(_,i){
+        i++;
+        var y = (2*i*rad/steps) - rad;
+        var x = rad - Math.sqrt((rad*rad) - (y*y));
+        
+        return [
+          $('<div>').css({
+            float:'left',
+            clear:'left',
+            width:x,
+            height:h
+          }),
+          $('<div>').css({
+            float:'right',
+            clear:'right',
+            width:x,
+            height:h
+          })
+        ];
+      });
+      $this.prepend(left);
+
+      $('.text.hidden',this).removeClass('hidden');
+      $this.height(rad*2);
+
+    }).css({overflow:'hidden', position:'relative'});
+  };
+
+  $.fn.fitText = $.fn.fitText2;
+
+
+
   
   
   $.iatiDialog = function(title, body, appendTarget){
