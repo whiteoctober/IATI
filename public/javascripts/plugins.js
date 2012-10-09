@@ -220,8 +220,8 @@
             float:lr,
             clear:lr,
             width:x,
-            height:h,
-            backgroundColor:'#08f'
+            height:h
+            // backgroundColor:'#08f'
           });
         });
       });
