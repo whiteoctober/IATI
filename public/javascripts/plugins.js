@@ -203,44 +203,55 @@
 
   // alternative fitText
   $.fn.fitText2 = function(){
-    // return this;
+
     return this.each(function(){
-      var $this = $(this);
+      var $this = $(this),
+          rad = $this.height() / 2,
+          steps = 20,
+          h = 2*rad/steps;
 
-      var rad = $this.height() / 2;
-      var steps = 20;
-      var h = 2*rad/steps;
-
-      var left = $.map(Array(steps), function(_,i){
+      var floats = $.map(Array(steps), function(_,i){
         i++;
         var y = (2*i*rad/steps) - rad;
         var x = rad - Math.sqrt((rad*rad) - (y*y));
-        
-        return [
-          $('<div>').css({
-            float:'left',
-            clear:'left',
+
+        return $.map(['left','right'], function(lr){
+          return $('<div>').css({
+            float:lr,
+            clear:lr,
             width:x,
-            height:h
-          }),
-          $('<div>').css({
-            float:'right',
-            clear:'right',
-            width:x,
-            height:h
-          })
-        ];
+            height:h,
+            backgroundColor:'#08f'
+          });
+        });
       });
-      $this.prepend(left);
+      $this.prepend(floats);
 
       $('.text.hidden',this).removeClass('hidden');
       $this.height(rad*2);
+
+      // TODO resize the text so that it fits in
 
     }).css({overflow:'hidden', position:'relative'});
   };
 
   $.fn.fitText = $.fn.fitText2;
 
+
+/*
+var timed = function(fn){
+  var start, t = 0;
+  return function(){
+    start = +new Date();
+    fn.apply(this,arguments);
+    t += +new Date() - start;
+    console.log(t);
+  };
+};
+$.fn.fitText = timed($.fn.fitText);
+*/
+
+track($.fn,'fitText');
 
 
   
