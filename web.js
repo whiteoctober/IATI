@@ -138,6 +138,11 @@ var beforeFilter = function(req, res, next) {
 
 //Routes
 
+// catch all css pie includes at any level
+app.get('*/pie.htc', function(req,res){
+  res.sendfile('public/stylesheets/pie.htc');
+});
+
 app.get('/', beforeFilter, function(req, res, next) {
   var params = {
     result: 'values',
