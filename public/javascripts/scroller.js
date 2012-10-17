@@ -9,7 +9,7 @@
 (function(window){
 
   // probably IE
-  if(document.body.addEventListener){
+  if(!document.body.addEventListener){
     window.Scroller = function(){};
     return;
   }
