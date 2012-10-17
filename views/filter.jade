@@ -24,14 +24,15 @@ nav.sorting
             id='choice-' + choice.code, class = selected ? 'selected' : '',
             data-name=choice.name, data-value=choice.value, data-colour=''
           )
-            .outline
+            //- .outline
             .inner
               - q = _.extend({}, query)
               //- - q[key] = selected ? _.without(current_codes, choice.code) : current_codes.concat(choice.code)
               - q[key] = _.uniq(current_codes.concat(choice.code))
               a.content.xhr(href=url('/activities', q))
                 - v = format_value(choice.value, true)
-                p.text.hidden #{title_case(choice.name)}\n #{choice.count} activit#{choice.count == 1 ? "y" : "ies"}\n $#{v.value}#{v.unit}
+                | #{title_case(choice.name)} <br/> #{choice.count} activit#{choice.count == 1 ? "y" : "ies"}\n $#{v.value}#{v.unit}
+                // p.text.xhidden #{title_case(choice.name)}\n #{choice.count} activit#{choice.count == 1 ? "y" : "ies"}\n $#{v.value}#{v.unit}
   - else
     h3 Sorry, you cannot filter any further by #{type}.
 
@@ -108,6 +109,7 @@ script
           content.filter(filter).fitText('circular', {font: {min: min, max: font.max}});
         }
     });
+
     
     var hasTouch = "ontouchstart" in window;
     if(hasTouch){
@@ -129,13 +131,15 @@ script
     var fitText = function() {
       if (textFittingQueue.length > 0 && zoomer.touches == 0) {
         var elem = $(textFittingQueue.shift());
-        elem.find(".content").fitText('circular', {font: font, afterFit: afterFit});
+        elem.find(".inner").fitText('circular', {font: font, afterFit: afterFit});
         elem.addClass('text-fitted');
         fittedElems++;
       }
-      if (fittedElems < totalElems) setTimeout(fitText, 5);
+      if (fittedElems < totalElems) setTimeout(fitText, 0);
     }
     fitText();
+    
+
     
     $.setArcNav(!{JSON.stringify(query)})
   });
