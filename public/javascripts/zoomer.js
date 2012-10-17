@@ -11,6 +11,13 @@
 */
 
 (function(window){
+
+  // probably IE
+  if(!document.body.addEventListener){
+    window.Zoomer = function(){};
+    window.Zoomer.prototype = {touches:0};
+    return;
+  }
   
   // Prevent native scrolling if zoomer is used
   var noscroll;

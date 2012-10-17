@@ -7,6 +7,12 @@
 */
 
 (function(window){
+
+  // probably IE
+  if(!document.body.addEventListener){
+    window.Scroller = function(){};
+    return;
+  }
   
   // Prevent native scrolling if zoomer is used
   var noscroll;
