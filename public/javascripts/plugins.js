@@ -8,7 +8,7 @@
     }).css('cursor', 'default');
   };
   
-  // This fires an animation,  but returns a 
+  // This fires an animation,  but returns a
   // deferred object rather than the jQuery object
   $.fn.deferredAnimate = function( prop, speed, easing, callback ){
     var dfr = $.Deferred();
@@ -41,7 +41,7 @@
         if($.isFunction(fn)){
           $.proxy(fn, this)();
         }
-        dfr.resolve(); 
+        dfr.resolve();
       };
     }
   };
@@ -75,7 +75,7 @@
       var sampler = $("<div><span></span></div>").addClass("sampler").appendTo($("body"));
       var sampleText = sampler.children();
       sampler.css({
-        position: "absolute", visibility: 'hidden', 
+        position: "absolute", visibility: 'hidden',
         width: standardFontSize * 10, 'font-size': standardFontSize
       });
       $.map(allNewText, function(c) {
@@ -126,7 +126,7 @@
             var margins = {
               top: i == 0 ? centering : 0,
               left: Math.max(
-                parseInt(edges.left(height.upper) * total.width / 2), 
+                parseInt(edges.left(height.upper) * total.width / 2),
                 parseInt(edges.left(height.lower) * total.width / 2)
               ),
               right: Math.max(
@@ -199,19 +199,34 @@
     fitTextTo(items);
   };
 
-
-
   // alternative fitText
-  $.fn.fitText2 = function(){
+  $.fn.fitText2 = function(type /* unused */, options){
+
+    var defaults = {
+      font: {min: 12, max: 25},
+      delay: 30,
+      truncate: true
+    };
+
+    options = $.extend(defaults, options);
+
 
     return this.each(function(){
+      // insert floats around the edges
+      //
       var $this = $(this),
           rad = $this.height() / 2,
           steps = 20,
           h = 2*rad/steps;
 
+      if($this.data('fitted')){return;}
+      $this.data('fitted', true);
+
+
+
       var floats = $.map(Array(steps), function(_,i){
-        i++;
+        i += 0.5;
+
         var y = (2*i*rad/steps) - rad;
         var x = rad - Math.sqrt((rad*rad) - (y*y));
 
@@ -220,8 +235,8 @@
             float:lr,
             clear:lr,
             width:x,
-            height:h
-            // backgroundColor:'#08f'
+            height:h//,
+            //backgroundColor:'#08f'
           });
         });
       });
@@ -230,28 +245,62 @@
       $('.text.hidden',this).removeClass('hidden');
       $this.height(rad*2);
 
-      // TODO resize the text so that it fits in
+    }).each(function(){
 
-    }).css({overflow:'hidden', position:'relative'});
+      var $this = $(this),
+          max = options.font.max, //30,
+          min = options.font.min, //10,
+          iters = 5,
+          threshold = 0.5,
+          current;
+
+      // binary search for the biggest size that will fit
+      while((max - min) > threshold){
+
+          current = (max + min) / 2;
+
+          $this.css('fontSize',current);
+
+          if($this.prop('scrollHeight') > $this.height()){
+              max = current;
+          } else {
+              min = current;
+          }
+
+      }
+
+      $this.css('fontSize', current - (threshold*2));
+
+      var truncated = min == options.font.min;
+      $this.css('backgroundColor', truncated ? 'red' : '');
+      $this.toggleClass('truncated', truncated);
+
+    });//.css({overflow:'hidden', xposition:'relative'});
   };
 
   $.fn.fitText = $.fn.fitText2;
 
 
-/*
+
 var timed = function(fn){
-  var start, t = 0;
+  var start, t = 0,last;
+  setInterval(function(){
+    if(last != t && window.console){
+      console.log(t);
+      last = t;
+    }
+  }, 100);
+
   return function(){
     start = +new Date();
     fn.apply(this,arguments);
     t += +new Date() - start;
-    console.log(t);
   };
 };
-$.fn.fitText = timed($.fn.fitText);
-*/
+// $.fn.fitText = timed($.fn.fitText);
 
-track($.fn,'fitText');
+
+// track($.fn,'fitText');
 
 
   
@@ -266,8 +315,8 @@ track($.fn,'fitText');
       modal.css({opacity:0, marginTop:0});
       setTimeout(function(){
         modal.remove();
-      },200)
-    })
+      },200);
+    });
     
     modal.find('h1').text(title).after(body || '');
 
@@ -278,6 +327,6 @@ track($.fn,'fitText');
     },0);
     
     return modal;
-  }
+  };
   
 })(jQuery);
