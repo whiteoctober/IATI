@@ -27,11 +27,7 @@ a, img, .landing_message{
   }
 }
 
-.bubble{
-  .outline{
-    filter: ~'alpha(opacity = 60)';
-  }
-  .outline, .inner{
-    behavior: url(/stylesheets/pie.htc);
-  }
+.bubble, .bubble .inner {
+  /* can be in any dir - re-written by app */
+  behavior: url(/pie.htc);
 }
