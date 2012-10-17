@@ -1,5 +1,6 @@
 // Packs a set of circles around each other, given the radius of each circle and a desired aspect ratio
 var packLayout = function(sizes, ratio) {
+
   var positions = [];
   var pairs = [];
   var origin = {x: 0, y: 0};
@@ -25,7 +26,7 @@ var packLayout = function(sizes, ratio) {
       node.y = pair[0].y;
     }
     return node;
-  }
+  };
 
   // Finds the distance between two points,
   // scaling vertical/horizontal values according to the desired aspect ratio
@@ -33,7 +34,7 @@ var packLayout = function(sizes, ratio) {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow((r || 1) * (a.y - b.y), 2));
   };
   
-  // Finds the distance between a pair of circles and the origin, 
+  // Finds the distance between a pair of circles and the origin,
   // using the desired aspect ratio
   var pairDist = function(pair) { 
     return (dist(pair[0], origin, ratio) + dist(pair[1], origin, ratio)) / 2; 
