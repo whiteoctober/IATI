@@ -169,19 +169,21 @@ var IATI = IATI || {};
     var $this = this;
     
     if(_.any(data, function(d){
-      return d.key == 'activities'
+      return d.key == 'activities';
     })){
       $('.groups .info').hide();
     }
+
     
     _.each(data, function(d){
       var target = $('[data-dashkey='+d.key+']',$this);
-      
+
       if(d.subkey !== undefined){
         
         var newTarget = $('.sub', target).filter(function(){
           return $(this).data('subkey') == d.subkey;
         });
+
         
         if(!newTarget.size()){
           
@@ -250,7 +252,7 @@ var IATI = IATI || {};
   $.fn.favourite = function(){
     return this.each(function(){
       var $this = $(this);
-      var href = $this.data('dash') ? 
+      var href = $this.data('dash') ?
         $this.data('dash').href :
         $this.attr('href');
       
@@ -329,11 +331,9 @@ var IATI = IATI || {};
       content.hide().appendTo($this.closest('li')).slideDown();
       
       
-    } else {    
+    } else {
       IATI.dashboard.aadd(_data);
       addedAnimation();
-      
-      
     }
     
   });
