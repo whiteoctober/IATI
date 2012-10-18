@@ -62,9 +62,9 @@
         item.css({
           position: 'absolute',
           left: position.x - position.radius,
-          top: position.y - position.radius, 
-          width: position.radius * 2,
-          height: position.radius * 2
+          top: position.y - position.radius,
+          width:  (position.radius * 2) - 20,
+          height: (position.radius * 2) - 20
         });
       });
       
