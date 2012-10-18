@@ -74,6 +74,11 @@ section.activity.slide-panel.clearfix
             th Recipent #{rcpt.type}:
             td <strong> #{rcpt.name}</strong>
         
+        tr
+          th Reporting organisation:
+          td <strong>#{activity.reportingOrg()}</strong>
+
+
     .clearLeft
     .note
       | * IATI supports forward looking budget data. Not all donors yet supply this.
