@@ -56,6 +56,11 @@ section.activity.slide-panel.clearfix
           th Loan & interest repayments:
           - repayments = format_value(repayments)
           td #{repayments.sign}$<strong>#{repayments.value}</strong> #{repayments.unit}
+
+        - if(activity.activityStatus())
+          tr
+            th Activity status
+            td <strong>#{activity.activityStatus()}</strong>
     
     .half.left
       table.headline
@@ -77,6 +82,7 @@ section.activity.slide-panel.clearfix
         tr
           th Reporting organisation:
           td <strong>#{activity.reportingOrg()}</strong>
+
 
 
     .clearLeft
