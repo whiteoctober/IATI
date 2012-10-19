@@ -100,6 +100,9 @@ section.activity.slide-panel.clearfix
       .widget(data-href=url_with('/widgets/project_map', {ID: activity.id(), view:'full'}))
         !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
+      .widget(data-href=url_with('/widgets/contact_details', {ID: activity.id(), view:'full'}))
+        !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/contact_details', {ID: activity.id()}), links: true, padding: 0, width: 260}})
+    .half.left
       .widget
         h3 Funding Breakdown
         img(src='/images/mockups/funding_breakdown.png')

@@ -205,10 +205,10 @@
       new api.Request(params)
         .on('success', function(data) {
           var activity = accessors.activity(data);
-
           res.render('widgets/contact_details', {
             title: "Contact Details Widget",
-            layout: 'widget' // NOTE - this will have to be changed to link in app
+            layout: 'widget', // NOTE - this will have to be changed to link in app
+            contactInfo:activity.contactInfo()
           });
         })
         .on('error', function(e) {
