@@ -1,3 +1,6 @@
 .widget_content
   h3.title Contact Details
-  p Coming Soon
+  dl
+    each value, key in contactInfo
+        dt= key
+        dd= value

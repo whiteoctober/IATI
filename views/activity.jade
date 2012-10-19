@@ -34,7 +34,22 @@ section.activity.slide-panel.clearfix
           li: a.icn.doc(href="/activity/" + relatedActivity.id)= relatedActivity.title
     - else
       p No related activities found.
-      
+    
+
+    - otherIdentifiers = activity.otherIdentifiers()
+    if(otherIdentifiers.length)
+      h3 Other activity identifiers
+      dl
+      - each other in otherIdentifiers
+        ul
+          li
+            strong 
+              abbr(title=other.ownerName)= other.ownerRef
+            |  #{other.id}
+          
+
+
+
   div.main
     h1 Activity: #{activity.title()} (#{activity.funderName() || "Unknown Funder"})
     
@@ -53,9 +68,14 @@ section.activity.slide-panel.clearfix
           - spend = format_value(spend)
           td #{spend.sign}$<strong>#{spend.value}</strong> #{spend.unit}
         tr
-          th Loan & interest repayments:
+          th Loan &amp; interest repayments:
           - repayments = format_value(repayments)
           td #{repayments.sign}$<strong>#{repayments.value}</strong> #{repayments.unit}
+
+        - if(activity.activityStatus())
+          tr
+            th Activity status
+            td <strong>#{activity.activityStatus()}</strong>
     
     .half.left
       table.headline
@@ -79,6 +99,7 @@ section.activity.slide-panel.clearfix
           td <strong>#{activity.reportingOrg()}</strong>
 
 
+
     .clearLeft
     .note
       | * IATI supports forward looking budget data. Not all donors yet supply this.
@@ -99,6 +120,9 @@ section.activity.slide-panel.clearfix
     .half.left
       .widget(data-href=url_with('/widgets/project_map', {ID: activity.id(), view:'full'}))
         !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/project_map', {ID: activity.id()}), links: true, padding: 0, width: 260}})
+    .half.left
+      .widget(data-href=url_with('/widgets/contact_details', {ID: activity.id(), view:'full'}))
+        !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/contact_details', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
       .widget
         h3 Funding Breakdown
