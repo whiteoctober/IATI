@@ -34,7 +34,22 @@ section.activity.slide-panel.clearfix
           li: a.icn.doc(href="/activity/" + relatedActivity.id)= relatedActivity.title
     - else
       p No related activities found.
-      
+    
+
+    - otherIdentifiers = activity.otherIdentifiers()
+    if(otherIdentifiers.length)
+      h3 Other activity identifiers
+      dl
+      - each other in otherIdentifiers
+        ul
+          li
+            strong 
+              abbr(title=other.ownerName)= other.ownerRef
+            |  #{other.id}
+          
+
+
+
   div.main
     h1 Activity: #{activity.title()} (#{activity.funderName() || "Unknown Funder"})
     
