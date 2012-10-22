@@ -344,6 +344,27 @@ app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
 });
 
 
+
+app.get(/\/activity\/txs\/(.+)/, beforeFilter, function(req, res, next) {
+  var id = req.params[0];
+  
+  api.Request({ID: id, result: 'full'})
+    .on('success', function(data) {
+      var activity = accessors.activity(data);
+      console.log(data);
+      
+      res.render('activity_txs', {
+        activity: activity,
+        layout: false
+      });
+    })
+    .on('error', function(e) {
+      next(e);
+    })
+    .end();
+});
+
+
 app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
   var id = req.params[0];
   

@@ -2,6 +2,9 @@ section.activity.slide-panel.clearfix
   // the params for adding this activity to the dashboard
   - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'activities', subkey:false})
   aside
+    
+    a(style="color:#f08", href="/activity/txs/" + activity.id()) (TEMP) Transactions Graph
+    
     ul
       li: a.icn.favourite(href='#', data-dash=dashParams) Save to my dashboard        
       li: a.icn.print(href="#") Print
@@ -46,7 +49,7 @@ section.activity.slide-panel.clearfix
             strong 
               abbr(title=other.ownerName)= other.ownerRef
             |  #{other.id}
-          
+
 
 
 

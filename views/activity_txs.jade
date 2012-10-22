@@ -1,0 +1,106 @@
+!!!5
+head
+	title Transactions Graph
+
+	link(href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css", rel="stylesheet")
+
+body.span11.offset1
+
+	h1 Transactions Graph
+
+	div#visualization
+
+	
+	table.table.table-bordered
+		thead
+			tr
+				th Date
+				th Value (USD)
+				th Type
+		
+		tbody
+			// todo - accessor
+			for tx in activity.data.transaction
+				tr
+					td= tx['transaction-date']['@iso-date']
+					td= parseFloat(tx['value']['@iati-ad:USD-value'],10)
+					td= tx['transaction-type']['@code']
+
+
+	pre 
+		= JSON.stringify(activity.data.transaction, null, " ")
+
+	script(src="https://www.google.com/jsapi")
+	script(src="/javascripts/lib/underscore.js")
+	script(src="/javascripts/lib/jquery.js")
+	script
+
+		function drawVisualization() {
+
+			var data = new google.visualization.DataTable();
+
+			data.addColumn('date', 'Transaction Date');
+
+			_.each(types, function(name, id){
+				data.addColumn('number', name, id);
+			});
+
+			_.each(trows, function(val){
+				var row = [new Date(val[0])];
+				_.each(types, function(name,id){
+					row.push(val[2] == id ? parseFloat(val[1]) : undefined)
+				});
+				console.log(row);
+				data.addRow(row);
+			});
+
+			// Create and draw the visualization.
+			var type = ['ColumnChart', 'BarChart', 'LineChart'][0];
+			new google.visualization[type](document.getElementById('visualization')).
+				draw(data,
+				{
+					//- title:"Yearly Coffee Consumption by Country",
+					width:900, height:400,
+					vAxis: {title: "Year"},
+					hAxis: {title: "Cups"},
+					interpolateNulls:true,
+					isStacked:true,
+					//- legend:{
+					//- 	position:'in'
+					//- }
+				}
+			)
+		}
+
+
+		// http://iatistandard.org/codelists/transaction_type
+		var types = {
+			C:	"Commitment",
+			D:	"Disbursement",
+			E:	"Expenditure",
+			IF:	"Incoming",
+			IR:	"Interest",
+			LR:	"Loan",
+			R:	"Reimbursement"
+		};
+
+		// the DataTable format we want is
+		// date, amount_c, amount_d, amount_e, amount_if, amount_ir, amount_lr, amount_r
+
+		var cols = [{id:'date', label:'Date', type: 'date'}];
+
+		_.each(types, function(name, id){
+			cols.push({id:id, label: name, type: 'number'});
+		});
+
+		var trows = $('tbody tr').map(function(){
+			return [$('td', this).map(function(){
+				return $(this).text();
+			}).toArray()];
+		})
+
+
+		
+		google.setOnLoadCallback(drawVisualization);
+		google.load("visualization", '1.0', {'packages':['corechart', 'geochart', 'barchart']});
+	
