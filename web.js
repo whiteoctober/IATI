@@ -119,9 +119,12 @@ app.helpers(helpers);
 
 
 var beforeFilter = function(req, res, next) {
+  
   __logger.info(req.method + ' ' + req.originalUrl);
+
   //Get query, filtering unwanted values
   var keep = 'Region Country Sector SectorCategory Funder orderby ID'.split(' ');
+
   req.filter_query = _.only(req.query, keep);
   
   // xhr is only used to allow ajax caching to not clash
@@ -136,6 +139,11 @@ var beforeFilter = function(req, res, next) {
   next();
 };
 
+// mounting this as middleware doesn't seem to work
+// > app.use(beforeFilter);
+app.get('*',beforeFilter);
+
+
 //Routes
 
 // catch all css pie includes at any level
@@ -143,7 +151,7 @@ app.get('*/pie.htc', function(req,res){
   res.sendfile('public/stylesheets/pie.htc');
 });
 
-app.get('/', beforeFilter, function(req, res, next) {
+app.get('/', function(req, res, next) {
   var params = {
     result: 'values',
     groupby: 'Funder'
@@ -163,14 +171,14 @@ app.get('/', beforeFilter, function(req, res, next) {
     .end();
 });
 
-app.get('/about', beforeFilter, function(req, res, next) {
+app.get('/about', function(req, res, next) {
   res.render('about', {
     filter_paths: req.filter_paths,
     layout: !req.isXHR
   });
 });
 
-app.get('/arcnav', beforeFilter, function(req, res, next) {
+app.get('/arcnav', function(req, res, next) {
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
   
   new filterTitles.Request(filters)
@@ -183,8 +191,7 @@ app.get('/arcnav', beforeFilter, function(req, res, next) {
     .end();
 });
 
-
-app.get('/activities', beforeFilter, function(req, res, next) {
+app.get('/activities', function(req, res, next) {
   var list = req.query.view == 'list';
   var page = parseInt(req.query.p || 1, 10);
   var params = {
@@ -223,7 +230,7 @@ app.get('/activities', beforeFilter, function(req, res, next) {
     .end();
 });
 
-app.get('/activities-map', beforeFilter, function(req, res, next) {
+app.get('/activities-map', function(req, res, next) {
   var params = {
     groupby: 'Country',
     result: 'values'
@@ -251,7 +258,7 @@ app.get('/activities-map', beforeFilter, function(req, res, next) {
 });
 
 
-app.get('/data-file', beforeFilter, function(req, res, next) {
+app.get('/data-file', function(req, res, next) {
   if (req.query.view != 'embed') return next();
   
   var filters = _.only(req.query, 'Region Country Sector SectorCategory Funder'.split(' '));
@@ -276,7 +283,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 });
 
 
-app.get('/data-file', beforeFilter, function(req, res, next) {
+app.get('/data-file', function(req, res, next) {
   var params = { result: 'summary', groupby: 'All' };
   
   _.extend(params, req.filter_query);
@@ -325,7 +332,7 @@ app.get('/data-file', beforeFilter, function(req, res, next) {
 });
 
 
-app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
+app.get(/\/activity\/(.+)/, function(req, res, next) {
   if (req.query.view != 'embed') return next();
   var id = req.params[0];
   
@@ -345,7 +352,7 @@ app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
 
 
 
-app.get(/\/activity\/txs\/(.+)/, beforeFilter, function(req, res, next) {
+app.get(/\/activity\/txs\/(.+)/, function(req, res, next) {
   var id = req.params[0];
   
   api.Request({ID: id, result: 'full'})
@@ -365,7 +372,7 @@ app.get(/\/activity\/txs\/(.+)/, beforeFilter, function(req, res, next) {
 });
 
 
-app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
+app.get(/\/activity\/(.+)/, function(req, res, next) {
   var id = req.params[0];
   
   api.Request({ID: id, result: 'details'})
@@ -389,7 +396,7 @@ app.get(/\/activity\/(.+)/, beforeFilter, function(req, res, next) {
 });
 
 
-app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
+app.get('/filter/:filter_key', function(req, res, next) {
   var filterKey = req.params.filter_key; // e.g. SectorCategory (to use in requests)
   var filterName = filterKey // e.g. Sector Catgory (to use in titles)
     .replace(/[a-z][A-Z]/g, function(match) {return match[0] + " " + match[1]; });
@@ -424,21 +431,21 @@ app.get('/filter/:filter_key', beforeFilter, function(req, res, next) {
 });
 
 
-app.get('/dashboard', beforeFilter, function(req, res, next){
+app.get('/dashboard', function(req, res, next){
   res.render('dashboard', {
     layout: !req.isXHR
   });
 });
 
 
-app.get('/list', beforeFilter, function(req, res) {
+app.get('/list', function(req, res) {
   res.render('activities-list', {
     layout: !req.isXHR
   });
 });
 
 
-app.get('/search', beforeFilter, function(req, res, next) {
+app.get('/search', function(req, res, next) {
   var page = parseInt(req.query.p || 1, 10);
   var params = {
     search: req.query.q,
@@ -471,7 +478,7 @@ app.get('/search', beforeFilter, function(req, res, next) {
 
 
 var widgets = require('./widgets.js');
-widgets.init(app, beforeFilter, api, _, accessors);
+widgets.init(app, api, _, accessors);
 
 
 //Only listen on $ node app.js

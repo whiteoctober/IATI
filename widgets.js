@@ -8,10 +8,10 @@
   
   
   //Initialises up widget pages and routes
-  exports.init = function(app, filters, api, _, accessors) {
+  exports.init = function(app, api, _, accessors) {
   
     //Widget displaying a pie chart of the biggest donors for a group of activities
-    app.get('/widgets/donors', filters, function(req, res, next) {
+    app.get('/widgets/donors', function(req, res, next) {
       var params = {
         result: 'values',
         groupby: 'Funder',
@@ -37,7 +37,7 @@
 
     
     //Widget displaying a bar chart of the 6 most significant sectors for a group of activities
-    app.get('/widgets/sectors', filters, function(req, res, next) {
+    app.get('/widgets/sectors', function(req, res, next) {
       var params = {
         result: 'values',
         groupby: 'Sector',
@@ -63,7 +63,7 @@
 
     
     //Widget displaying up to 5 of the newest projects for a group of activities
-    app.get('/widgets/new_projects', filters, function(req, res, next) {    
+    app.get('/widgets/new_projects', function(req, res, next) {    
       var params = {
         result: 'values',
         orderby: 'start-actual',
@@ -89,7 +89,7 @@
     
     
     //Widget displaying a map with the location of an activity
-    app.get('/widgets/project_map', filters, function(req, res, next) {
+    app.get('/widgets/project_map', function(req, res, next) {
       var params = {result: 'geo'};
       
 
@@ -112,7 +112,7 @@
     
     
     //Widget displaying a project description for an activity
-    app.get('/widgets/project_description', filters, function(req, res, next) {
+    app.get('/widgets/project_description', function(req, res, next) {
       var params = {result: 'details'};
       
       _.extend(params, req.filter_query);
@@ -134,7 +134,7 @@
     
     
     //Widget displaying a list of participating organisations for an activity
-    app.get('/widgets/participating_organisations', filters, function(req, res, next) {
+    app.get('/widgets/participating_organisations', function(req, res, next) {
       var params = {result: 'details'};
 
       _.extend(params, req.filter_query);
@@ -156,7 +156,7 @@
     
     
     //Widget displaying a graph of project sectors for an activity
-    app.get('/widgets/project_sectors', filters, function(req, res, next) {
+    app.get('/widgets/project_sectors', function(req, res, next) {
       var params = {result: 'details'};
 
       _.extend(params, req.filter_query);
@@ -178,7 +178,7 @@
     
     
     //Widget displaying a bar chart of funding figures for an activity
-    app.get('/widgets/funding_breakdown', filters, function(req, res, next) {
+    app.get('/widgets/funding_breakdown', function(req, res, next) {
       var params = {result: 'details'};
 
       _.extend(params, req.filter_query);
@@ -198,7 +198,7 @@
     });
     
     //Widget displaying contact details for an activity
-    app.get('/widgets/contact_details', filters, function(req, res, next) {
+    app.get('/widgets/contact_details', function(req, res, next) {
       var params = {result: 'details'};
 
       _.extend(params, req.filter_query);
@@ -219,7 +219,7 @@
     
     
     //Renders an embed dialog
-    app.get('/embed', filters, function(req, res, next) {
+    app.get('/embed', function(req, res, next) {
       var widget_url = req.query.widget_url;
       var origin_url = req.query.origin_url;
 
