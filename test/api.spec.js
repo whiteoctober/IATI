@@ -61,7 +61,24 @@ describe("request", function() {
     
     req.end();
   });
-  
+
+  describe('xml', function(){
+    it('returns a string', function(){
+      var data;
+      
+      gently.expect(gently.hijacked.request, 'get', 1, function(params, callback) {
+        callback(null, { statusCode: 200 },  '<xml></xml>');
+      });
+
+      var r = new api.Request({myParam:'1', format:'xml'});
+      r.on('success', function(_data){
+        data=_data;
+      }).end();
+
+      expect(''+data).toBe(data);
+    });
+
+  });
   
 });
 
