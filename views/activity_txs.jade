@@ -20,15 +20,21 @@ body.span11.offset1
 		
 		tbody
 			// todo - accessor
-			for tx in activity.data.transaction
+			for tx in activity.transactions()
 				tr
 					td= tx['transaction-date']['@iso-date']
 					td= parseFloat(tx['value']['@iati-ad:USD-value'],10)
 					td= tx['transaction-type']['@code']
 
+			for budget in activity.budgets()
+				tr
+					td= budget["period-start"]["@iso-date"]
+					td= parseFloat(budget.value["@iati-ad:USD-value"],10)
+					td B
+
 
 	pre 
-		= JSON.stringify(activity.data.transaction, null, " ")
+		= JSON.stringify(activity.budgets(), null, " ")
 
 	script(src="https://www.google.com/jsapi")
 	script(src="/javascripts/lib/underscore.js")
@@ -59,15 +65,9 @@ body.span11.offset1
 			new google.visualization[type](document.getElementById('visualization')).
 				draw(data,
 				{
-					//- title:"Yearly Coffee Consumption by Country",
 					width:900, height:400,
-					vAxis: {title: "Year"},
-					hAxis: {title: "Cups"},
 					interpolateNulls:true,
 					isStacked:true,
-					//- legend:{
-					//- 	position:'in'
-					//- }
 				}
 			)
 		}
@@ -75,13 +75,14 @@ body.span11.offset1
 
 		// http://iatistandard.org/codelists/transaction_type
 		var types = {
-			C:	"Commitment",
+			//- C:	"Commitment",
 			D:	"Disbursement",
-			E:	"Expenditure",
-			IF:	"Incoming",
-			IR:	"Interest",
-			LR:	"Loan",
-			R:	"Reimbursement"
+			//- E:	"Expenditure",
+			//- IF:	"Incoming",
+			B: "Budget"
+			//- IR:	"Interest",
+			//- LR:	"Loan",
+			//- R:	"Reimbursement"
 		};
 
 		// the DataTable format we want is
