@@ -58,7 +58,7 @@ app.configure(function() {
   
   if(process.env.GA_ACCOUNT)
     app.set('trackingAccount', process.env.GA_ACCOUNT);
-  
+
 });
 
 
@@ -67,7 +67,8 @@ app.configure('development', function() {
   
   app.set('view options', {
     title: '[DEV] Aid View',
-    clientScripts: clientScripts
+    clientScripts: clientScripts,
+    pretty: true
   });
 });
 
@@ -332,6 +333,36 @@ app.get('/data-file', function(req, res, next) {
 });
 
 
+// putting config here, because
+// at some point the activity controller
+// can be moved to a separate file
+
+var xslt = require('node_xslt');
+
+// activity in csv format
+app.get(/\/activity\/(.+)\.csv/, function(req, res, next) {
+  var id = req.params[0];
+
+  api.Request({ID: id, result: 'full', format:'xml'})
+    .on('success', function(data) {
+
+      var stylesheet = xslt.readXsltFile('xsl/iati-transactions-xml-to-csv.xsl'),
+          doc = xslt.readXmlString(data),
+          transformed = xslt.transform(stylesheet, doc, []);
+
+      res.header('Content-type', 'text/csv');
+      res.header('Content-disposition','attachment;filename=activity-'+id+'.csv');
+      res.send(transformed);
+    })
+    .on('error', function(e) {
+      next(e);
+    })
+    .end();
+});
+
+
+
+// embedded activity
 app.get(/\/activity\/(.+)/, function(req, res, next) {
   if (req.query.view != 'embed') return next();
   var id = req.params[0];
@@ -358,7 +389,6 @@ app.get(/\/activity\/txs\/(.+)/, function(req, res, next) {
   api.Request({ID: id, result: 'full'})
     .on('success', function(data) {
       var activity = accessors.activity(data);
-      console.log(data);
       
       res.render('activity_txs', {
         activity: activity,
