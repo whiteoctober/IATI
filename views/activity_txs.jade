@@ -3,14 +3,18 @@ head
 	title Transactions Graph
 
 	link(href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css", rel="stylesheet")
+	style
+		.graph{
+			height:400px;
+		}
 
 body.span11.offset1
 
 	h1 Transactions Graph
 
-	div#table_vis
+	div.graph#all
 
-	table.table.table-bordered.enhance(data-enhance="google_chart #table_vis ")
+	table.table.table-bordered.enhance(data-enhance="google_chart #all ")
 		thead
 			tr
 				th(data-dt-type='date') Date
@@ -48,6 +52,55 @@ body.span11.offset1
 					td(data-dt-value=value)
 						| $#{value} (#{code})
 
+	hr
+	h1 Separated
+
+
+	div.graph#inout
+
+	table.table.table-bordered.enhance(data-enhance="google_chart #inout ")
+		thead
+			tr
+				th(data-dt-type='date') Date
+				th(data-dt-type='number') Purtive outgoings
+				th(data-dt-type='number') Real outgoings
+		
+		tbody
+			for budget in activity.budgets()
+				tr
+					- value = parseFloat(budget.value["@iati-ad:USD-value"],10)
+					td= budget["value"]["@iati-ad:transaction-date"]
+					td(data-dt-value=value)
+						| $#{value} (Budget)
+					td
+
+			for tx in activity.transactions('D E LR IR')
+				tr
+					- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
+					- code = tx["transaction-type"]['#text']
+					td= tx['value']['@value-date']
+					td
+					td(data-dt-value=value)
+						| $#{value} (#{code})
+
+
+	div.graph#income
+
+	table.table.table-bordered.enhance(data-enhance="google_chart #income ")
+		thead
+			tr
+				th(data-dt-type='date') Date
+				th(data-dt-type='number') Income
+		
+		tbody
+
+			for tx in activity.transactions('IF R')
+				tr
+					- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
+					- code = tx["transaction-type"]['#text']
+					td= tx['value']['@value-date']
+					td(data-dt-value=value)
+						| $#{value} (#{code})
 
 
 	script(src="https://www.google.com/jsapi")
