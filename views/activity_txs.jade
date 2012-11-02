@@ -10,30 +10,31 @@ body.span11.offset1
 
 	div#visualization
 
-	
 	table.table.table-bordered
 		thead
 			tr
-				th Date
-				th Value (USD)
-				th Type
+				th(data-dt-type='date') Date
+				th(data-dt-type='number') Budget (USD)
+				th(data-dt-type='number') Disbursement (USD)
 		
 		tbody
 			// todo - accessor
 			for tx in activity.transactions()
-				tr
-					td= tx['transaction-date']['@iso-date']
-					td= parseFloat(tx['value']['@iati-ad:USD-value'],10)
-					td= tx['transaction-type']['@code']
+				if tx['transaction-type']['@code'] == 'D'
+					tr
+						td= tx['value']['@value-date']
+						td
+						td= parseFloat(tx['value']['@iati-ad:USD-value'],10)
 
 			for budget in activity.budgets()
 				tr
-					td= budget["period-start"]["@iso-date"]
+					td= budget["value"]["@iati-ad:transaction-date"]
 					td= parseFloat(budget.value["@iati-ad:USD-value"],10)
-					td B
+					td
 
 
-	pre 
+	//- pre 
+		= JSON.stringify(activity.transactions(), null, " ")
 		= JSON.stringify(activity.budgets(), null, " ")
 
 	script(src="https://www.google.com/jsapi")
@@ -45,18 +46,31 @@ body.span11.offset1
 
 			var data = new google.visualization.DataTable();
 
-			data.addColumn('date', 'Transaction Date');
+			// functions to normalise the values
+			// in the folloing rows
+			var types = [],
+				normalise = function(type, value){
+					return  type == 'date' ? new Date(value) :
+							type == 'number' ? parseFloat(value) || undefined : 
+							value; // default
+				};
 
-			_.each(types, function(name, id){
-				data.addColumn('number', name, id);
+			$('thead th').each(function(){
+				var $th = $(this),
+					type = $th.data('dt-type') || 'string',
+					label = $th.text();
+				data.addColumn(type, label);
+
+				types.push(type);
 			});
 
-			_.each(trows, function(val){
-				var row = [new Date(val[0])];
-				_.each(types, function(name,id){
-					row.push(val[2] == id ? parseFloat(val[1]) : undefined)
+			$('tbody tr').each(function(){
+				var row = [];
+				$('td', this).each(function(i){
+					var value = $(this).text(),
+						type = types[i];
+					row.push(normalise(type, value));
 				});
-				console.log(row);
 				data.addRow(row);
 			});
 
@@ -72,36 +86,7 @@ body.span11.offset1
 			)
 		}
 
-
-		// http://iatistandard.org/codelists/transaction_type
-		var types = {
-			//- C:	"Commitment",
-			D:	"Disbursement",
-			//- E:	"Expenditure",
-			//- IF:	"Incoming",
-			B: "Budget"
-			//- IR:	"Interest",
-			//- LR:	"Loan",
-			//- R:	"Reimbursement"
-		};
-
-		// the DataTable format we want is
-		// date, amount_c, amount_d, amount_e, amount_if, amount_ir, amount_lr, amount_r
-
-		var cols = [{id:'date', label:'Date', type: 'date'}];
-
-		_.each(types, function(name, id){
-			cols.push({id:id, label: name, type: 'number'});
-		});
-
-		var trows = $('tbody tr').map(function(){
-			return [$('td', this).map(function(){
-				return $(this).text();
-			}).toArray()];
-		})
-
-
 		
 		google.setOnLoadCallback(drawVisualization);
-		google.load("visualization", '1.0', {'packages':['corechart', 'geochart', 'barchart']});
+		google.load("visualization", '1.0', {'packages':['corechart', 'geochart']});
 	
