@@ -164,8 +164,7 @@ body.span11.offset1
 					});
 
 					// Create and draw the visualization.
-					var type = ['ColumnChart', 'BarChart', 'LineChart'][0];
-					new google.visualization[type]($(selector).get(0)).
+					new google.visualization[chart_type]($(selector).get(0)).
 						draw(data,
 						{
 							width:900, height:400,
