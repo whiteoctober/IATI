@@ -8,85 +8,142 @@ body.span11.offset1
 
 	h1 Transactions Graph
 
-	div#visualization
+	div#table_vis
 
-	table.table.table-bordered
+	table.table.table-bordered.enhance(data-enhance="google_chart #table_vis ")
 		thead
 			tr
 				th(data-dt-type='date') Date
-				th(data-dt-type='number') Budget (USD)
-				th(data-dt-type='number') Disbursement (USD)
+				th(data-dt-type='number') Purtive outgoings
+				th(data-dt-type='number') Real outgoings
+				th(data-dt-type='number') Income
 		
 		tbody
-			// todo - accessor
-			for tx in activity.transactions()
-				if tx['transaction-type']['@code'] == 'D'
-					tr
-						td= tx['value']['@value-date']
-						td
-						td= parseFloat(tx['value']['@iati-ad:USD-value'],10)
-
 			for budget in activity.budgets()
 				tr
+					- value = parseFloat(budget.value["@iati-ad:USD-value"],10)
 					td= budget["value"]["@iati-ad:transaction-date"]
-					td= parseFloat(budget.value["@iati-ad:USD-value"],10)
+					td(data-dt-value=value)
+						| $#{value} (Budget)
+					td
 					td
 
+			for tx in activity.transactions('D E LR IR')
+				tr
+					- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
+					- code = tx["transaction-type"]['#text']
+					td= tx['value']['@value-date']
+					td
+					td(data-dt-value=value)
+						| $#{value} (#{code})
+					td
 
-	//- pre 
-		= JSON.stringify(activity.transactions(), null, " ")
-		= JSON.stringify(activity.budgets(), null, " ")
+			for tx in activity.transactions('IF R')
+				tr
+					- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
+					- code = tx["transaction-type"]['#text']
+					td= tx['value']['@value-date']
+					td
+					td
+					td(data-dt-value=value)
+						| $#{value} (#{code})
+
+
 
 	script(src="https://www.google.com/jsapi")
 	script(src="/javascripts/lib/underscore.js")
 	script(src="/javascripts/lib/jquery.js")
 	script
 
-		function drawVisualization() {
+		console.log(google.visualization);
 
-			var data = new google.visualization.DataTable();
+		var enhancers = {
+			google_chart:function(selector, chart_type){
+				selector = selector || '#visualization';
+				chart_type = chart_type || 'ColumnChart';
 
-			// functions to normalise the values
-			// in the folloing rows
-			var types = [],
-				normalise = function(type, value){
-					return  type == 'date' ? new Date(value) :
-							type == 'number' ? parseFloat(value) || undefined : 
-							value; // default
+				var $table = this;
+				var generate = function(){
+					// hack the rows to sort by date
+					var rows = $('tbody tr',$table).toArray();
+
+					rows.sort(function(a,b){
+						a = +new Date($('td:first',a).text());
+						b = +new Date($('td:first',b).text());
+						return a - b;
+					});
+
+					// replace the body with sorted ones
+					$('tbody',$table).empty().append(rows);
+
+					var data = new google.visualization.DataTable();
+
+					// functions to normalise the values
+					// in the folloing rows
+					var types = [],
+						normalise = function(type, value){
+							return  type == 'date' ? new Date(value) :
+									type == 'number' ? parseFloat(value) || undefined : 
+									value; // default
+						};
+
+					// generate the columns
+					$('thead th', $table).each(function(){
+						var $th = $(this),
+							type = $th.data('dt-type') || 'string',
+							label = $th.text();
+						data.addColumn(type, label);
+
+						types.push(type);
+					});
+
+					// generate the data
+					$('tbody tr', $table).each(function(){
+						var row = [];
+						$('td', this).each(function(i){
+							var $td = $(this),
+								text = $td.text(),
+								value = $td.data('dt-value') || text,
+								type = types[i];
+							row.push({v:normalise(type, value),f:text});
+						});
+						data.addRow(row);
+					});
+
+					// Create and draw the visualization.
+					var type = ['ColumnChart', 'BarChart', 'LineChart'][0];
+					new google.visualization[type]($(selector).get(0)).
+						draw(data,
+						{
+							width:900, height:400,
+							interpolateNulls:true,
+							isStacked:true
+						}
+					)
 				};
 
-			$('thead th').each(function(){
-				var $th = $(this),
-					type = $th.data('dt-type') || 'string',
-					label = $th.text();
-				data.addColumn(type, label);
-
-				types.push(type);
-			});
-
-			$('tbody tr').each(function(){
-				var row = [];
-				$('td', this).each(function(i){
-					var value = $(this).text(),
-						type = types[i];
-					row.push(normalise(type, value));
-				});
-				data.addRow(row);
-			});
-
-			// Create and draw the visualization.
-			var type = ['ColumnChart', 'BarChart', 'LineChart'][0];
-			new google.visualization[type](document.getElementById('visualization')).
-				draw(data,
-				{
-					width:900, height:400,
-					interpolateNulls:true,
-					isStacked:true,
+				if(google.visualization){
+					generate()
+				} else {
+					google.setOnLoadCallback(generate);
+					google.load("visualization", '1.0', {'packages':['corechart']});
 				}
-			)
-		}
+			}
+		};
 
-		
-		google.setOnLoadCallback(drawVisualization);
-		google.load("visualization", '1.0', {'packages':['corechart', 'geochart']});
+		// apply the enhancers to any elements on the page
+		$.enhance = function(){
+			$('.enhance').each(function(){
+				var $el = $(this),
+					args = $el.removeClass('enhance').data('enhance').split(' '),
+					fn = args.shift();
+				enhancers[fn].apply($el,args);
+			})
+		};
+
+
+		$.enhance()
+
+
+		google.load("visualization", '1.0', {'packages':['corechart']});
 	
