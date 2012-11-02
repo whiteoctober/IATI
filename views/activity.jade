@@ -60,19 +60,19 @@ section.activity.slide-panel.clearfix
       table.headline
         tr
           th Total budget*:
-          - budget = format_value(budget)
+          - budget = format_value_long(budget)
           td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}
         tr
           th Total commitments**:
-          - commitments = format_value(commitments)
+          - commitments = format_value_long(commitments)
           td #{commitments.sign}$<strong>#{commitments.value}</strong> #{commitments.unit}
         tr
           th Total spend***:
-          - spend = format_value(spend)
+          - spend = format_value_long(spend)
           td #{spend.sign}$<strong>#{spend.value}</strong> #{spend.unit}
         tr
           th Loan &amp; interest repayments:
-          - repayments = format_value(repayments)
+          - repayments = format_value_long(repayments)
           td #{repayments.sign}$<strong>#{repayments.value}</strong> #{repayments.unit}
 
         - if(activity.activityStatus())
