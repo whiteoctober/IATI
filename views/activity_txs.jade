@@ -140,15 +140,17 @@ body.span11.offset1
 									value; // default
 						};
 
+					var cols = [], rows = [];
 					// generate the columns
 					$('thead th', $table).each(function(){
 						var $th = $(this),
 							type = $th.data('dt-type') || 'string',
 							label = $th.text();
-						data.addColumn(type, label);
+						cols.push([type, label]);
 
 						types.push(type);
 					});
+
 
 					// generate the data
 					$('tbody tr', $table).each(function(){
@@ -160,8 +162,62 @@ body.span11.offset1
 								type = types[i];
 							row.push({v:normalise(type, value),f:text});
 						});
+						rows.push(row);
+					});
+
+					// process the rows if we want
+					if(window.location.hash == '#dev_year' || window.location.hash == '#dev_month'){
+
+						var by_year = window.location.hash == '#dev_year';
+
+						// group by year
+						var grouped = _.groupBy(rows, function(row){
+							var date = row[0].v;
+							if(by_year){
+								return date.getFullYear()
+							} else {
+								var q = Math.floor(date.getMonth() / 4) + 1;
+								return date.getFullYear() + ' Q' + q;
+							}
+						});
+
+						// total up the row values
+						var mapped = _.map(grouped, function(rows, by){
+							var reduced = _.reduce(rows, function(prior, row){
+								_.each(row, function(item, i){
+									if(i > 0){
+										item.v = item.v || 0;
+										item.v += prior[i].v || 0;
+
+										item.f = undefined;
+									}
+								})
+								return row;
+							});
+
+							reduced[0] = by;
+
+							return reduced;
+						});
+
+						cols[0][0] = 'string';
+						rows = mapped;
+
+					};
+
+
+
+
+					// add the columns
+					$.each(cols, function(i, col){
+						data.addColumn(col[0], col[1]);
+					});
+
+					// add the rows
+					$.each(rows, function(i, row){
 						data.addRow(row);
 					});
+
 
 					// Create and draw the visualization.
 					new google.visualization[chart_type]($(selector).get(0)).
