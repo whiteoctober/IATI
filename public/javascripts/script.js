@@ -58,6 +58,12 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
     $(this).fadeOut(function() {
       $(this).remove();
     });
+
+    var dialogKey = document.location.href.replace('&p=1','');
+    // store that this dialog has been hidden
+    (window.hiddenDialogs = window.hiddenDialogs || [])
+      .push(dialogKey);
+    
   });
   
   $('.dashboard #clear').live('click', function(e){
@@ -71,7 +77,9 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
   // If this is a function that returns a deferred promise, then it will
   // be called before new content is loaded in.
   window.contentExit = null;
-  
+
+  window.currentURL = null;
+
   //Monitor state changes for Back request
   window.History.Adapter.bind(window,'statechange',function() {
     var State = window.History.getState(),
@@ -83,21 +91,43 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
     
     //jQuery Cache bug fix
     url = url.replace("?&", "?");
+
+    window.currentURL = url;
         
     var loadContent = function() {
-      $('#content_inner').load(url, function(response, status) {
-        if (status == 'error') return alert('request error');
-        
+      $.get(url)
+      .pipe(function(response){
+        return window.currentURL === url ?
+          response :
+          $.Deferred().rejectWith(this,['wrong_page']);
+      })
+      //.pipe(todo)
+      .done(function(response){
+
+        var content = $('#content_inner').html(response).get(0);
+
         if (State.data.enter == 'slideUp') {
-          $(this).css('margin-top', 600).animate({'margin-top': 0},runInlines);
+          $(content).css('margin-top', 600).animate({'margin-top': 0},runInlines);
         }
         else {
-          runInlines.apply(this);
+          runInlines.apply(content);
         }
         
         if(window._gaq) window._gaq.push(['_trackPageview']);
-        
+
+      })
+      .fail(function(err){
+        if(err != 'wrong_page'){
+          if(window.navigator.standalone){
+            alert("request error")
+          } else {
+            // attempt to reload the page, so the 
+            // real error is shown
+            document.location.reload();
+          }
+        }
       });
+
     };
     
     //If there is an exit animation/function then fire that before loading 
