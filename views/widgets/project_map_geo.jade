@@ -35,8 +35,23 @@ script
             google.maps.event.removeListener(zoomChangeBoundsListener);
           });
         });
-        gmap.maxInitialZoom = 10;
+        gmap.maxInitialZoom = 4;
         gmap.initialZoom = true;
+
+
+        var infowindow = new google.maps.InfoWindow(),
+          info = function(marker,loc){
+            var content = $('<div><h2></h2><p></p></div>')
+              .find('h2').text(loc.name).end()
+              .find('p').text(loc.description).end()
+              .html();
+
+            return function(){
+              infowindow.setContent(content);
+              infowindow.open(gmap,marker);
+            }
+          };
+
 
         //Adds markers and positions/zooms the map to fit
         var bounds = new google.maps.LatLngBounds();
@@ -47,6 +62,9 @@ script
             title: location.name,
             map: gmap
           });
+          
+          google.maps.event.addListener(marker, 'click', info(marker, location));
+
           bounds.extend(latLng);
         });
         gmap.fitBounds(bounds);

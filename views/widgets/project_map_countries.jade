@@ -1,0 +1,52 @@
+.widget_content
+  h3.title(style='margin-bottom: 22px;') Geographical locations
+  - if (countries.length > 0)
+
+    #visualization
+    .map(data-locations=JSON.stringify(countries))
+
+    //- no table at the moment, though we might want this later
+    //- table
+        thead
+            tr
+                th Country
+        tbody
+            for country in countries
+                tr
+                    td= country.name
+
+  - else
+    p No location information available.
+
+
+script
+  inlines.push(function(){
+    function drawVisualization() {
+      var map = $(".map");
+      if (map.length > 0) {
+
+        // map.width($("body").width());
+        var h = $("body").height() - $(".title").outerHeight(true);
+
+        map.height(Math.min(h, 500));
+
+        var rows = [['Country']];
+
+        var locs = $('.map').data('locations');
+        $.each(locs, function(i,l){
+            // sometimes the code isn't recognised by the 
+            // geoChart visualization, so I'm hacking this in 
+            // twice to get more chance of matching them
+            rows.push([l.code]);
+            rows.push([l.name]);
+        });
+
+        var data = google.visualization.arrayToDataTable(rows);
+
+        var geochart = new google.visualization.GeoChart(map.get(0));
+            geochart.draw(data);
+        }
+    };
+
+    drawVisualization()
+  })
