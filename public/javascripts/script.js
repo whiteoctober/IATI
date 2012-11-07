@@ -18,6 +18,19 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
       dimmed = false;
     }
   });
+
+  $("#ajax-loader").on("ajaxStart", function(){
+   $(this).delay(1000).fadeIn();
+  }).on("ajaxStop", function(){
+   $(this).stop().hide();
+  }).click(function(){
+    // we're not actually cancelling the request
+    // here,  but just hiding this, so that something
+    // else could be clicked. Setting History.back()
+    // causes quite a lot of trouble
+    $(this).stop().hide();
+  })
+  .text('loading');
   
   //Load embed widget dialog when requested
   $(".embed").live('click', function(e) {
@@ -33,7 +46,7 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
         // console.log(this);
         runInlines.apply(this);
       });
-      dimmed = true; 
+      dimmed = true;
     });
     e.preventDefault();
   });
