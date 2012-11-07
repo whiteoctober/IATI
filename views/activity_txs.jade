@@ -1,14 +1,5 @@
-!!!5
-head
-	title Transactions Graph
-
-	link(href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css", rel="stylesheet")
-	style
-		.graph{
-			height:350px;
-		}
-
-body.span11.offset1
+.widget_content
+	h3.title(style='margin-bottom: 22px;') Transactions
 
 	- planned = activity.budgets()
 	- actual = activity.transactions('D E LR IR')

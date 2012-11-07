@@ -392,7 +392,7 @@ app.get(/\/activity\/txs\/(.+)/, function(req, res, next) {
       
       res.render('activity_txs', {
         activity: activity,
-        layout: false
+        layout: true
       });
     })
     .on('error', function(e) {
