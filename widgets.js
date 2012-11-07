@@ -1,5 +1,4 @@
-(function(exports) {
-  
+(function(exports) {  
   // default to site layout when view=full and allow no layout on
   // ajax requests
   var widgetLayout = function(req){
@@ -90,7 +89,7 @@
     
     //Widget displaying a map with the location of an activity
     app.get('/widgets/project_map', function(req, res, next) {
-      var params = {result: 'geo'};
+      var params = {result: 'full'};
       
 
       _.extend(params, req.filter_query);
@@ -98,11 +97,23 @@
         .on('success', function(data) {
           var activity = accessors.activity(data);
 
-          res.render('widgets/project_map', {
-            title: "Geographical Location Widget",
-            locations: activity.locations(),
-            layout: widgetLayout(req)
-          });
+          var locations = activity.locations();
+          if(locations.length){
+            res.render('widgets/project_map_geo', {
+              title: "Geographical Location Widget",
+              locations: locations,
+              layout: widgetLayout(req)
+            });
+          } else {
+            var countries = activity.recipientCountries();
+            res.render('widgets/project_map_countries', {
+              title: "Geographical Location Widget",
+              countries: countries,
+              layout: widgetLayout(req)
+            });
+          }
+
+
         })
         .on('error', function(e) {
           next(e);
