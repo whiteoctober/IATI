@@ -1,0 +1,96 @@
+<result version="2011-11-26T17:00:00" activity-count="1">
+    <test elapsed-milliseconds="174">
+        <query>
+            <term name="ID" priority="1">
+                <path>iati-identifier</path>
+                <value>GB-1-108990-101</value>
+            </term>
+            <start-date>1900-01-01</start-date>
+            <end-date>2100-01-01</end-date>
+            <start>1</start>
+            <result>full</result>
+            <format>xml</format>
+            <corpus>fullB</corpus>
+            <test>yes</test>
+        </query>
+    </test>
+    <iati-activity xmlns:iati-ad="http://tools.aidinfolabs.org/api/AugmentedData" xml:lang="en" default-currency="GBP" hierarchy="2" iati-ad:project-value="4.0646402E7" iati-ad:activitySet="http://projects.dfid.gov.uk/iati/Country/VN" iati-ad:activity-modified="2011-11-19T00:03:30.547Z" iati-ad:live="live" iati-ad:include="include">
+        <participating-org ref="GB" type="10" role="Funding" iati-ad:org="GB" iati-ad:funder="GB">UNITED KINGDOM</participating-org>
+        <participating-org ref="GB-1" type="10" role="Extending" iati-ad:org="GB-1">Department for International Development</participating-org>
+        <participating-org ref="43002" role="Implementing" iati-ad:org="43002">International Monetary Fund - Poverty Reduction and Growth - Heavily Indebted Poor Countries Debt Relief Initiative Trust Fund [includes HIPC, Extended Credit Facility (ECF), and ECF-HIPC sub-accounts]</participating-org>
+        <recipient-country code="VN" iati-ad:country="VN" iati-ad:project-value="4.0646402E7">Vietnam</recipient-country>
+        <sector code="600" vocabulary="DAC-3" iati-ad:category="600" percentage="100" iati-ad:project-value="4.0646402E7">ACTION RELATING TO DEBT</sector>
+        <sector code="60010" vocabulary="DAC" iati-ad:sector="60010" iati-ad:project-value="4.0646402E7" percentage="100">Actions relating to debt</sector>
+        <reporting-org ref="GB-1" type="10">Department for International Development</reporting-org>
+        <collaboration-type code="1">Bilateral</collaboration-type>
+        <default-flow-type code="10">ODA</default-flow-type>
+        <default-aid-type code="F01">Debt relief</default-aid-type>
+        <iati-identifier>GB-1-108990-101</iati-identifier>
+        <title>UK Multilateral Debt Relief Initiative (UK MDRI) - Vietnam</title>
+        <activity-date type="end-actual">2015-12-01Z</activity-date>
+        <activity-date type="end-planned">2015-12-01Z</activity-date>
+        <activity-date type="start-actual">2006-03-29Z</activity-date>
+        <activity-date type="start-planned">2006-03-29Z</activity-date>
+        <activity-status code="2">Implementation</activity-status>
+        <contact-info>
+            <organisation>Department for International Development</organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</mailing-address>
+        </contact-info>
+        <default-tied-status code="5">Untied</default-tied-status>
+        <policy-marker code="1" vocabulary="DAC" significance="0">Gender Equality</policy-marker>
+        <policy-marker code="2" vocabulary="DAC" significance="0">Aid to Environment</policy-marker>
+        <policy-marker code="3" vocabulary="DAC" significance="0">Participatory Development/Good Governance</policy-marker>
+        <policy-marker code="4" vocabulary="DAC" significance="0">Trade Development</policy-marker>
+        <policy-marker code="5" vocabulary="DAC" significance="0">Aid Targeting the Objectives of the Convention on Biological Diversity</policy-marker>
+        <policy-marker code="6" vocabulary="DAC" significance="0">Aid Targeting the Objectives of the Framework Convention on Climate Change - Mitigation</policy-marker>
+        <policy-marker code="7" vocabulary="DAC" significance="0">Aid Targeting the Objectives of the Framework Convention on Climate Change - Adaptation</policy-marker>
+        <policy-marker code="8" vocabulary="DAC" significance="0">Aid Targeting the Objectives of the Convention to Combat Desertification</policy-marker>
+        <transaction>
+            <value value-date="2005-04-01Z" iati-ad:currency="GBP" iati-ad:date="2005-04-01Z" iati-ad:transaction-date="2005-04-01Z" iati-ad:transaction-type="C" iati-ad:USD-value="5.962552E6">3280000</value>
+            <transaction-type code="C">Commitment</transaction-type>
+            <transaction-date iso-date="2005-04-01Z">Budget for financial year 2005</transaction-date>
+        </transaction>
+        <transaction>
+            <value value-date="2006-04-01Z" iati-ad:currency="GBP" iati-ad:date="2006-04-01Z" iati-ad:transaction-date="2006-04-01Z" iati-ad:transaction-type="C" iati-ad:USD-value="4.320234E6">2347615</value>
+            <transaction-type code="C">Commitment</transaction-type>
+            <transaction-date iso-date="2006-04-01Z">Budget for financial year 2006</transaction-date>
+        </transaction>
+        <transaction>
+            <value value-date="2007-04-01Z" iati-ad:currency="GBP" iati-ad:date="2007-04-01Z" iati-ad:transaction-date="2007-04-01Z" iati-ad:transaction-type="C" iati-ad:USD-value="2.40741E6">1202983</value>
+            <transaction-type code="C">Commitment</transaction-type>
+            <transaction-date iso-date="2007-04-01Z">Budget for financial year 2007</transaction-date>
+        </transaction>
+        <transaction>
+            <value value-date="2008-04-01Z" iati-ad:currency="GBP" iati-ad:date="2008-04-01Z" iati-ad:transaction-date="2008-04-01Z" iati-ad:transaction-type="C" iati-ad:USD-value="5.799625E6">3205453</value>
+            <transaction-type code="C">Commitment</transaction-type>
+            <transaction-date iso-date="2008-04-01Z">Budget for financial year 2008</transaction-date>
+        </transaction>
+        <transaction>
+            <value value-date="2009-04-01Z" iati-ad:currency="GBP" iati-ad:date="2009-04-01Z" iati-ad:transaction-date="2009-04-01Z" iati-ad:transaction-type="C" iati-ad:USD-value="6.354597E6">4068213</value>
+            <transaction-type code="C">Commitment</transaction-type>
+            <transaction-date iso-date="2009-04-01Z">Budget for financial year 2009</transaction-date>
+        </transaction>
+        <transaction>
+            <value value-date="2010-04-01Z" iati-ad:currency="GBP" iati-ad:date="2010-04-01Z" iati-ad:transaction-date="2010-04-01Z" iati-ad:transaction-type="C" iati-ad:USD-value="7.323147E6">4741738</value>
+            <transaction-type code="C">Commitment</transaction-type>
+            <transaction-date iso-date="2010-04-01Z">Budget for financial year 2010</transaction-date>
+        </transaction>
+        <transaction>
+            <value value-date="2011-04-01Z" iati-ad:currency="GBP" iati-ad:date="2011-04-01Z" iati-ad:transaction-date="2011-04-01Z" iati-ad:transaction-type="C" iati-ad:USD-value="8.478837E6">5490047</value>
+            <transaction-type code="C">Commitment</transaction-type>
+            <transaction-date iso-date="2011-04-01Z">Budget for financial year 2011</transaction-date>
+        </transaction>
+        <transaction>
+            <value currency="GBP" value-date="2010-08-19Z" iati-ad:currency="GBP" iati-ad:date="2010-08-19Z" iati-ad:transaction-date="2010-08-19Z" iati-ad:transaction-type="D" iati-ad:USD-value="7.323147E6">4741738</value>
+            <transaction-type code="D">Disbursement</transaction-type>
+            <provider-org ref="GB-1" type="10">Department for International Development</provider-org>
+            <receiver-org ref="52000">Other.</receiver-org>
+            <description>Debt Relief</description>
+            <transaction-date iso-date="2010-08-19Z"/>
+        </transaction>
+        <related-activity ref="GB-1-108990" type="1">UK Multilateral Debt Relief Initiative (UK MDRI) - Vietnam</related-activity>
+        <legacy-data name="60010 Action Relating to Debt" value="60010" iati-equivalent="sector"/>
+    </iati-activity>
+</result>

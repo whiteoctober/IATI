@@ -1,0 +1,236 @@
+.widget_content
+	h3.title(style='margin-bottom: 22px;') Transactions
+
+	- planned = activity.budgets()
+	- actual = activity.transactions('D E LR IR')
+	- incoming = activity.transactions('IF R')
+
+	- planned_total = _.reduce(planned, function(memo, b){return memo + parseFloat(b.value["@iati-ad:USD-value"]) || 0},0)
+	- actual_total = _.reduce(actual, function(memo, b){return memo + parseFloat(b.value["@iati-ad:USD-value"]) || 0},0)
+	- incoming_total = _.reduce(incoming, function(memo, b){return memo + parseFloat(b.value["@iati-ad:USD-value"]) || 0},0)
+
+	.widget-hidden
+		h3 Planned outgoings: #{to_currency(planned_total)}
+		h3 Actual outgoings: #{to_currency(actual_total)}
+		h3 Incoming funds: #{to_currency(incoming_total)}
+
+		h1 Planned and Actual Outgoings
+
+	div.graph#inout
+
+
+	.widget-hidden
+		table.table.table-bordered.enhance(data-enhance="google_chart #inout group_years")
+			thead
+				tr
+					th(data-dt-type='date') Date
+					th(data-dt-type='number') Planned
+					th(data-dt-type='number') Actual
+			tfoot
+				if !(actual.length || planned.length)
+					tr
+						td(colspan=3) 
+							| There are no outgoings funds associated with this activity
+			tbody
+				for budget in planned
+					tr
+						- value = parseFloat(budget.value["@iati-ad:USD-value"],10)
+						td= budget["value"]["@iati-ad:transaction-date"]
+						td(data-dt-value=value)
+							| $#{value} (Budget)
+						td
+
+				for tx in actual
+					tr
+						- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
+						- code = tx["transaction-type"]['#text']
+						td= tx['value']['@value-date']
+						td
+						td(data-dt-value=value)
+							| $#{value} (#{code})
+
+
+		hr 
+		h1 Incoming Funds
+
+		div.graph#income
+
+		table.table.table-bordered.enhance(data-enhance="google_chart #income group_years")
+			thead
+				tr
+					th(data-dt-type='date') Date
+					th(data-dt-type='number') Income
+			tfoot
+				if !incoming.length
+					tr
+						td(colspan=2) 
+							| There are no incoming funds associated with this activity
+			tbody
+				for tx in incoming
+					tr
+						- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
+						- code = tx["transaction-type"]['#text']
+						td= tx['value']['@value-date']
+						td(data-dt-value=value)
+							| $#{value} (#{code})
+
+
+		script(src="https://www.google.com/jsapi")
+		script(src="/javascripts/lib/underscore.js")
+		script(src="/javascripts/lib/jquery.js")
+		script
+			
+			var enhancers = {
+				google_chart:function(selector, grouping){
+					selector = selector || '#visualization';
+
+					var $table = this;
+					var generate = function(){
+						var dims = {
+							height: Math.min($("body").height() - $(".title").outerHeight(true), 350),
+							width: Math.min($('body').width(), 800)
+						};
+
+						console.log($('body').height())
+
+						// hack the rows to sort by date
+						var rows = $('tbody tr',$table).toArray();
+
+						if(!rows.length || $(selector).is(':not(:visible)')){
+							return;
+						}
+
+						rows.sort(function(a,b){
+							a = +new Date($('td:first',a).text());
+							b = +new Date($('td:first',b).text());
+							return a - b;
+						});
+
+						// replace the body with sorted ones
+						$('tbody',$table).empty().append(rows);
+
+						var data = new google.visualization.DataTable();
+
+						// functions to normalise the values
+						// in the folloing rows
+						var types = [],
+							normalise = function(type, value){
+								return  type == 'date' ? new Date(value) :
+										type == 'number' ? parseFloat(value) || undefined : 
+										value; // default
+							};
+
+						var cols = [], rows = [];
+						// generate the columns
+						$('thead th', $table).each(function(){
+							var $th = $(this),
+								type = $th.data('dt-type') || 'string',
+								label = $th.text();
+							cols.push([type, label]);
+
+							types.push(type);
+						});
+
+
+						// generate the data
+						$('tbody tr', $table).each(function(){
+							var row = [];
+							$('td', this).each(function(i){
+								var $td = $(this),
+									text = $td.text(),
+									value = $td.data('dt-value') || text,
+									type = types[i];
+								row.push({v:normalise(type, value),f:text});
+							});
+							rows.push(row);
+						});
+
+						// process the rows if we want
+						if(grouping){
+
+							var by_year = grouping == 'group_years';
+
+							// group by year
+							var grouped = _.groupBy(rows, function(row){
+								var date = row[0].v;
+								if(by_year){
+									return date.getFullYear()
+								} else {
+									var q = Math.floor(date.getMonth() / 4) + 1;
+									return date.getFullYear() + ' Q' + q;
+								}
+							});
+
+							// total up the row values
+							var mapped = _.map(grouped, function(rows, by){
+								var reduced = _.reduce(rows, function(prior, row){
+									_.each(row, function(item, i){
+										if(i > 0){
+											item.v = item.v || 0;
+											item.v += prior[i].v || 0;
+
+											item.f = undefined;
+										}
+									})
+									return row;
+								});
+
+								reduced[0] = by;
+
+								return reduced;
+							});
+
+							cols[0][0] = 'string';
+							rows = mapped;
+
+						};
+
+
+
+
+						// add the columns
+						$.each(cols, function(i, col){
+							data.addColumn(col[0], col[1]);
+						});
+
+						// add the rows
+						$.each(rows, function(i, row){
+							data.addRow(row);
+						});
+
+
+						// Create and draw the visualization.
+						new google.visualization.ColumnChart($(selector).get(0)).
+							draw(data,
+							{
+								width:dims.width, height:dims.height,
+								interpolateNulls:true,
+								isStacked:false,
+							}
+						)
+					};
+					if(google.visualization){
+						generate()
+					} else {
+						google.setOnLoadCallback(generate);
+						google.load("visualization", '1.0', {'packages':['corechart']});
+					}
+				}
+			};
+
+			// apply the enhancers to any elements on the page
+			$.enhance = function(){
+				$('.enhance').each(function(){
+					var $el = $(this),
+						args = $el.removeClass('enhance').data('enhance').split(' '),
+						fn = args.shift();
+					enhancers[fn].apply($el,args);
+				})
+			};
+
+
+			$.enhance()
+
+
+			google.load("visualization", '1.0', {'packages':['corechart']});
+		

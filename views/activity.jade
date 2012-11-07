@@ -2,11 +2,12 @@ section.activity.slide-panel.clearfix
   // the params for adding this activity to the dashboard
   - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'activities', subkey:false})
   aside
+    
     ul
       li: a.icn.favourite(href='#', data-dash=dashParams) Save to my dashboard        
       li: a.icn.print(href="#") Print
       li: a.icn.pdf(href="#") PDF
-      li: a.icn.csv(href="#") CSV
+      li: a.icn.csv(href="/activity/" + activity.id() + ".csv") CSV
       
     - documents = activity.documents()
     h3 Related documents
@@ -46,7 +47,7 @@ section.activity.slide-panel.clearfix
             strong 
               abbr(title=other.ownerName)= other.ownerRef
             |  #{other.id}
-          
+
 
 
 
@@ -57,19 +58,19 @@ section.activity.slide-panel.clearfix
       table.headline
         tr
           th Total budget*:
-          - budget = format_value(budget)
+          - budget = format_value_long(budget)
           td #{budget.sign}$<strong>#{budget.value}</strong> #{budget.unit}
         tr
           th Total commitments**:
-          - commitments = format_value(commitments)
+          - commitments = format_value_long(commitments)
           td #{commitments.sign}$<strong>#{commitments.value}</strong> #{commitments.unit}
         tr
           th Total spend***:
-          - spend = format_value(spend)
+          - spend = format_value_long(spend)
           td #{spend.sign}$<strong>#{spend.value}</strong> #{spend.unit}
         tr
           th Loan &amp; interest repayments:
-          - repayments = format_value(repayments)
+          - repayments = format_value_long(repayments)
           td #{repayments.sign}$<strong>#{repayments.value}</strong> #{repayments.unit}
 
         - if(activity.activityStatus())
@@ -124,17 +125,12 @@ section.activity.slide-panel.clearfix
       .widget(data-href=url_with('/widgets/contact_details', {ID: activity.id(), view:'full'}))
         !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/contact_details', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget
-        h3 Funding Breakdown
-        img(src='/images/mockups/funding_breakdown.png')
+      .widget(data-href=url_with('/widgets/transactions', {ID: activity.id(), view:'full'}))
+        !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/transactions', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
       .widget
         h3 Aid flows
         img(src='/images/mockups/aid_flows.png')
-    .half.left
-      .widget
-        h3 Contact Details
-        p Coming soon
     .half.left
       .widget
         h3 Results
