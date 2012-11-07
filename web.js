@@ -346,7 +346,7 @@ app.get(/\/activity\/(.+)\.csv/, function(req, res, next) {
   api.Request({ID: id, result: 'full', format:'xml'})
     .on('success', function(data) {
 
-      var stylesheet = xslt.readXsltFile('xsl/iati-transactions-xml-to-csv.xsl'),
+      var stylesheet = xslt.readXsltFile('xsl/iati-activities-xml-to-csv.xsl'),
           doc = xslt.readXmlString(data),
           transformed = xslt.transform(stylesheet, doc, []);
 
