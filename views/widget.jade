@@ -13,7 +13,7 @@ html
     each script in clientScripts
       script(src='/javascripts/'+script)
     script
-      google.load('visualization', '1.0', {'packages':['corechart']});
+      google.load('visualization', '1.0', {'packages':['corechart', 'geochart']});
     script
       var runInlines = function() { while(inlines.length) { inlines.pop()(); } }
       $(runInlines);
