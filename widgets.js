@@ -227,6 +227,27 @@
         })
         .end();
     });
+
+
+    app.get('/widgets/transactions', function(req, res, next) {
+      var id = req.query.ID;
+      
+      api.Request({ID: id, result: 'full'})
+        .on('success', function(data) {
+          var activity = accessors.activity(data);
+          
+          res.render('activity_txs', {
+            activity: activity,
+            layout: widgetLayout(req)
+          });
+        })
+        .on('error', function(e) {
+          next(e);
+        })
+        .end();
+    });
+
+
     
     
     //Renders an embed dialog

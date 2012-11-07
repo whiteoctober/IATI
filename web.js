@@ -382,26 +382,6 @@ app.get(/\/activity\/(.+)/, function(req, res, next) {
 });
 
 
-
-app.get(/\/activity\/txs\/(.+)/, function(req, res, next) {
-  var id = req.params[0];
-  
-  api.Request({ID: id, result: 'full'})
-    .on('success', function(data) {
-      var activity = accessors.activity(data);
-      
-      res.render('activity_txs', {
-        activity: activity,
-        layout: true
-      });
-    })
-    .on('error', function(e) {
-      next(e);
-    })
-    .end();
-});
-
-
 app.get(/\/activity\/(.+)/, function(req, res, next) {
   var id = req.params[0];
   

@@ -3,8 +3,6 @@ section.activity.slide-panel.clearfix
   - dashParams = JSON.stringify({href:url_with(false,{view:'embed'}), type:'embed', key:'activities', subkey:false})
   aside
     
-    a(style="color:#f08", href="/activity/txs/" + activity.id()) (TEMP) Transactions Graph
-    
     ul
       li: a.icn.favourite(href='#', data-dash=dashParams) Save to my dashboard        
       li: a.icn.print(href="#") Print
@@ -127,17 +125,12 @@ section.activity.slide-panel.clearfix
       .widget(data-href=url_with('/widgets/contact_details', {ID: activity.id(), view:'full'}))
         !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/contact_details', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget
-        h3 Funding Breakdown
-        img(src='/images/mockups/funding_breakdown.png')
+      .widget(data-href=url_with('/widgets/transactions', {ID: activity.id(), view:'full'}))
+        !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/transactions', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
       .widget
         h3 Aid flows
         img(src='/images/mockups/aid_flows.png')
-    .half.left
-      .widget
-        h3 Contact Details
-        p Coming soon
     .half.left
       .widget
         h3 Results
