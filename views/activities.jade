@@ -76,8 +76,11 @@ script
       setTimeout(fitText, 5);
     }
     fitText();
-    
-    $('#dialog').hide().fadeIn();
+
+    var dialogKey = document.location.href.replace('&p=1','');
+    if(!(window.hiddenDialogs && window.hiddenDialogs.indexOf(dialogKey) > -1)){
+      $('#dialog').delay(200).fadeIn();
+    }
     
     $.setArcNav(!{JSON.stringify(query)}, '/activities');
   });

@@ -272,7 +272,6 @@
       $this.css('fontSize', current - (threshold*2));
 
       var truncated = min == options.font.min;
-      $this.css('backgroundColor', truncated ? 'red' : '');
       $this.toggleClass('truncated', truncated);
 
     });//.css({overflow:'hidden', xposition:'relative'});
