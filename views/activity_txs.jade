@@ -5,68 +5,40 @@ head
 	link(href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css", rel="stylesheet")
 	style
 		.graph{
-			height:400px;
+			height:350px;
 		}
 
 body.span11.offset1
 
-	h1 Transactions Graph
+	- planned = activity.budgets()
+	- actual = activity.transactions('D E LR IR')
+	- incoming = activity.transactions('IF R')
 
-	div.graph#all
+	- planned_total = _.reduce(planned, function(memo, b){return memo + parseFloat(b.value["@iati-ad:USD-value"]) || 0},0)
+	- actual_total = _.reduce(actual, function(memo, b){return memo + parseFloat(b.value["@iati-ad:USD-value"]) || 0},0)
+	- incoming_total = _.reduce(incoming, function(memo, b){return memo + parseFloat(b.value["@iati-ad:USD-value"]) || 0},0)
 
-	table.table.table-bordered.enhance(data-enhance="google_chart #all ")
-		thead
-			tr
-				th(data-dt-type='date') Date
-				th(data-dt-type='number') Purtive outgoings
-				th(data-dt-type='number') Real outgoings
-				th(data-dt-type='number') Income
-		
-		tbody
-			for budget in activity.budgets()
-				tr
-					- value = parseFloat(budget.value["@iati-ad:USD-value"],10)
-					td= budget["value"]["@iati-ad:transaction-date"]
-					td(data-dt-value=value)
-						| $#{value} (Budget)
-					td
-					td
+	h3 Planned outgoings: #{to_currency(planned_total)}
+	h3 Actual outgoings: #{to_currency(actual_total)}
+	h3 Incoming funds: #{to_currency(incoming_total)}
 
-			for tx in activity.transactions('D E LR IR')
-				tr
-					- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
-					- code = tx["transaction-type"]['#text']
-					td= tx['value']['@value-date']
-					td
-					td(data-dt-value=value)
-						| $#{value} (#{code})
-					td
-
-			for tx in activity.transactions('IF R')
-				tr
-					- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
-					- code = tx["transaction-type"]['#text']
-					td= tx['value']['@value-date']
-					td
-					td
-					td(data-dt-value=value)
-						| $#{value} (#{code})
-
-	hr
-	h1 Separated
-
+	h1 Planned and Actual Outgoings
 
 	div.graph#inout
 
-	table.table.table-bordered.enhance(data-enhance="google_chart #inout ")
+	table.table.table-bordered.enhance(data-enhance="google_chart #inout group_years")
 		thead
 			tr
 				th(data-dt-type='date') Date
-				th(data-dt-type='number') Purtive outgoings
-				th(data-dt-type='number') Real outgoings
-		
+				th(data-dt-type='number') Planned
+				th(data-dt-type='number') Actual
+		tfoot
+			if !(actual.length || planned.length)
+				tr
+					td(colspan=3) 
+						| There are no outgoings funds associated with this activity
 		tbody
-			for budget in activity.budgets()
+			for budget in planned
 				tr
 					- value = parseFloat(budget.value["@iati-ad:USD-value"],10)
 					td= budget["value"]["@iati-ad:transaction-date"]
@@ -74,7 +46,7 @@ body.span11.offset1
 						| $#{value} (Budget)
 					td
 
-			for tx in activity.transactions('D E LR IR')
+			for tx in actual
 				tr
 					- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
 					- code = tx["transaction-type"]['#text']
@@ -84,17 +56,23 @@ body.span11.offset1
 						| $#{value} (#{code})
 
 
+	hr 
+	h1 Incoming Funds
+
 	div.graph#income
 
-	table.table.table-bordered.enhance(data-enhance="google_chart #income ")
+	table.table.table-bordered.enhance(data-enhance="google_chart #income group_years")
 		thead
 			tr
 				th(data-dt-type='date') Date
 				th(data-dt-type='number') Income
-		
+		tfoot
+			if !incoming.length
+				tr
+					td(colspan=2) 
+						| There are no incoming funds associated with this activity
 		tbody
-
-			for tx in activity.transactions('IF R')
+			for tx in incoming
 				tr
 					- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
 					- code = tx["transaction-type"]['#text']
@@ -111,14 +89,18 @@ body.span11.offset1
 		console.log(google.visualization);
 
 		var enhancers = {
-			google_chart:function(selector, chart_type){
+			google_chart:function(selector, grouping){
 				selector = selector || '#visualization';
-				chart_type = chart_type || 'ColumnChart';
 
 				var $table = this;
 				var generate = function(){
 					// hack the rows to sort by date
 					var rows = $('tbody tr',$table).toArray();
+
+					if(!rows.length){
+						$(selector).css('background-color','#f5f5f5');
+						return;
+					}
 
 					rows.sort(function(a,b){
 						a = +new Date($('td:first',a).text());
@@ -166,9 +148,9 @@ body.span11.offset1
 					});
 
 					// process the rows if we want
-					if(window.location.hash == '#dev_year' || window.location.hash == '#dev_month'){
+					if(grouping){
 
-						var by_year = window.location.hash == '#dev_year';
+						var by_year = grouping == 'group_years';
 
 						// group by year
 						var grouped = _.groupBy(rows, function(row){
@@ -220,16 +202,15 @@ body.span11.offset1
 
 
 					// Create and draw the visualization.
-					new google.visualization[chart_type]($(selector).get(0)).
+					new google.visualization.ColumnChart($(selector).get(0)).
 						draw(data,
 						{
-							width:900, height:400,
+							width:800, height:350,
 							interpolateNulls:true,
-							isStacked:true
+							isStacked:false,
 						}
 					)
 				};
-
 				if(google.visualization){
 					generate()
 				} else {
