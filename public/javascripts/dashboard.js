@@ -145,8 +145,13 @@ var IATI = IATI || {};
       });
     },
     aadd:function(obj){
-      data.push(obj);
-      persist();
+      var contains = _.any(data, function(item){
+        return _.isEqual(obj,item);
+      });
+      if(!contains){
+        data.push(obj);
+        persist();        
+      }
     },
     subkeysFor:function(key){
       return _(data).chain().filter(function(d){

@@ -12,7 +12,6 @@ describe("dashboard", function(){
 
   describe("widgets", function(){
     
-    
     it('a widget can be added to the dashboard', function(){
       
       IATI.dashboard.add('widgets', 'http://my-widget-url');
@@ -22,6 +21,17 @@ describe("dashboard", function(){
       expect(IATI.dashboard.get('widgets')[0].href).toBe('http://my-widget-url');
       
     });
+
+    it('should not add duplicate widgets', function(){
+
+
+      IATI.dashboard.add('widgets', 'http://my-widget-url');
+      IATI.dashboard.add('widgets', 'http://my-widget-url');
+
+      expect(IATI.dashboard.get('widgets').length).toBe(1);
+
+
+    })
     
     
   });
