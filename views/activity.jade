@@ -128,13 +128,14 @@ section.activity.slide-panel.clearfix
       .widget(data-href=url_with('/widgets/transactions', {ID: activity.id(), view:'full'}))
         !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/transactions', {ID: activity.id()}), links: true, padding: 0, width: 260}})
     .half.left
-      .widget
-        h3 Aid flows
-        img(src='/images/mockups/aid_flows.png')
-    .half.left
-      .widget
-        h3 Results
-        p Coming soon
+      .widget(data-href=url_with('/widgets/policy_markers', {ID: activity.id(), view:'full'}))
+        !=partial('embed_widget', {locals: {widget_url: url_with('/widgets/policy_markers', {ID: activity.id()}), links: true, padding: 0, width: 260}})
+
+    // mock-placeholder
+      .half.left
+        .widget
+          h3 Aid flows
+          img(src='/images/mockups/aid_flows.png')
 
 script
   inlines.push(function() {

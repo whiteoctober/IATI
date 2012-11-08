@@ -1,3 +1,5 @@
+var codelists = require('./codelists.js');
+
 (function(exports) {  
   // default to site layout when view=full and allow no layout on
   // ajax requests
@@ -246,6 +248,27 @@
         })
         .end();
     });
+
+    // displaying policy-thematic-markers
+    app.get('/widgets/policy_markers', function(req, res, next) {
+      var id = req.query.ID;
+      
+      api.Request({ID: id, result: 'full'})
+        .on('success', function(data) {
+          var activity = accessors.activity(data);
+          var markers = activity.policyMarkers();
+          
+          res.render('widgets/policy_markers', {
+            markers: markers,
+            layout: widgetLayout(req)
+          });
+        })
+        .on('error', function(e) {
+          next(e);
+        })
+        .end();
+    });
+
 
 
     
