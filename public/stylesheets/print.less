@@ -1,6 +1,7 @@
 body {
   font: 12px Arial, sans-serif;
   color: #828281;
+  margin:0;
 }
 input {
   font: 12px Arial, sans-serif;
@@ -67,7 +68,7 @@ header, footer {
 .activity aside {
   display: none;
 }
-header, footer  {
+header, footer, nav.foot {
   display: none;
 }
 
@@ -98,4 +99,26 @@ table.headline td {
 table.headline strong {
   font-size: 1.5em;
   font-weight: normal;
+}
+
+#print-header{
+  display:block !important;
+}
+#ajax-loader{
+  display:none;
+}
+
+/* widget tweaks */
+.widget{
+  float:left;
+  margin:1em;
+}
+.widget_content h3{
+  margin:0 !important;
+}
+body.widget_layout .widget-hidden{
+  display:none;
+}
+nav.linkup{
+  display:none;
 }
