@@ -2,7 +2,8 @@
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/style.css', media="screen")
+    link(rel="stylesheet", href="/stylesheets/print.css", media="print") 
   script
     window.inlines = [];
     window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
