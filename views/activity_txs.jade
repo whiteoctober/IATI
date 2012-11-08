@@ -35,7 +35,7 @@
 				for budget in planned
 					tr
 						- value = parseFloat(budget.value["@iati-ad:USD-value"],10)
-						td= budget["value"]["@iati-ad:transaction-date"]
+						td= budget.value['@value-date'] || budget.value['@iati-ad:transaction-date']
 						td(data-dt-value=value)
 							| $#{value} (Budget)
 						td
@@ -44,7 +44,7 @@
 					tr
 						- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
 						- code = tx["transaction-type"]['#text']
-						td= tx['value']['@value-date']
+						td= tx.value['@value-date'] || tx.value['@iati-ad:transaction-date']
 						td
 						td(data-dt-value=value)
 							| $#{value} (#{code})
@@ -70,7 +70,7 @@
 					tr
 						- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
 						- code = tx["transaction-type"]['#text']
-						td= tx['value']['@value-date']
+						td= tx.value['@value-date'] || tx.value['@iati-ad:transaction-date']
 						td(data-dt-value=value)
 							| $#{value} (#{code})
 
@@ -200,6 +200,9 @@
 								width:dims.width, height:dims.height,
 								interpolateNulls:true,
 								isStacked:false,
+								vAxis:{
+									minValue:0
+								}
 							}
 						)
 					};
