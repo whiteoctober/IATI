@@ -6,7 +6,7 @@ section.activity.slide-panel.clearfix
     ul
       li: a.icn.favourite(href='#', data-dash=dashParams) Save to my dashboard        
       li: a.icn.print(href="javascript:window.print()") Print
-      li: a.icn.pdf(href="#") PDF
+      //-li: a.icn.pdf(href="#") PDF
       li: a.icn.csv(href="/activity/" + activity.id() + ".csv") CSV
       
     - documents = activity.documents()
