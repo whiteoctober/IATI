@@ -1,3 +1,6 @@
+// so we know if we should try the new textfitting style
+window.shivved = true;
+
 /*
  HTML5 Shiv v3.6.2pre | @afarkas @jdalton @jon_neal @rem | MIT/GPL2 Licensed
 */
@@ -39,3 +42,5 @@ if (!Array.prototype.filter)
     return res;
   };
 }
+
+

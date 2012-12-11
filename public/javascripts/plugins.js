@@ -183,10 +183,18 @@
        
         //Inserts lines
         $.map(lineDetails, function(line) {
+
+          // need this hack to make it compatibile with fitText2
+          if(line.margins.top){
+            $('<span>').css({
+              display:'block',
+              height:line.margins.top
+            }).appendTo(item);
+          }
+
           $("<span>").text(line.text).css({
             display: 'block', 'text-align': 'center', 'height': line.height,
-            'margin-left': line.margins.left, 'margin-right': line.margins.right,
-            'margin-top': line.margins.top
+            'margin-left': line.margins.left, 'margin-right': line.margins.right
           }).appendTo(item);
         });
       }
@@ -277,7 +285,9 @@
     });//.css({overflow:'hidden', xposition:'relative'});
   };
 
-  $.fn.fitText = $.fn.fitText2;
+  if(window.shivved){
+    $.fn.fitText = $.fn.fitText2;
+  }
 
 
 
