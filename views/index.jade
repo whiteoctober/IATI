@@ -22,9 +22,11 @@
   h4: a.xhr(href='/about', data-history='{"enter":"slideUp"}') About this project
   
 
-// this message will be hidden for all but IE<9
-//.built_for
-  p This site is not currenty supported on IE 8 or below
+// this message will be hidden for all but <IE7
+.built_for
+  p This site is not supported on IE 6
+  p
+    small Either update, or install a <a href="http://www.google.com/chrome">newer browser</a> to visit this site
 
 script
   inlines.push(function(){
