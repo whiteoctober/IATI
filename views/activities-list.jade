@@ -38,6 +38,10 @@ section.slide-panel.clearfix
 
 nav.foot!= partial('activities-nav', {dataFile: !largeQuery})
 
+
+//- bit of a hack to keep the list view when filters are turned off
+- query['view'] = 'list'
+
 script
   inlines.push(function() {
     $("a", this).click(function() {
@@ -53,4 +57,6 @@ script
     });
     
     new Scroller($('section.slide-panel').get(0));
+
+    $.setArcNav(!{JSON.stringify(query)}, '/activities');
   });
