@@ -92,6 +92,7 @@
       var item = $(items[index]);
       
       if (item.is(":visible")) {
+
         if (item.data("text")) var originalText = item.data("text"); 
         else {
           var originalText = item.text()
@@ -103,7 +104,6 @@
             .replace(/,\s*/g, ", ");
         }
         item.data("text", originalText);
-        item.empty();
         var total = {width: item.width(), height: item.height()};
         var text = '', lineDetails, remainingText;
         
@@ -180,7 +180,16 @@
           item.addClass("truncated");
         }
         else { item.removeClass("truncated"); }
-       
+
+        // if there is a link involved, move down to that 
+        var a = item.find('a');
+        if(a.size()){
+          item = a;
+        }
+
+        // insert update the content
+        item.empty();
+
         //Inserts lines
         $.map(lineDetails, function(line) {
 
