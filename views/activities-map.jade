@@ -41,4 +41,6 @@ script
       
       googleLoaded ? loadMap() : google.setOnLoadCallback(loadMap);
     }
+    
+    $.setArcNav(!{JSON.stringify(query)}, '/activities-map');
   });

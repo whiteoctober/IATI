@@ -76,6 +76,7 @@ app.configure('development', function() {
 app.configure('production', function() {
   //Combination and minification of static files
   app.use(assetManager({
+    /*
     'js':{
       'route' : /\/static\/js\/[0-9]+\/.*\.js/,
       'path': './public/javascripts/',
@@ -85,6 +86,7 @@ app.configure('production', function() {
           '^': [assetHandler.uglifyJsOptimize]
       }
     }
+    */
     /* todo, problems:
         - no import inlining
         - fs *.css wont be written to fs until requested
@@ -107,7 +109,8 @@ app.configure('production', function() {
   
   app.set('view options', {
     title: 'Aid View',
-    clientScripts: clientScripts_combined
+    clientScripts: clientScripts
+    //clientScripts: clientScripts_combined
   });
   
   app.set('cacheHeader', 'public, max-age=3600'); // 1 hour

@@ -16,6 +16,7 @@ section.slide-panel.dashboard
 
 script
   inlines.push(function(){
+    $.setArcNav();
     $('.dashboard').dashboardContent();
     new Scroller($('section.slide-panel').get(0));
   })
