@@ -3,7 +3,7 @@ var gently = global.GENTLY = new (require('gently'))(),
 
 describe('currency helper', function(){
   
-  it('works', function(){
+  it('formats currency', function(){
     expect(helpers.to_currency('1')).toBe('$1');
     expect(helpers.to_currency('1234')).toBe('$1,234');
     expect(helpers.to_currency('1E3')).toBe('$1,000');
@@ -14,4 +14,17 @@ describe('currency helper', function(){
     expect(helpers.to_currency('123', "£")).toBe('£123');
   });
   
+});
+
+
+describe('format value', function(){
+
+    it('formats float style numbers', function(){
+        
+        var formatted = helpers.format_value('9.9282424175E8');
+
+        expect(formatted.value).toBe(992);
+        expect(formatted.unit).toBe('million');
+
+    });
 });
