@@ -4,7 +4,7 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/boilerplate.css', media="screen")
     link(rel='stylesheet', href='/stylesheets/style.css', media="screen")
-    link(rel="stylesheet", href="/stylesheets/print.css", media="print") 
+    link(rel="stylesheet", href="/stylesheets/print.css", media="print")
     //if lt IE 9
       link(rel='stylesheet', href='/stylesheets/ie.css')
       script(src='/javascripts/lib/html5shiv.js')
@@ -41,7 +41,7 @@ html
       a.sectorcategory.filter.xhr(href=url_with('/filter/SectorCategory'), rel="nofollow")
         img.text(src='/images/sector_filter_text.png')
         img.button(src='/images/sector_filter.png')
-      
+
       ul.arcnav.sector.sectorcategory
 
       nav.main_navigation
@@ -49,10 +49,10 @@ html
           span home
         a.back(href='javascript:history.back()')
           span back
-        a.dashboard.xhr(href='/dashboard', data-history='{"enter":"slideUp"}')  
+        a.dashboard.xhr(href='/dashboard', data-history='{"enter":"slideUp"}')
           span.saving Saving
           span dashboard
-        
+
     footer
       .left_corner.corner
       .centre
@@ -63,14 +63,14 @@ html
       a.country.filter.xhr(href=url_with('/filter/Country'), rel="nofollow")
         img.button(src='/images/country_filter.png')
         img.text.right(src='/images/country_filter_text.png')
-        
+
       ul.arcnav.funder
       ul.arcnav.area.country.region
-      
+
     #popup.hidden
     #dimmer
     #embed.hidden
-    
+
     script(src="https://www.google.com/jsapi")
     each script in clientScripts
       script(src='/javascripts/'+script)

@@ -6,11 +6,11 @@
     strong= funders
     |  Funders
   h3
-    | Filter by 
+    | Filter by
     strong
-      a.xhr(href="/filter/SectorCategory") Sector, 
-      a.xhr(href="/filter/Funder") Funder, 
-      a.xhr(href="/filter/Country") Country, 
+      a.xhr(href="/filter/SectorCategory") Sector,
+      a.xhr(href="/filter/Funder") Funder,
+      a.xhr(href="/filter/Country") Country,
     | or
     strong
       a.search(href="#search") Search
@@ -18,15 +18,25 @@
   form.jshide(action='/search', id="search")
    input.q(type='text', name='q')
    input.submit(type='submit', value='search')
-    
+
   h4: a.xhr(href='/about', data-history='{"enter":"slideUp"}') About this project
-  
+
 
 // this message will be hidden for all but <IE7
 .built_for
-  p This site is not supported on IE 6
-  p
-    small Either update, or install a <a href="http://www.google.com/chrome">newer browser</a> to visit this site
+  h2 This site is not supported on IE 6
+  h3 Please update your browser or install a different browser below:
+  .browsers
+    a(href="http://www.mozilla.org/en-US/")
+      img(src="images/firefox.png")
+      span Firefox
+    a(href="https://www.google.com/intl/en/chrome/browser/")
+      img(src="images/chrome.png")
+      span Chrome
+    a(href="http://support.apple.com/kb/DL1531")
+      img(src="images/safari.png")
+      span Safari
+
 
 script
   inlines.push(function(){
