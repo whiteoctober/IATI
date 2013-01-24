@@ -6,10 +6,10 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
   var dimmer = $("#dimmer");
   var embed = $("#embed");
   var dimmed = false;
-  
+
   //Sets a seed for deterministic randomness
   //Math.seedrandom('z6m44E4MB5');
-  
+
   //Dim the page when requested
   dimmer.click(function() {
     if (dimmed) {
@@ -19,19 +19,27 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
     }
   });
 
-  $("#ajax-loader").on("ajaxStart", function(){
-   $(this).delay(1000).fadeIn();
-  }).on("ajaxStop", function(){
-   $(this).stop().hide();
-  }).click(function(){
-    // we're not actually cancelling the request
-    // here,  but just hiding this, so that something
-    // else could be clicked. Setting History.back()
-    // causes quite a lot of trouble
-    $(this).stop().hide();
-  })
-  .text('loading');
-  
+  var ajaxLoader = $("#ajax-loader");
+  $(document)
+    .on("ajaxStart", function(){
+      ajaxLoader.delay(1000).fadeIn();
+      console.log('start');
+    })
+    .on("ajaxStop", function(){
+      ajaxLoader.stop().hide();
+      console.log('end');
+    });
+
+  ajaxLoader
+    .click(function(){
+      // we're not actually cancelling the request
+      // here,  but just hiding this, so that something
+      // else could be clicked. Setting History.back()
+      // causes quite a lot of trouble
+      ajaxLoader.stop().hide();
+    })
+    .text('loading');
+
   //Load embed widget dialog when requested
   $(".embed").live('click', function(e) {
     var link = $(this);
@@ -50,11 +58,11 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
     });
     e.preventDefault();
   });
-  
+
   $('#dialog').live('touchstart click', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    
+
     $(this).fadeOut(function() {
       $(this).remove();
     });
@@ -63,9 +71,9 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
     // store that this dialog has been hidden
     (window.hiddenDialogs = window.hiddenDialogs || [])
       .push(dialogKey);
-    
+
   });
-  
+
   $('.dashboard #clear').live('click', function(e){
     e.preventDefault();
     if(confirm($(this).data('confirm'))){
@@ -73,7 +81,7 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
       window.location.reload();
     }
   });
-  
+
   // If this is a function that returns a deferred promise, then it will
   // be called before new content is loaded in.
   window.contentExit = null;
@@ -84,16 +92,16 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
   window.History.Adapter.bind(window,'statechange',function() {
     var State = window.History.getState(),
         url = State.url;
-    
+
     //Add the xhr param (allows for caching + doesn't clash with 'full' pages)
     var separator = State.url.indexOf('?') == -1 ? '?' : '&';
     url += separator + 'xhr=true';
-    
+
     //jQuery Cache bug fix
     url = url.replace("?&", "?");
 
     window.currentURL = url;
-        
+
     var loadContent = function() {
       $.get(url)
       .pipe(function(response){
@@ -112,7 +120,7 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
         else {
           runInlines.apply(content);
         }
-        
+
         if(window._gaq) window._gaq.push(['_trackPageview']);
 
       })
@@ -121,7 +129,7 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
           if(window.navigator.standalone){
             alert("request error")
           } else {
-            // attempt to reload the page, so the 
+            // attempt to reload the page, so the
             // real error is shown
             document.location.reload();
           }
@@ -129,8 +137,8 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
       });
 
     };
-    
-    //If there is an exit animation/function then fire that before loading 
+
+    //If there is an exit animation/function then fire that before loading
     if (window.contentExit) {
       window.contentExit().then(function() {
         window.contentExit = null;
@@ -140,7 +148,7 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
       loadContent();
     }
   });
-   
+
   //Shows widget buttons
   $('.widget nav.linkup').live("click", function(){
     var $this = $(this);
@@ -148,17 +156,17 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
       //Remove from all
       $('.showone').removeClass('showone');
 
-      //Then add to current 
+      //Then add to current
       $this.addClass('showone');
       return false;
     }
   });
-   
+
   //Hides widget buttons
   $("body").live('click', function(){
     $('.showone').removeClass('showone');
-  }); 
-  
+  });
+
   //Connects AJAX links to page state system
   $('a.xhr').live('click', function() {
     var $this = $(this);
@@ -168,11 +176,11 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
     window.History.pushState($this.data('history'), "", $this.attr('href'));
     return false;
   });
-  
+
   $(runInlines);
-  
-  
-  
+
+
+
   // analytics
   if(window._gaq){
      window._gaq.push(['_trackPageview']);
@@ -181,5 +189,5 @@ var bubbleClasses = 'c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13'.split(' ');
      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   }
 
-  
+
 })();
