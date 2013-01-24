@@ -29,13 +29,13 @@
 			tfoot
 				if !(actual.length || planned.length)
 					tr
-						td(colspan=3) 
+						td(colspan=3)
 							| There are no outgoings funds associated with this activity
 			tbody
 				for budget in planned
 					tr
 						- value = parseFloat(budget.value["@iati-ad:USD-value"],10)
-						td= budget.value['@value-date'] || budget.value['@iati-ad:transaction-date']
+						td= budget.value['@iati-ad:transaction-date']
 						td(data-dt-value=value)
 							| $#{value} (Budget)
 						td
@@ -44,13 +44,13 @@
 					tr
 						- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
 						- code = tx["transaction-type"]['#text']
-						td= tx.value['@value-date'] || tx.value['@iati-ad:transaction-date']
+						td= tx.value['@iati-ad:transaction-date']
 						td
 						td(data-dt-value=value)
 							| $#{value} (#{code})
 
 
-		hr 
+		hr
 		h1 Incoming Funds
 
 		div.graph#income
@@ -63,19 +63,19 @@
 			tfoot
 				if !incoming.length
 					tr
-						td(colspan=2) 
+						td(colspan=2)
 							| There are no incoming funds associated with this activity
 			tbody
 				for tx in incoming
 					tr
 						- value = parseFloat(tx['value']['@iati-ad:USD-value'],10)
 						- code = tx["transaction-type"]['#text']
-						td= tx.value['@value-date'] || tx.value['@iati-ad:transaction-date']
+						td= tx.value['@iati-ad:transaction-date']
 						td(data-dt-value=value)
 							| $#{value} (#{code})
 
 		script
-			
+
 			var enhancers = {
 				google_chart:function(selector, grouping){
 					selector = selector || '#visualization';
@@ -110,7 +110,7 @@
 						var types = [],
 							normalise = function(type, value){
 								return  type == 'date' ? new Date(value) :
-										type == 'number' ? parseFloat(value) || undefined : 
+										type == 'number' ? parseFloat(value) || undefined :
 										value; // default
 							};
 
@@ -233,6 +233,6 @@
 				if(content.size()){
 					new Scroller(content.get(0));
 				}
-				
+
 			});
-		
+
