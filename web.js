@@ -494,6 +494,17 @@ var widgets = require('./widgets.js');
 widgets.init(app, api, _, accessors);
 
 
+
+// Allow clearing redis db
+if(process.env.REDISTOGO_URL){
+  var redis = require('redis-url').createClient(process.env.REDISTOGO_URL);
+  app.get('/clear-cache', function(req, res) {
+    redis.flushdb(function(){
+      res.send("flushed cache");
+    });
+  });
+}
+
 //Only listen on $ node app.js
 if (!module.parent) {
   app.listen(process.env.PORT || 3000);
