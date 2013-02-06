@@ -127,7 +127,7 @@ var beforeFilter = function(req, res, next) {
   __logger.info(req.method + ' ' + req.originalUrl);
 
   //Get query, filtering unwanted values
-  var keep = 'Region Country Sector SectorCategory Funder orderby ID'.split(' ');
+  var keep = 'Region Country Sector SectorCategory Funder Reporter orderby ID'.split(' ');
 
   req.filter_query = _.only(req.query, keep);
   
