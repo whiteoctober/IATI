@@ -3,7 +3,6 @@ exports.replacements = {
   'PROCOFSERVICES': 'Procurement of Services:',
   'NOTFORPROFITORG': 'Not For Profit Organisations:',
   'MULTILATORGANISATION': 'Multilateral Organisation:',
-  'NONBUDSUPPFINAID': 'Non-budget support in Financial Aid:',
   'HUMANITASSISTANCE': 'Non-budget support in Financial Aid:',
   'PROCUREMENTOFGOODS': 'Procurement of Goods:',
   'REHABILITATION': 'Rehab:',
@@ -25,4 +24,4 @@ exports.replacements = {
   'RECURRENTCOSTS': 'Recurrent Costs',
   'RECONSTRUCTION': 'Reconstruction',
   'UNIVERSALIZATION': 'Universalization'
-}
+};

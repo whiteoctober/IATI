@@ -156,8 +156,10 @@ app.get('*/pie.htc', function(req,res){
 });
 
 app.get('/', function(req, res, next) {
+
+  // we don't actually care about the values,
+  // just the @group-count attribute
   var params = {
-    result: 'values',
     groupby: 'Funder'
   };
   
@@ -165,7 +167,7 @@ app.get('/', function(req, res, next) {
     .on('success', function(data) {
       res.render('index', {
         filter_paths: req.filter_paths,
-        funders: _(data.Funder).as_array().length,
+        funders: data['@group-count'],
         layout: !req.isXHR
       });
     })
@@ -421,7 +423,7 @@ app.get('/filter/:filter_key', function(req, res, next) {
     "Region": "region"
   };
   
-  var params = {result: 'values', groupby: filterKey};
+  var params = {result: 'values', groupby: filterKey, pagesize:300};
   _.extend(params, req.filter_query);
   delete params[filterKey];
   

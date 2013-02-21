@@ -27,7 +27,7 @@
     
     // set the links for the sector filters 
     var qs = $.param(query); 
-    _.each(['SectorCategory', 'Country', 'Funder'], function(filterkey){
+    _.each(['SectorCategory', 'Country', 'Reporter'], function(filterkey){
       var href = '/filter/' + filterkey + (qs ? '?' + qs : '');
       $('.filter.' + filterkey.toLowerCase()).attr('href', href);
     });
