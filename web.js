@@ -423,7 +423,7 @@ app.get('/filter/:filter_key', function(req, res, next) {
     "Region": "region"
   };
   
-  var params = {result: 'values', groupby: filterKey};
+  var params = {result: 'values', groupby: filterKey, pagesize:300};
   _.extend(params, req.filter_query);
   delete params[filterKey];
   
