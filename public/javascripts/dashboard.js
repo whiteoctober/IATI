@@ -101,7 +101,11 @@ var IATI = IATI || {};
 
 (function(IATI, $, _){
   var storage = window.localStorage,
-      data = [];
+      data = [],
+
+      // increment this to reset all users dashboards
+      // for when the api is switched over
+      storeKey = 'dashboard-0';
   
   /* Data Format
   [{
@@ -115,11 +119,11 @@ var IATI = IATI || {};
   */
   
   function persist(){
-    storage.setItem('dashboard', JSON.stringify(data));
+    storage.setItem(storeKey, JSON.stringify(data));
   }
   
   function fetch(){
-    data = JSON.parse(storage.getItem('dashboard')) || [];
+    data = JSON.parse(storage.getItem(storeKey)) || [];
   }
   fetch();
   
