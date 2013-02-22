@@ -42,11 +42,10 @@ section.activity.slide-panel.clearfix
       h3 Other activity identifiers
       dl
       - each other in otherIdentifiers
-        ul
-          li
-            strong 
-              abbr(title=other.ownerName)= other.ownerRef
-            |  #{other.id}
+        dl
+          dt
+            abbr(title=other.ownerRef)= other.ownerName
+          dd= other.id
 
 
 
