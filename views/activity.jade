@@ -42,7 +42,7 @@ section.activity.slide-panel.clearfix
       h3 Other activity identifiers
       dl
       - each other in otherIdentifiers
-        dl
+        if(other.id)
           dt
             abbr(title=other.ownerRef)= other.ownerName
           dd= other.id
