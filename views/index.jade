@@ -8,10 +8,13 @@
   h3
     | Filter by
     strong
-      a.xhr(href="/filter/SectorCategory") Sector,
-      a.xhr(href="/filter/Reporter") Organisation,
-      a.xhr(href="/filter/Country") Country,
-    | or
+      a.xhr(href="/filter/SectorCategory")
+        |  Sector,
+      a.xhr(href="/filter/Reporter")
+        |  Organisation,
+      a.xhr(href="/filter/Country")
+        |  Country
+    |  or
     strong
       a.search(href="#search") Search
 
