@@ -1,9 +1,12 @@
 section.slide-panel.dashboard
-  h1 About AidView
+  h1 About AidView and data quality
   p AidView is a prototype demonstrating how detailed and timely data on aid activities shared through the <a href="http://www.aidtransparency.net">International Aid Transparency Initiative</a> can be made accessible to a wide range of people. Designed to work on tablet devices such as iPads or Android tablets, AidView explores how different partners in the development process can have the information they need at their fingertips. It is also accessible through modern web browsers. 
 
   h2 How does it work?
   p AidView brings together aid activity information published on the <a href="http://www.iatiregistry.org">IATIRegistry</a> and makes it possible to browse by the funder sector, or location of aid. AidView allows users to access data files for any collection of activities, or add in-depth activity information to a customised dashboard. The information in AidView comes direct from donors, so the information available is based on the information donors currently publish. The current version of AidView only includes 'active' aid activities. 
+
+  h2 Data quality
+  p AidView uses the data published and linked to the IATI registry.  IATI is in its early stages and data coverage is currently limited to the organisations that have published to date - it does not provide a definitive view of all aid activities within a certain country, sector or of an organisation. Additionally, organisations may not have published comprehensive details about individual activities. Caution should therefore be exercised in using IATI data to aggregate data or estimate global trends. However, coverage increases weekly, and we expect IATI to be an in increasingly comprehensive source of data on both official and private flows.
 
   h2 From prototype to product
   p The current version of AidView is an early prototype: an alpha version.
@@ -12,9 +15,15 @@ section.slide-panel.dashboard
 
   h2 Credits and Technical Details
   small
-    p The AidView interface has been designed and developed by White October working with an API developed by Chris Wallace. Tim Davies (Practical Participation) has provided project support, and the project was funded and overseen by AidInfo. Data quality has been reviewed by Steven Flower and David Carpenter. 
+    p The AidView interface has been designed and developed by White October working with Simon Whitehouse and an API developed by Chris Wallace. Tim Davies (Practical Participation) has provided project support, and the project was funded and overseen by aidInfo. Data quality has been reviewed by Steven Flower and David Carpenter. 
     p The interface uses <a href="http://nodejs.org/">Node.js</a> and is deployed to <a href="http://www.heroku.com/">Heroku</a>, whilst the backend API uses the <a href="http://exist-db.org/">eXist XML database</a> deployed to <a href="http://elastichosts.com">ElasticHosts cloud hosting</a>. 
     p The source code for the interface <A href="https://github.com/whiteoctober/IATI">is available on GitHub</a>. We would like to thank all the contributors to the following open source projects whose work we have built upon: <a href="http://exist-db.org/">eXist</a>, <a href="http://nodejs.org/">Node.js</a>, <a href="http://jquery.com">jQuery</a>, <a href="http://documentcloud.github.com/underscore/">underscore.js</a>, <a href="http://html5boilerplate.com/">HTML Boilerplate</a>, <a href="http://expressjs.com/">express.js</a> and many more whose work we rely upon day-to-day. The backend API will be released soon.
+
+    p
+      a(href="http://www.aidinfo.org/")
+        img(style="margin-top:3em", src="/images/logos/logo-ai.png", alt="aidinfo - better information, better aid")
+      a(href="http://www.devinit.org/")
+        img(style="margin-top:3em", src="/images/logos/logo-di.png", alt="Development Initiatives - Engage. Empower. Eliminate Poverty")
     
 script
   inlines.push(function() {
