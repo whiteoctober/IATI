@@ -8,10 +8,13 @@
   h3
     | Filter by
     strong
-      a.xhr(href="/filter/SectorCategory") Sector,
-      a.xhr(href="/filter/Reporter") Organisation,
-      a.xhr(href="/filter/Country") Country,
-    | or
+      a.xhr(href="/filter/SectorCategory")
+        |  Sector,
+      a.xhr(href="/filter/Reporter")
+        |  Organisation,
+      a.xhr(href="/filter/Country")
+        |  Country
+    |  or
     strong
       a.search(href="#search") Search
 
@@ -19,7 +22,13 @@
    input.q(type='text', name='q')
    input.submit(type='submit', value='search')
 
-  h4: a.xhr(href='/about', data-history='{"enter":"slideUp"}') About this project
+  h4: a.xhr.highlight(href='/about', data-history='{"enter":"slideUp"}') About AidView and data quality
+
+  h4.iati
+    | Bringing IATI to life
+    br
+    a(href="http://www.aidtransparency.net/")
+      img(src="/images/logos/logo-iati.png", alt="IATI -  International Aid Transparency Initiative")
 
 
 // this message will be hidden for all but <IE7
