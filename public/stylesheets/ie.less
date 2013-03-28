@@ -1,3 +1,5 @@
+/* we are now letting IE in
+
 // a stylesheet to block off IE
 
 .built_for{
@@ -12,4 +14,20 @@
 // hide other elements
 a, img, .landing_message{
   display:none;
+}
+*/
+
+@media screen {
+  * html {
+    overflow-y: hidden;
+  }
+  * html body {
+    height: 100%;
+    overflow: auto;
+  }
+}
+
+.bubble, .bubble .inner {
+  /* can be in any dir - re-written by app */
+  behavior: url(/pie.htc);
 }

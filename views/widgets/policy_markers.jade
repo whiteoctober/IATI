@@ -1,0 +1,11 @@
+.widget_content
+  h3.title Policy Markers
+
+  if !markers.length
+    p None supplied
+
+  for marker in markers
+    p 
+        strong #{marker['#text'] || marker.code.name} 
+        em (#{marker.significance.name})
+        // long version - (#{marker.significance.name} - #{marker.significance.description})

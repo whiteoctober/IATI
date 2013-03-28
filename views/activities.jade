@@ -22,10 +22,11 @@ h3.inner #{activity_count} activities found
   ul.activities.clearfix
     each activity in activities
       li.activity.bubble.hidden(data-name=activity.title(), data-value=activity.value())
-        .outline
+        //- .outline
         .inner
           a.xhr.content(href='/activity/' + activity.id(), data-history='{"enter":"slideUp"}')
-            p.text.hidden= activity.title().replace("\n", "")
+            = activity.title().replace("\n", "")
+
 
 nav.foot!= partial('activities-nav', {dataFile: !largeQuery})
 
@@ -70,13 +71,16 @@ script
     var fitText = function() {
       if (textFittingQueue.length > 0 && zoomer.touches == 0) {
         var elem = $(textFittingQueue.shift());
-        elem.fitText('circular', {font: font});
+        elem.parent().fitText('circular', {font: font});
       }
-      setTimeout(fitText, 20);
+      setTimeout(fitText, 5);
     }
     fitText();
-    
-    $('#dialog').hide().fadeIn();
+
+    var dialogKey = document.location.href.replace('&p=1','');
+    if(!(window.hiddenDialogs && window.hiddenDialogs.indexOf(dialogKey) > -1)){
+      $('#dialog').delay(200).fadeIn();
+    }
     
     $.setArcNav(!{JSON.stringify(query)}, '/activities');
   });

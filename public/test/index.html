@@ -2,8 +2,9 @@
 <html>
 <head>
     <title>IATI Aid View</title>
-    <link rel="stylesheet" href="/stylesheets/boilerplate.css">
-    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <!--link rel="stylesheet" href="/stylesheets/boilerplate.css">
+    <link rel="stylesheet" href="/stylesheets/style.css"-->
     <link rel="stylesheet" href="jasmine/jasmine.css" type="text/css" media="screen" title="no title" charset="utf-8">
     
     <script src="jasmine/jasmine.js" type="text/javascript" charset="utf-8"></script>
@@ -14,17 +15,41 @@
     <script src="/javascripts/lib/underscore.js" type="text/javascript" charset="utf-8"></script>
     
     <!-- code -->
-    <script src="/javascripts/dashboard.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        window.inlines = [];
+        window.runInlines = function() { while(inlines.length) { inlines.pop().apply(this); } };
+    </script>
     
-    <!-- specs -->
-    <script src="dashboard.spec.js" type="text/javascript" charset="utf-8"></script>
     
     
 </head><body>
-    <h1>IATI</h1>
     
+
+    <!-- code -->
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="/javascripts/lib/jquery.js"></script>
+    <script src="/javascripts/lib/jquery.history.js"></script>
+    <script src="/javascripts/lib/jquery.tinysort.js"></script>
+    <script src="/javascripts/lib/seedrandom.js"></script>
+    <script src="/javascripts/lib/underscore.js"></script>
+    <script src="/javascripts/dashboard.js"></script>
+    <script src="/javascripts/packLayout.js"></script>
+    <script src="/javascripts/bubble.jquery.js"></script>
+    <script src="/javascripts/zoomer.js"></script>
+    <script src="/javascripts/scroller.js"></script>
+    <script src="/javascripts/arcnav.js"></script>
+    <script src="/javascripts/plugins.js"></script>
+    <script src="/javascripts/script.js"></script>
+    <script>google.load('visualization', '1.0', {'packages':['corechart', 'geochart']});</script>
+
+
+    <!-- specs -->
+    <script src="dashboard.spec.js" type="text/javascript" charset="utf-8"></script>
+    <script src="fitText.spec.js" type="text/javascript" charset="utf-8"></script>
+
+
     <script type="text/javascript" charset="utf-8">
-        jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+        jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
         jasmine.getEnv().execute();
     </script>
 </body>

@@ -9,15 +9,15 @@ Requires node + npm.
     npm install 
     
     # run the app
-    node app.js
+    node web.js
 
 The default endpoint is http://109.104.101.243:8080/exist/rest/db/apps/iati-api/xquery/woapi.xq? - if you want to change this, set the ENDPOINT environment variable:
 
     # run the app with a custom endpoint
-    ENDPOINT=http://my-custom/endpoint? node app.js
+    ENDPOINT=http://my-custom/endpoint? node web.js
     
     # run the app with a custom corpus
-    CORPUS=fullA node app.js
+    CORPUS=fullA node web.js
 
 
 ## Vagrant
@@ -32,7 +32,7 @@ This project can be run on a virtual machine using [Vagrant](http://vagrantup.co
     /etc/init.d/networking restart
 
     # when ssh-ed into virtual machine
-    cd /vagrant && node app.js
+    cd /vagrant && node web.js
 
 Note. this will tunnel port 3000 on the virtual box -> 3003 on localhost
 

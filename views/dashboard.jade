@@ -4,7 +4,7 @@ section.slide-panel.dashboard
   h1.icn.favourite.large My dashboard
   
   ol.groups(data-dashkey = 'activities')
-    li.info: h3 Activities will be listed here when you press 'add to dashboard'.
+    li.info: h3 The My Dashboard page is where you can review all the searches and widgets which you have saved within AidView
   
   section(data-dashkey = 'widgets')
     h2 My widgets
@@ -16,6 +16,7 @@ section.slide-panel.dashboard
 
 script
   inlines.push(function(){
+    $.setArcNav();
     $('.dashboard').dashboardContent();
     new Scroller($('section.slide-panel').get(0));
   })
