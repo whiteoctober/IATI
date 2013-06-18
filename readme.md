@@ -96,3 +96,8 @@ There is a script that will expire the redis cache, this can be run on heroku us
 Google analytics can be enabled by setting the GA_ACCOUNT variable
 
     GA_ACCOUNT=UA-12345678-1
+
+
+## Production
+
+Aidview is hosted on [heroku](http://heroku.com), the appname is 'aidview'.  The account is owned by aidinfo@practicalparticipation.co.uk, [benfoxall](https://github.com/benfoxall) is also be able to grant access.
