@@ -160,7 +160,7 @@ app.get('/', function(req, res, next) {
   // we don't actually care about the values,
   // just the @group-count attribute
   var params = {
-    groupby: 'Funder'
+    groupby: 'Reporter'
   };
   
   new api.Request(params)
