@@ -29,7 +29,11 @@
     var qs = $.param(query); 
     _.each(['SectorCategory', 'Country', 'Reporter'], function(filterkey){
       var href = '/filter/' + filterkey + (qs ? '?' + qs : '');
-      $('.filter.' + filterkey.toLowerCase()).attr('href', href);
+      var key = filterkey.toLowerCase();
+
+      // the reporter is "funder" in the css, so we'll hack this across to that
+      if(key === 'reporter') key = 'funder';
+      $('.filter.' + key).attr('href', href);
     });
     
     
