@@ -3,7 +3,7 @@
 
 ## Running development insight
 
-Requires node + npm.
+Requires node (~0.8) + npm.
 
     # install npm dependencies
     npm install 
@@ -19,6 +19,12 @@ The default endpoint is http://109.104.101.243:8080/exist/rest/db/apps/iati-api/
     # run the app with a custom corpus
     CORPUS=fullA node web.js
 
+
+### problems
+
+    Error: Cannot find module 'node_xslt'
+
+The xslt module won't work with node >0.10 - easiest fix is to use [nvm](https://github.com/creationix/nvm) and downgrade to 0.8.
 
 ## Vagrant
 
