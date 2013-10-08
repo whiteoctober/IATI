@@ -31,8 +31,7 @@ nav.sorting
               - q[key] = _.uniq(current_codes.concat(choice.code))
               a.content.xhr(href=url('/activities', q))
                 - v = format_value(choice.value, true)
-                | #{title_case(choice.name)} <br/> #{choice.count} activit#{choice.count == 1 ? "y" : "ies"}\n $#{v.value}#{v.unit}
-                //- p.text.xhidden #{title_case(choice.name)}\n #{choice.count} activit#{choice.count == 1 ? "y" : "ies"}\n $#{v.value}#{v.unit}
+                | #{choice.name} <br/> #{choice.count} activit#{choice.count == 1 ? "y" : "ies"}\n $#{v.value}#{v.unit}
   - else
     h3 Sorry, you cannot filter any further by #{type}.
 
